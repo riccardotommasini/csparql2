@@ -1,6 +1,6 @@
 package it.polimi.jasper.engine.reasoning;
 
-import it.polimi.yasper.simple.windowing.TimeVarying;
+import it.polimi.yasper.core.quering.TimeVarying;
 import org.apache.jena.reasoner.InfGraph;
 
 /**

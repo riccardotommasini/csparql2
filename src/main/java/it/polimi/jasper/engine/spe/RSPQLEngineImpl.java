@@ -9,6 +9,8 @@ import it.polimi.yasper.core.quering.ContinuousQuery;
 import it.polimi.yasper.core.quering.SDS;
 import it.polimi.yasper.core.quering.execution.ContinuousQueryExecution;
 import it.polimi.yasper.core.quering.formatter.QueryResponseFormatter;
+import it.polimi.yasper.core.reasoning.Entailment;
+import it.polimi.yasper.core.stream.Stream;
 import it.polimi.yasper.core.stream.rdf.RDFStream;
 import it.polimi.yasper.core.stream.schema.StreamSchema;
 import it.polimi.yasper.core.utils.EncodingUtils;
@@ -30,14 +32,13 @@ public abstract class RSPQLEngineImpl implements RSPEngine<StreamItem> {
     protected final EPRuntime runtime;
     protected final EPAdministrator admin;
 
-    protected Map<String, RDFStream> registeredStreams;
+    protected Map<String, Stream> registeredStreams;
     protected Map<String, SDS> assignedSDS;
     protected Map<String, ContinuousQueryExecution> queryExecutions;
     protected Map<String, ContinuousQuery> registeredQueries;
     protected Map<String, List<QueryResponseFormatter>> queryObservers;
 
     protected EngineConfiguration rsp_config;
-
 
     protected ConfigurationMethodRef ref;
     protected long t0;
@@ -100,7 +101,8 @@ public abstract class RSPQLEngineImpl implements RSPEngine<StreamItem> {
             log.debug("Current runtime is now [" + runtime.getCurrentTime() + "]");
         }
 
-        String encode = EncodingUtils.encode(g.getStreamURI());
+        String streamURI = g.getStreamURI();
+        String encode = EncodingUtils.encode(streamURI);
         runtime.sendEvent(g, encode);
         log.debug("Received Stimulus [" + g + "] on stream [" + encode + "]");
         rspEventsNumber++;
@@ -118,7 +120,7 @@ public abstract class RSPQLEngineImpl implements RSPEngine<StreamItem> {
     protected void persist(ContinuousQuery q, ContinuousQueryExecution accept, SDS sds) {
         registeredQueries.put(q.getID(), q);
         queryObservers.put(q.getID(), new ArrayList<>());
-        assignedSDS.put(q.getID(), accept.getSDS());
+        assignedSDS.put(q.getID(), sds);
         queryExecutions.put(q.getID(), accept);
         assignedSDS.put(q.getID(), sds);
 

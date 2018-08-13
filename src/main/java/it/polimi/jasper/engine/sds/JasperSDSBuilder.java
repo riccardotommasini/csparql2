@@ -3,7 +3,6 @@ package it.polimi.jasper.engine.sds;
 import it.polimi.jasper.engine.querying.execution.observer.ContinuousQueryExecutionFactory;
 import it.polimi.jasper.engine.reasoning.GenericRuleJenaTVGReasoner;
 import it.polimi.jasper.engine.reasoning.TimeVaryingInfGraph;
-import it.polimi.jasper.engine.spe.JenaRSPQLEngineImpl;
 import it.polimi.jasper.engine.windowing.NamedStreamEsperView;
 import it.polimi.jasper.engine.windowing.StreamEsperView;
 import it.polimi.yasper.core.enums.EntailmentType;
@@ -12,15 +11,15 @@ import it.polimi.yasper.core.exceptions.StreamRegistrationException;
 import it.polimi.yasper.core.quering.ContinuousQuery;
 import it.polimi.yasper.core.quering.SDS;
 import it.polimi.yasper.core.quering.SDSBuilder;
+import it.polimi.yasper.core.quering.TimeVarying;
 import it.polimi.yasper.core.quering.execution.ContinuousQueryExecution;
 import it.polimi.yasper.core.reasoning.Entailment;
 import it.polimi.yasper.core.spe.report.ReportGrain;
 import it.polimi.yasper.core.spe.scope.Tick;
 import it.polimi.yasper.core.spe.windowing.assigner.WindowAssigner;
-import it.polimi.yasper.core.stream.rdf.RDFStream;
+import it.polimi.yasper.core.stream.Stream;
 import it.polimi.yasper.core.utils.EngineConfiguration;
 import it.polimi.yasper.core.utils.QueryConfiguration;
-import it.polimi.yasper.simple.windowing.TimeVarying;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -45,7 +44,7 @@ import java.util.Map;
 public class JasperSDSBuilder implements SDSBuilder {
 
     @NonNull
-    private Map<String, RDFStream> registeredStreams;
+    private Map<String, Stream> registeredStreams;
     @NonNull
     private final HashMap<String, Entailment> entailments;
     @NonNull
@@ -53,12 +52,8 @@ public class JasperSDSBuilder implements SDSBuilder {
     @NonNull
     protected QueryConfiguration queryConfiguration;
 
-
     @Nonnull
     private IRIResolver resolver;
-
-    @Nonnull
-    JenaRSPQLEngineImpl engine;
 
     @Getter
     protected GenericRuleJenaTVGReasoner reasoner;
@@ -70,8 +65,13 @@ public class JasperSDSBuilder implements SDSBuilder {
     private ContinuousQueryExecution qe;
     private Maintenance maintenance;
 
+    @Getter
+    private Map<String, WindowAssigner> windowAssigners;
+
     @Override
     public void visit(ContinuousQuery query) {
+
+        windowAssigners = new HashMap<>();
 
         JenaRDF rdf = new JenaRDF();
 
@@ -120,16 +120,19 @@ public class JasperSDSBuilder implements SDSBuilder {
                 if (wo.isNamed()) {
                     NamedStreamEsperView n = new NamedStreamEsperView(s.getURI(), this.maintenance, wa);
                     n.addObserver(qe);
-                    TimeVarying<InfGraph> tvii = this.reasoner.bindTVG(wa.setView(n));
+                    TimeVarying<Graph> graphTimeVarying = wa.setView(n);
+                    TimeVarying<InfGraph> tvii = this.reasoner.bindTVG(graphTimeVarying);
                     n.setContent(tvii.asT());
                     jenaSDS.add(rdf.createIRI(wo.getName()), tvii);
                 } else {
                     StreamEsperView n = new StreamEsperView(this.maintenance, wa);
                     n.addObserver(qe);
-                    TimeVarying<InfGraph> tvii = this.reasoner.bindTVG(wa.setView(n));
+                    TimeVarying<Graph> graphTimeVarying = wa.setView(n);
+                    TimeVarying<InfGraph> tvii = this.reasoner.bindTVG(graphTimeVarying);
                     n.setContent(tvii.asT());
                     jenaSDS.add(tvii);
                 }
+                windowAssigners.put(resolver.resolveToString("streams/" + s.getURI()), wa);
             }
         });
 

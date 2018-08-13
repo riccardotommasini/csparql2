@@ -13,12 +13,8 @@ import java.util.List;
  */
 public class BasicForwardRuleInstantaneousInfTVGraph extends BasicForwardRuleInfGraph implements InfGraph {
 
-    private Graph igraph;
-
-
-    public BasicForwardRuleInstantaneousInfTVGraph(Reasoner reasoner, List<Rule> rules, Graph schema, Graph w) {
+    public BasicForwardRuleInstantaneousInfTVGraph(Reasoner reasoner, List<Rule> rules, Graph schema) {
         super(reasoner, rules, schema);
-        this.igraph = w;
     }
 
 }

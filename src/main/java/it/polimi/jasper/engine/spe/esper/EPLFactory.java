@@ -118,9 +118,10 @@ public class EPLFactory {
     }
 
     public static WindowAssigner getWindowAssigner(String name, int step, int range, String unitStep, String unitRange, WindowType type) {
-        List<AnnotationPart> annotations = EPLFactory.getAnnotations(name, range, step, name);
+        List<AnnotationPart> annotations = new ArrayList<>();//EPLFactory.getAnnotations(name, range, step, name);
         View window = EPLFactory.getWindow(range, unitRange, type);
         EPStatementObjectModel epStatementObjectModel = EPLFactory.toEPL(step, unitStep, type, name, window, annotations);
+        log.info(epStatementObjectModel.toEPL());
         try {
             return new EsperWindowAssigner(EncodingUtils.encode(name), epStatementObjectModel);
         } catch (ConfigurationException e) {

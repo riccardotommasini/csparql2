@@ -6,6 +6,8 @@ import it.polimi.yasper.core.quering.execution.ContinuousQueryExecutionObserver;
 import it.polimi.yasper.core.quering.operators.r2s.RelationToStreamOperator;
 import it.polimi.yasper.core.quering.response.InstantaneousResponse;
 import it.polimi.yasper.core.reasoning.TVGReasoner;
+import org.apache.jena.atlas.json.JsonArray;
+import org.apache.jena.atlas.json.JsonObject;
 import org.apache.jena.graph.Triple;
 import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.Model;
@@ -27,7 +29,7 @@ public abstract class JenaContinuousQueryExecution extends ContinuousQueryExecut
 
     public JenaContinuousQueryExecution(ContinuousQuery query, SDS sds, TVGReasoner reasoner, RelationToStreamOperator s2r) {
         super(sds, query, reasoner, s2r);
-        this.q = QueryFactory.create(query.getSPARQL());
+        this.q = (Query) query;
     }
 
     @Override
@@ -169,4 +171,13 @@ public abstract class JenaContinuousQueryExecution extends ContinuousQueryExecut
         return execution.getTimeout2();
     }
 
+    @Override
+    public JsonArray execJson() {
+        return null;
+    }
+
+    @Override
+    public Iterator<JsonObject> execJsonItems() {
+        return null;
+    }
 }

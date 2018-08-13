@@ -11,23 +11,8 @@ import org.apache.jena.reasoner.rulesys.impl.LPRuleStore;
  */
 public class LPBackwardRuleInstantaneousInfTvGraph extends LPBackwardRuleInfGraph implements InfGraph {
 
-    private long last_timestamp;
-    private Graph igraph;
-
-    public LPBackwardRuleInstantaneousInfTvGraph(Reasoner reasoner, LPRuleStore ruleStore, Graph data, Graph schema, Graph igraph) {
+    public LPBackwardRuleInstantaneousInfTvGraph(Reasoner reasoner, LPRuleStore ruleStore, Graph data, Graph schema) {
         super(reasoner, ruleStore, data, schema);
-        this.last_timestamp = last_timestamp;
-        this.igraph = igraph;
     }
-
-
-    public long getTimestamp() {
-        return last_timestamp;
-    }
-
-    public void setTimestamp(long ts) {
-        this.last_timestamp = ts;
-    }
-
 
 }

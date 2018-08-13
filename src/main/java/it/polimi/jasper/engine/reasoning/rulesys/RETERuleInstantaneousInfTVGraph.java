@@ -13,11 +13,8 @@ import java.util.List;
  */
 public class RETERuleInstantaneousInfTVGraph extends RETERuleInfGraph implements InfGraph {
 
-    private Graph igraph;
-
-    public RETERuleInstantaneousInfTVGraph(Reasoner reasoner, List<Rule> rules, Graph schema, Graph i) {
+    public RETERuleInstantaneousInfTVGraph(Reasoner reasoner, List<Rule> rules, Graph schema) {
         super(reasoner, rules, schema);
-        this.igraph = i;
     }
 
 

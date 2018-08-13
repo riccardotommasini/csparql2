@@ -1,8 +1,8 @@
 package it.polimi.jasper.engine.sds;
 
 import it.polimi.yasper.core.quering.SDS;
+import it.polimi.yasper.core.quering.TimeVarying;
 import it.polimi.yasper.core.reasoning.TVGReasoner;
-import it.polimi.yasper.simple.windowing.TimeVarying;
 import it.polimi.yasper.core.spe.time.Time;
 import it.polimi.yasper.core.spe.time.TimeFactory;
 import lombok.Getter;
@@ -51,7 +51,7 @@ public class JenaSDS extends DatasetImpl implements SDS<InfGraph> {
 
     @Override
     public <T extends TimeVarying<InfGraph>> void add(IRI iri, T tvg) {
-        addNamedModel(resolver.resolveToString(iri.getIRIString()), new InfModelImpl(tvg.asT()));
+        addNamedModel(iri.getIRIString(), new InfModelImpl(tvg.asT()));
         tvgs.add(tvg);
     }
 

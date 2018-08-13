@@ -73,17 +73,12 @@ public class JenaRSPQLEngineImpl extends RSPQLEngineImpl {
 
     @Override
     public ContinuousQueryExecution register(ContinuousQuery q, QueryConfiguration c) {
-        SDSBuilder builder = new JasperSDSBuilder(registeredStreams, entailments, rsp_config, c, resolver, this);
+        SDSBuilder builder = new JasperSDSBuilder(registeredStreams, entailments, rsp_config, c, resolver);
         builder.visit(q);
         ContinuousQueryExecution continuousQueryExecution = builder.getContinuousQueryExecution();
         persist(q, continuousQueryExecution, builder.getSDS());
         //register(new QueryStream(this, q.getID(), RDFStreamItem.class));
         return continuousQueryExecution;
-    }
-
-    @Override
-    public ContinuousQueryExecution register(String q, QueryConfiguration c) {
-        return null;
     }
 
     @Override
@@ -169,17 +164,20 @@ public class JenaRSPQLEngineImpl extends RSPQLEngineImpl {
         return QueryFactory.parse(resolver, q);
     }
 
-    @Override
     public void unregister(ContinuousQuery q, QueryResponseFormatter o) {
         unregister(queryExecutions.get(q.getID()), o);
     }
 
-    @Override
     public void unregister(ContinuousQueryExecution cqe, QueryResponseFormatter o) {
         cqe.deleteFormatter(o);
         if (queryObservers.containsKey(cqe.getQueryID())) {
             queryObservers.get(cqe.getQueryID()).remove(o);
             throw new UnregisteredQueryExeception(cqe.getQueryID());
         }
+    }
+
+    @Override
+    public void removeQueryResponseFormatter(QueryResponseFormatter queryResponseFormatter) {
+
     }
 }

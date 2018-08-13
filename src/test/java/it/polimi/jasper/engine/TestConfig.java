@@ -29,16 +29,13 @@ public class TestConfig {
 
         sr = new JenaRSPQLEngineImpl(0, ec);
 
-        GraphStream painter = new GraphStream("Painter", "http://streamreasoning.org/jasper/streams/stream1", 1);
         GraphStream writer = new GraphStream("Writer", "http://streamreasoning.org/jasper/streams/stream2", 5);
 
-        painter.setRSPEngine(sr);
         writer.setRSPEngine(sr);
 
-        sr.register(painter);
         sr.register(writer);
 
-        ContinuousQuery q2 = sr.parse(getQuery("rspql"));
+        ContinuousQuery q2 = sr.parse(getQuery(".rspql"));
 
         System.out.println("<<------>>");
         System.out.println(q2.toString());
@@ -49,14 +46,15 @@ public class TestConfig {
         sr.register(cq, ResponseFormatterFactory.getGenericResponseSysOutFormatter(ec.getResponseFormat(), true)); // attaches a new *RSP-QL query to the SDS
 
         //In real application we do not have to start the stream.
-        (new Thread(painter)).start();
         (new Thread(writer)).start();
 
 
     }
 
     public static String getQuery(String suffix) throws IOException {
-        File file = new File("/Users/riccardo/_Projects/RSP/yasper/src/test/resources/q52." + suffix);
+        URL resource = TestConfig.class.getResource("/q52" + suffix);
+        System.out.println(resource.getPath());
+        File file = new File(resource.getPath());
         return FileUtils.readFileToString(file);
     }
 

@@ -13,17 +13,13 @@ import java.util.List;
  */
 public class FBRuleInstantaneousInfTVGraph extends FBRuleInfGraph implements InfGraph {
 
-    private Graph igraph;
-
-
-    public FBRuleInstantaneousInfTVGraph(Reasoner reasoner, List<Rule> rules, Graph schema, Graph w) {
+    public FBRuleInstantaneousInfTVGraph(Reasoner reasoner, List<Rule> rules, Graph schema) {
         super(reasoner, rules, schema);
-        this.igraph = w;
     }
 
 
     @Override
     public String toString() {
-        return "FBRuleInstantaneousInfTVGraph@"+hashCode();
+        return "FBRuleInstantaneousInfTVGraph@" + hashCode();
     }
 }

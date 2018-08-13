@@ -4,8 +4,8 @@ import it.polimi.jasper.engine.reasoning.rulesys.BasicForwardRuleInstantaneousIn
 import it.polimi.jasper.engine.reasoning.rulesys.FBRuleInstantaneousInfTVGraph;
 import it.polimi.jasper.engine.reasoning.rulesys.LPBackwardRuleInstantaneousInfTvGraph;
 import it.polimi.jasper.engine.reasoning.rulesys.RETERuleInstantaneousInfTVGraph;
+import it.polimi.yasper.core.quering.TimeVarying;
 import it.polimi.yasper.core.reasoning.TVGReasoner;
-import it.polimi.yasper.simple.windowing.TimeVarying;
 import org.apache.jena.graph.Graph;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.reasoner.InfGraph;
@@ -58,19 +58,19 @@ public class GenericRuleJenaTVGReasoner extends GenericRuleReasoner implements T
 
         InfGraph graph = null;
         if (mode == FORWARD) {
-            graph = new BasicForwardRuleInstantaneousInfTVGraph(this, rules, schemaArg, data);
+            graph = new BasicForwardRuleInstantaneousInfTVGraph(this, rules, schemaArg);
             ((BasicForwardRuleInfGraph) graph).setTraceOn(super.isTraceOn());
         } else if (mode == FORWARD_RETE) {
             Reasoner r = this;
-            graph = new RETERuleInstantaneousInfTVGraph(r, rules, schemaArg, data);
+            graph = new RETERuleInstantaneousInfTVGraph(r, rules, schemaArg);
             ((BasicForwardRuleInfGraph) graph).setTraceOn(super.isTraceOn());
             ((BasicForwardRuleInfGraph) graph).setFunctorFiltering(filterFunctors);
         } else if (mode == BACKWARD) {
-            graph = new LPBackwardRuleInstantaneousInfTvGraph(this, getBruleStore(), data, schemaArg, data);
+            graph = new LPBackwardRuleInstantaneousInfTvGraph(this, getBruleStore(), data, schemaArg);
             ((LPBackwardRuleInfGraph) graph).setTraceOn(super.isTraceOn());
         } else {
             List<Rule> ruleSet = ((FBRuleInfGraph) schemaArg).getRules();
-            FBRuleInstantaneousInfTVGraph fbgraph = new FBRuleInstantaneousInfTVGraph(this, ruleSet, schemaArg, data);
+            FBRuleInstantaneousInfTVGraph fbgraph = new FBRuleInstantaneousInfTVGraph(this, ruleSet, schemaArg);
             graph = fbgraph;
             if (enableTGCCaching) fbgraph.setUseTGCCache();
             fbgraph.setTraceOn(super.isTraceOn());
@@ -97,10 +97,10 @@ public class GenericRuleJenaTVGReasoner extends GenericRuleReasoner implements T
         }
         Graph graph = null;
         if (mode == FORWARD) {
-            graph = new BasicForwardRuleInstantaneousInfTVGraph(this, rules, null, tbox);
+            graph = new BasicForwardRuleInstantaneousInfTVGraph(this, rules, tbox);
             ((org.apache.jena.reasoner.InfGraph) graph).prepare();
         } else if (mode == FORWARD_RETE) {
-            graph = new RETERuleInfGraph(this, rules, null, tbox);
+            graph = new RETERuleInfGraph(this, rules, tbox, null);
             ((org.apache.jena.reasoner.InfGraph) graph).prepare();
         } else if (mode == BACKWARD) {
             graph = tbox;
@@ -125,7 +125,7 @@ public class GenericRuleJenaTVGReasoner extends GenericRuleReasoner implements T
 
     @Override
     public TimeVarying<InfGraph> bindTVG(TimeVarying<Graph> data) {
-        return new TimeVaryingInfGraphImpl(data, bind(data.asT()));
+        return new TimeVaryingInfGraphImpl(bind(data.asT()));
     }
 
     @Override

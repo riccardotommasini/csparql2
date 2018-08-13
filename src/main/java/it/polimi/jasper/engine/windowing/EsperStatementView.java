@@ -36,7 +36,7 @@ public abstract class EsperStatementView extends Observable implements View, Sta
     @Override
     public synchronized void update(EventBean[] newData, EventBean[] oldData, EPStatement stmt, EPServiceProvider eps) {
         Long currentTime = eps.getEPRuntime().getCurrentTime();
-        log.debug("[" + Thread.currentThread() + "][" + System.currentTimeMillis() + "] FROM STATEMENT: " + stmt.getText() + " AT "
+        log.info("[" + Thread.currentThread() + "][" + System.currentTimeMillis() + "] FROM STATEMENT: " + stmt.getText() + " AT "
                 + currentTime);
         eval(newData, oldData, currentTime);
         setChanged();
