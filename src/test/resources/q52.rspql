@@ -1,0 +1,12 @@
+PREFIX ars: <http://www.streamreasoning/it.polimi.jasper.test/artist#>
+
+REGISTER RSTREAM <s1> AS
+SELECT (AVG(?age) AS ?sum) ?a
+FROM NAMED WINDOW <win2> ON <stream2> [RANGE PT1M STEP PT1M]
+WHERE  {
+    WINDOW ?w {
+        ?a a ars:Writer ;
+           ars:hasAge ?age .
+    }
+}
+GROUP BY ?a
