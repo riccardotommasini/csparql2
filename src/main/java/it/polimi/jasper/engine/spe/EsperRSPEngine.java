@@ -5,15 +5,18 @@ import com.espertech.esper.client.EPRuntime;
 import com.espertech.esper.client.EPServiceProvider;
 import com.espertech.esper.client.EPStatement;
 import com.espertech.esper.client.time.CurrentTimeEvent;
-import it.polimi.jasper.engine.streaming.items.StreamItem;
 import it.polimi.jasper.engine.spe.esper.EsperStreamRegistrationService;
-import it.polimi.jasper.engine.windowing.EsperWindowAssigner;
 import it.polimi.jasper.engine.spe.esper.RuntimeManager;
+import it.polimi.jasper.engine.streaming.RegisteredRDFStream;
+import it.polimi.jasper.engine.streaming.items.StreamItem;
+import it.polimi.jasper.engine.windowing.EsperWindowAssigner;
 import it.polimi.yasper.core.engine.RSPEngine;
-import it.polimi.yasper.core.quering.formatter.QueryResponseFormatter;
 import it.polimi.yasper.core.quering.ContinuousQuery;
-import it.polimi.yasper.core.quering.execution.ContinuousQueryExecution;
 import it.polimi.yasper.core.quering.SDS;
+import it.polimi.yasper.core.quering.execution.ContinuousQueryExecution;
+import it.polimi.yasper.core.quering.formatter.QueryResponseFormatter;
+import it.polimi.yasper.core.reasoning.Entailment;
+import it.polimi.yasper.core.spe.windowing.assigner.WindowAssigner;
 import it.polimi.yasper.core.stream.rdf.RDFStream;
 import it.polimi.yasper.core.stream.schema.StreamSchema;
 import it.polimi.yasper.core.utils.EngineConfiguration;
@@ -27,11 +30,12 @@ import java.util.Map;
 @Log4j
 public abstract class EsperRSPEngine implements RSPEngine<StreamItem> {
 
-    protected Map<String, EsperWindowAssigner> stream_dispatching_service;
+    protected Map<String, WindowAssigner> stream_dispatching_service;
     protected Map<String, SDS> assignedSDS;
     protected Map<String, ContinuousQueryExecution> queryExecutions;
     protected Map<String, ContinuousQuery> registeredQueries;
     protected Map<String, List<QueryResponseFormatter>> queryObservers;
+    protected HashMap<String, Entailment> entailments;
 
     protected EsperStreamRegistrationService stream_registration_service;
 
@@ -51,6 +55,14 @@ public abstract class EsperRSPEngine implements RSPEngine<StreamItem> {
 
         StreamSchema.Factory.registerSchema(this.rsp_config.getStreamSchema());
 
+        this.cep = RuntimeManager.getCEP();
+        this.manager = RuntimeManager.getInstance();
+        this.runtime = RuntimeManager.getEPRuntime();
+        this.admin = RuntimeManager.getAdmin();
+
+        stream_registration_service = new EsperStreamRegistrationService(admin);
+        stream_dispatching_service = new HashMap<>();
+
         log.debug("Running Configuration ]");
         log.debug("Event Time [" + this.rsp_config.isUsingEventTime() + "]");
         log.debug("Partial Window [" + this.rsp_config.partialWindowsEnabled() + "]");
@@ -58,18 +70,14 @@ public abstract class EsperRSPEngine implements RSPEngine<StreamItem> {
         log.debug("Query Class [" + this.rsp_config.getQueryClass() + "]");
         log.debug("StreamItem Class [" + this.rsp_config.getStreamSchema() + "]");
 
-        this.cep = RuntimeManager.getCEP();
-        this.manager = RuntimeManager.getInstance();
-        this.runtime = RuntimeManager.getEPRuntime();
-        this.admin = RuntimeManager.getAdmin();
-
         runtime.sendEvent(new CurrentTimeEvent(t0));
     }
 
     @Override
     public RDFStream register(RDFStream s) {
         EPStatement epl = stream_registration_service.register(s);
-        return s;
+        RegisteredRDFStream value = new RegisteredRDFStream(s.getURI(), s, epl, this);
+        return value;
     }
 
     @Override
@@ -79,18 +87,32 @@ public abstract class EsperRSPEngine implements RSPEngine<StreamItem> {
 
     @Override
     public boolean process(StreamItem e) {
-        if (stream_dispatching_service.containsKey(e.getStreamURI())) {
-            stream_dispatching_service.get(e.getStreamURI()).process(e);
+        String streamURI = e.getStreamURI();
+        if (stream_dispatching_service.containsKey(streamURI)) {
+            stream_dispatching_service.get(streamURI).notify(e);
             return true;
         }
         return false;
     }
 
+    public void unregister_query(String id) {
+        registeredQueries.remove(id);
+        queryObservers.remove(id);
+        assignedSDS.remove(id);
+        queryExecutions.remove(id);
+    }
+
+    @Override
+    public void unregister(ContinuousQuery q) {
+        unregister_query(q.getID());
+    }
+
     protected void save(ContinuousQuery q, ContinuousQueryExecution cqe, SDS sds) {
-        registeredQueries.put(q.getID(), q);
-        queryObservers.put(q.getID(), new ArrayList<>());
-        assignedSDS.put(q.getID(), sds);
-        queryExecutions.put(q.getID(), cqe);
+        String id = q.getID();
+        registeredQueries.put(id, q);
+        queryObservers.put(id, new ArrayList<>());
+        assignedSDS.put(id, sds);
+        queryExecutions.put(id, cqe);
     }
 
 }

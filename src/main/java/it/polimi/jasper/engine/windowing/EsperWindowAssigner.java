@@ -2,22 +2,23 @@ package it.polimi.jasper.engine.windowing;
 
 import com.espertech.esper.client.*;
 import com.espertech.esper.client.soda.EPStatementObjectModel;
-import it.polimi.jasper.engine.streaming.items.StreamItem;
 import it.polimi.jasper.engine.spe.content.ContentBean;
-import it.polimi.jasper.engine.spe.esper.RuntimeManager;
 import it.polimi.jasper.engine.spe.content.TimeVaryingJenaGraph;
-import it.polimi.yasper.simple.windowing.TimeVarying;
+import it.polimi.jasper.engine.spe.esper.EsperTime;
+import it.polimi.jasper.engine.spe.esper.RuntimeManager;
+import it.polimi.jasper.engine.streaming.items.StreamItem;
+import it.polimi.yasper.core.quering.TimeVarying;
 import it.polimi.yasper.core.spe.content.Content;
 import it.polimi.yasper.core.spe.content.viewer.View;
 import it.polimi.yasper.core.spe.report.Report;
 import it.polimi.yasper.core.spe.report.ReportGrain;
 import it.polimi.yasper.core.spe.scope.Tick;
 import it.polimi.yasper.core.spe.time.Time;
-import it.polimi.yasper.core.spe.time.TimeFactory;
 import it.polimi.yasper.core.spe.windowing.assigner.WindowAssigner;
 import it.polimi.yasper.core.stream.StreamElement;
 import it.polimi.yasper.core.utils.EncodingUtils;
 import it.polimi.yasper.core.utils.EngineConfiguration;
+import lombok.extern.log4j.Log4j;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.jena.graph.Graph;
 
@@ -25,7 +26,7 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
-
+@Log4j
 public class EsperWindowAssigner implements WindowAssigner<Graph>, Observer {
 
     private EPAdministrator admin;
@@ -40,10 +41,10 @@ public class EsperWindowAssigner implements WindowAssigner<Graph>, Observer {
     public EsperWindowAssigner(String name, EPStatementObjectModel epStatementObjectModel) throws ConfigurationException {
         this.rsp_config = EngineConfiguration.getCurrent();
         this.report = rsp_config.getReport();
-        this.time = TimeFactory.getInstance();
         this.runtime = RuntimeManager.getEPRuntime();
         this.admin = RuntimeManager.getAdmin();
         this.statement = admin.create(epStatementObjectModel, name);
+        this.time = new EsperTime(runtime);
     }
 
     @Override

@@ -19,6 +19,7 @@ import java.util.*;
 public class EsperStreamRegistrationService {
 
     private final EPAdministrator cepAdm;
+
     @Getter
     private Map<String, Stream> registeredStreams;
 
