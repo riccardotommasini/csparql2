@@ -4,10 +4,12 @@ import com.espertech.esper.client.EPAdministrator;
 import com.espertech.esper.client.EPStatement;
 import com.espertech.esper.client.soda.CreateSchemaClause;
 import com.espertech.esper.client.soda.SchemaColumnDesc;
-import it.polimi.yasper.core.stream.Stream;
-import it.polimi.yasper.core.stream.rdf.RDFStream;
+import it.polimi.jasper.engine.rsp.streams.RegisteredEPLStream;
 import it.polimi.yasper.core.exceptions.StreamRegistrationException;
 import it.polimi.yasper.core.exceptions.UnregisteredStreamExeception;
+import it.polimi.yasper.core.stream.RegisteredStream;
+import it.polimi.yasper.core.stream.Stream;
+import it.polimi.yasper.core.stream.rdf.RDFStream;
 import it.polimi.yasper.core.utils.EncodingUtils;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j;
@@ -21,22 +23,23 @@ public class EsperStreamRegistrationService {
     private final EPAdministrator cepAdm;
 
     @Getter
-    private Map<String, Stream> registeredStreams;
+    private Map<String, RegisteredStream> registeredStreams;
 
     public EsperStreamRegistrationService(EPAdministrator cepAdm) {
         this.cepAdm = cepAdm;
         this.registeredStreams = new HashMap<>();
     }
 
-    public EPStatement register(Stream s) {
+    public RegisteredEPLStream register(Stream s) {
         String uri = s.getURI();
-
         log.info("Registering Stream [" + uri + "]");
-        if (!registeredStreams.containsKey(uri))
-            registeredStreams.put(uri, s);
-        else
+        if (!registeredStreams.containsKey(uri)) {
+            EPStatement epl = createStream(toEPLSchema(s), uri);
+            RegisteredEPLStream value = new RegisteredEPLStream(s.getURI(), s, epl);
+            registeredStreams.put(uri, value);
+            return value;
+        } else
             throw new StreamRegistrationException("Stream [" + uri + "] already registered");
-        return createStream(toEPLSchema(s), uri);
     }
 
 

@@ -1,13 +1,14 @@
 package it.polimi.jasper.engine.spe.esper;
 
 import com.espertech.esper.client.soda.*;
-import it.polimi.jasper.engine.windowing.EsperWindowAssigner;
+import it.polimi.jasper.engine.spe.windowing.EsperWindowAssigner;
+import it.polimi.yasper.core.enums.Maintenance;
 import it.polimi.yasper.core.enums.WindowType;
-import it.polimi.yasper.core.spe.windowing.assigner.WindowAssigner;
+import it.polimi.yasper.core.spe.report.Report;
+import it.polimi.yasper.core.spe.scope.Tick;
 import it.polimi.yasper.core.stream.Stream;
 import it.polimi.yasper.core.utils.EncodingUtils;
 import lombok.extern.log4j.Log4j;
-import org.apache.commons.configuration.ConfigurationException;
 
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -21,13 +22,12 @@ import java.util.List;
 @Log4j
 public class EPLFactory {
 
-
-
-    public static EPStatementObjectModel toEPL(int step, String unitStep, WindowType type, String s, View window, List<AnnotationPart> annotations) {
+    public static EPStatementObjectModel toEPL(Tick tick, Report report, Maintenance maintenance, long step, String unitStep, WindowType type, String s, View window, List<AnnotationPart> annotations) {
         EPStatementObjectModel stmt = new EPStatementObjectModel();
 
         stmt.setAnnotations(annotations);
-        SelectClause selectClause = SelectClause.create().addWildcard();
+        SelectClause selectClause1 = SelectClause.create();
+        SelectClause selectClause = selectClause1.addWildcard();
         stmt.setSelectClause(selectClause);
         FromClause fromClause = FromClause.create();
         FilterStream stream = FilterStream.create(EncodingUtils.encode(s));
@@ -35,19 +35,31 @@ public class EPLFactory {
         fromClause.add(stream);
         stmt.setFromClause(fromClause);
 
-        OutputLimitClause outputLimitClause;
+        //MAINTENANCE ISTREAM/DSTREAM
 
-        if (WindowType.Physical.equals(type)) {
-            outputLimitClause = OutputLimitClause.create(OutputLimitSelector.SNAPSHOT, step);
+
+        //SETTING TICK
+        OutputLimitClause outputLimitClause;
+        OutputLimitSelector snapshot = OutputLimitSelector.SNAPSHOT;
+
+        if (WindowType.Logical.equals(type)) {
+            if (Tick.TIME_DRIVEN.equals(tick)) {
+                TimePeriodExpression timePeriod = getTimePeriod((int) step, unitStep);
+                outputLimitClause = OutputLimitClause.create(snapshot, timePeriod);
+                stmt.setOutputLimitClause(outputLimitClause);
+            }
         } else {
-            TimePeriodExpression timePeriod = getTimePeriod(step, unitStep);
-            outputLimitClause = OutputLimitClause.create(OutputLimitSelector.SNAPSHOT, timePeriod);
+            if (Tick.BATCH_DRIVEN.equals(tick)) {
+                outputLimitClause = OutputLimitClause.create(snapshot, step);
+                stmt.setOutputLimitClause(outputLimitClause);
+            } else if (Tick.TUPLE_DRIVEN.equals(tick)) {
+                outputLimitClause = OutputLimitClause.create(snapshot, 1);
+                stmt.setOutputLimitClause(outputLimitClause);
+            }
         }
 
-        stmt.setOutputLimitClause(outputLimitClause);
         return stmt;
     }
-
 
 
     public static List<AnnotationPart> getAnnotations(String name1, int range1, int step1, String s) {
@@ -74,14 +86,14 @@ public class EPLFactory {
     }
 
 
-    public static View getWindow(int range, String unitRange, WindowType type) {
+    public static View getWindow(long range, String unitRange, WindowType type) {
         View view;
         ArrayList<Expression> parameters = new ArrayList<Expression>();
         if (WindowType.Physical.equals(type)) {
             parameters.add(Expressions.constant(range));
             view = View.create("win", "length", parameters);
         } else {
-            parameters.add(getTimePeriod(range, unitRange));
+            parameters.add(getTimePeriod((int) range, unitRange));
             view = View.create("win", "time", parameters);
         }
         return view;
@@ -117,16 +129,12 @@ public class EPLFactory {
         return writer.toString();
     }
 
-    public static WindowAssigner getWindowAssigner(String name, int step, int range, String unitStep, String unitRange, WindowType type) {
+    public static EsperWindowAssigner getWindowAssigner(Tick tick, Maintenance maintenance, Report report, boolean time, String name, long step, long range, String unitStep, String unitRange, WindowType type) {
         List<AnnotationPart> annotations = new ArrayList<>();//EPLFactory.getAnnotations(name, range, step, name);
-        View window = EPLFactory.getWindow(range, unitRange, type);
-        EPStatementObjectModel epStatementObjectModel = EPLFactory.toEPL(step, unitStep, type, name, window, annotations);
+        View window = EPLFactory.getWindow((int) range, unitRange, type);
+        EPStatementObjectModel epStatementObjectModel = EPLFactory.toEPL(tick, report, maintenance, step, unitStep, type, name, window, annotations);
         log.info(epStatementObjectModel.toEPL());
-        try {
-            return new EsperWindowAssigner(EncodingUtils.encode(name), epStatementObjectModel);
-        } catch (ConfigurationException e) {
-            throw new RuntimeException("Error During Stream Registration");
-        }
+        return new EsperWindowAssigner(EncodingUtils.encode(name), tick, report, time, epStatementObjectModel);
     }
 
 
