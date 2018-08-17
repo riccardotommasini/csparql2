@@ -33,10 +33,7 @@ public abstract class JenaContinuousQueryExecution extends ContinuousQueryExecut
 
     @Override
     public void update(Observable o, Object arg) {
-        Long ts = (Long) arg;
-
-        InstantaneousResponse r = eval(ts);
-
+        InstantaneousResponse r = eval((Long) arg);
         setChanged();
         notifyObservers(r);
     }

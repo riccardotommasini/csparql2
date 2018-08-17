@@ -3,7 +3,6 @@ package it.polimi.jasper.engine.rsp.streams;
 import com.espertech.esper.client.EPStatement;
 import it.polimi.yasper.core.spe.windowing.assigner.WindowAssigner;
 import it.polimi.yasper.core.stream.Stream;
-import it.polimi.yasper.core.stream.StreamElement;
 import it.polimi.yasper.core.stream.rdf.RegisteredRDFStream;
 import lombok.Getter;
 
@@ -29,10 +28,6 @@ public class RegisteredEPLStream extends RegisteredRDFStream {
     @Override
     public void addWindowAssiger(WindowAssigner windowAssigner) {
         assigners.add(windowAssigner);
-    }
-
-    public void put(StreamElement e) {
-        assigners.forEach(wa -> wa.notify(e));
     }
 
 }
