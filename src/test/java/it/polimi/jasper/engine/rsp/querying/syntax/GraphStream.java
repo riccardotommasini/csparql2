@@ -1,7 +1,6 @@
 package it.polimi.jasper.engine.rsp.querying.syntax;
 
 import it.polimi.jasper.engine.rsp.streams.RegisteredEPLStream;
-import it.polimi.jasper.engine.rsp.streams.items.GraphStreamItem;
 import it.polimi.jasper.engine.rsp.streams.schema.GraphStreamSchema;
 import it.polimi.yasper.core.stream.rdf.RDFStream;
 import it.polimi.yasper.core.stream.schema.StreamSchema;
@@ -52,7 +51,8 @@ public class GraphStream extends RDFStream implements Runnable {
             Property hasAge = ResourceFactory.createProperty(uri + "hasAge");
             Property hasTimestamp = ResourceFactory.createProperty(uri + "generatedAt");
             Literal age = m.createTypedLiteral(r.nextInt(99));
-            Literal ts = m.createTypedLiteral(new Integer(i * 1000));
+            int appTimestamp1 = i * 1000;
+            Literal ts = m.createTypedLiteral(new Integer(appTimestamp1));
 
             //m.apply(m.createStatement(person, RDF.type, type));
             // m.apply(m.createStatement(person, hasAge, age));
@@ -60,11 +60,10 @@ public class GraphStream extends RDFStream implements Runnable {
             m.add(m.createStatement(person, RDF.type, type));
             m.add(m.createStatement(person, hasAge, age));
 
-            GraphStreamItem t = new GraphStreamItem(i * 1000, m.getGraph(), stream_uri);
-            System.out.println("[" + System.currentTimeMillis() + "] Sending [" + t + "] on " + stream_uri + " at " + i * 1000);
+            System.out.println("At [" + appTimestamp1 + "] [" + System.currentTimeMillis() + "] Sending [" + m.getGraph() + "] on " + stream_uri);
 
             if (s != null)
-                this.s.put(t);
+                this.s.put(m.getGraph(), appTimestamp1);
             try {
                 log.info("Sleep");
                 Thread.sleep(1000);

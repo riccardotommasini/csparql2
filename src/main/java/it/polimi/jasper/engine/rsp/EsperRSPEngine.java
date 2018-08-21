@@ -5,6 +5,7 @@ import com.espertech.esper.client.EPRuntime;
 import com.espertech.esper.client.EPServiceProvider;
 import com.espertech.esper.client.time.CurrentTimeEvent;
 import it.polimi.jasper.engine.rsp.streams.RegisteredEPLStream;
+import it.polimi.jasper.engine.rsp.streams.items.GraphStreamItem;
 import it.polimi.jasper.engine.rsp.streams.items.StreamItem;
 import it.polimi.jasper.engine.spe.esper.EsperStreamRegistrationService;
 import it.polimi.jasper.engine.spe.esper.RuntimeManager;
@@ -29,7 +30,7 @@ import java.util.List;
 import java.util.Map;
 
 @Log4j
-public abstract class EsperRSPEngine implements RSPEngine<RDFStream, RegisteredEPLStream, StreamItem> {
+public abstract class EsperRSPEngine implements RSPEngine<RDFStream, RegisteredEPLStream, GraphStreamItem> {
 
     protected final boolean enabled_recursion;
     protected final String responseFormat;
@@ -100,10 +101,10 @@ public abstract class EsperRSPEngine implements RSPEngine<RDFStream, RegisteredE
     }
 
     @Override
-    public boolean process(StreamItem e) {
+    public boolean process(GraphStreamItem e) {
         String streamURI = e.getStreamURI();
         if (stream_dispatching_service.containsKey(streamURI)) {
-            stream_dispatching_service.get(streamURI).notify(e);
+            stream_dispatching_service.get(streamURI).notify(e.getTypedContent(), e.getAppTimestamp());
             return true;
         }
         return false;

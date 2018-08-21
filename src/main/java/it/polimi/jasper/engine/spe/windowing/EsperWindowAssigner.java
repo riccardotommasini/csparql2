@@ -2,8 +2,8 @@ package it.polimi.jasper.engine.spe.windowing;
 
 import com.espertech.esper.client.*;
 import com.espertech.esper.client.soda.EPStatementObjectModel;
-import it.polimi.jasper.engine.rsp.streams.items.StreamItem;
-import it.polimi.jasper.engine.spe.content.ContentBean;
+import it.polimi.jasper.engine.rsp.streams.items.GraphStreamItem;
+import it.polimi.jasper.engine.spe.content.ContentGraphBean;
 import it.polimi.jasper.engine.spe.esper.EsperTime;
 import it.polimi.jasper.engine.spe.esper.RuntimeManager;
 import it.polimi.yasper.core.enums.Maintenance;
@@ -16,7 +16,6 @@ import it.polimi.yasper.core.spe.report.ReportGrain;
 import it.polimi.yasper.core.spe.scope.Tick;
 import it.polimi.yasper.core.spe.time.Time;
 import it.polimi.yasper.core.spe.windowing.assigner.WindowAssigner;
-import it.polimi.yasper.core.stream.StreamElement;
 import it.polimi.yasper.core.utils.EncodingUtils;
 import lombok.Getter;
 import lombok.Setter;
@@ -31,7 +30,7 @@ import java.util.Observer;
 
 @Log4j
 @Getter
-public class EsperWindowAssigner implements WindowAssigner, Observer {
+public class EsperWindowAssigner implements WindowAssigner<Graph>, Observer {
 
     private final String name;
     private final boolean eventtime;
@@ -72,14 +71,14 @@ public class EsperWindowAssigner implements WindowAssigner, Observer {
     }
 
     @Override
-    public <T> Content<T> getContent(long now) {
+    public Content<Graph> getContent(long now) {
         SafeIterator<EventBean> iterator = statement.safeIterator();
-        ContentBean events = new ContentBean();
+        ContentGraphBean events = new ContentGraphBean();
         events.setLast_timestamp_changed(now);
         while (iterator.hasNext()) {
             events.add(iterator.next());
         }
-        return (Content<T>) events;
+        return events;
     }
 
     @Override
@@ -125,29 +124,24 @@ public class EsperWindowAssigner implements WindowAssigner, Observer {
     }
 
     @Override
-    public void notify(StreamElement arg) {
-        if (arg instanceof StreamItem)
-            process((StreamItem) arg);
+    public void notify(Graph arg, long ts) {
+        process(arg, ts);
     }
 
-    public boolean process(StreamItem g) {
-
-        //Event time vs ingestion time
-        long now = eventtime ? g.getAppTimestamp() : g.getSysTimestamp();
+    public boolean process(Graph g, long now) {
 
         if (time.getAppTime() <= now) {
             time.setAppTime(now);
         }
 
-        //TODO encode vs statement.getName() is an invariant
-        String encode = EncodingUtils.encode(g.getStreamURI());
-        runtime.sendEvent(g, encode);
+        runtime.sendEvent(new GraphStreamItem(now, g, name), name);
         return true;
     }
 
     @Override
     public void update(Observable o, Object arg) {
-        process((StreamItem) arg);
+        GraphStreamItem arg1 = (GraphStreamItem) arg;
+        process(arg1.getTypedContent(), eventtime ? arg1.getAppTimestamp() : arg1.getSysTimestamp());
     }
 
     @Override
