@@ -1,11 +1,10 @@
 package it.polimi.jasper.engine;
 
-import it.polimi.jasper.engine.rsp.Jasper;
-import it.polimi.jasper.engine.rsp.querying.syntax.GraphStream;
-import it.polimi.jasper.engine.rsp.streams.RegisteredEPLStream;
-import it.polimi.yasper.core.quering.querying.ContinuousQuery;
-import it.polimi.yasper.core.utils.EngineConfiguration;
-import it.polimi.yasper.core.utils.QueryConfiguration;
+import it.polimi.jasper.streams.RegisteredEPLStream;
+import it.polimi.yasper.core.engine.EngineConfiguration;
+import it.polimi.yasper.core.rspql.execution.ContinuousQueryExecution;
+import it.polimi.yasper.core.rspql.querying.ContinuousQuery;
+import it.polimi.yasper.core.rspql.querying.QueryConfiguration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.io.FileUtils;
 
@@ -34,9 +33,9 @@ public class CSPARQLExample {
 
         writer.setWritable(register);
 
-        ContinuousQuery q2 = sr.parseQuery(getQuery(".rspql"));
+        ContinuousQueryExecution cqe = sr.register(getQuery(".rspql"), config);
 
-        sr.register(q2, config);
+        ContinuousQuery q2 = cqe.getContinuousQuery();
 
         System.out.println(q2.toString());
 
