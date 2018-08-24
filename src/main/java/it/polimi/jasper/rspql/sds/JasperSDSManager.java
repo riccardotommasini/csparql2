@@ -7,18 +7,18 @@ import it.polimi.jasper.rspql.reasoning.Entailment;
 import it.polimi.jasper.spe.esper.EsperStreamRegistrationService;
 import it.polimi.jasper.spe.windowing.EsperWindowOperator;
 import it.polimi.yasper.core.engine.exceptions.StreamRegistrationException;
-import it.polimi.yasper.core.rspql.Maintenance;
 import it.polimi.yasper.core.rspql.RDFUtils;
-import it.polimi.yasper.core.rspql.execution.ContinuousQueryExecution;
-import it.polimi.yasper.core.rspql.querying.ContinuousQuery;
-import it.polimi.yasper.core.rspql.querying.QueryConfiguration;
 import it.polimi.yasper.core.rspql.sds.SDS;
 import it.polimi.yasper.core.rspql.sds.SDSManager;
-import it.polimi.yasper.core.rspql.tvg.TimeVarying;
-import it.polimi.yasper.core.spe.Tick;
+import it.polimi.yasper.core.rspql.timevarying.TimeVarying;
+import it.polimi.yasper.core.spe.content.Maintenance;
+import it.polimi.yasper.core.spe.operators.r2r.ContinuousQuery;
+import it.polimi.yasper.core.spe.operators.r2r.QueryConfiguration;
+import it.polimi.yasper.core.spe.operators.r2r.execution.ContinuousQueryExecution;
+import it.polimi.yasper.core.spe.operators.s2r.execution.assigner.WindowAssigner;
 import it.polimi.yasper.core.spe.report.Report;
 import it.polimi.yasper.core.spe.report.ReportGrain;
-import it.polimi.yasper.core.spe.windowing.assigner.WindowAssigner;
+import it.polimi.yasper.core.spe.tick.Tick;
 import it.polimi.yasper.core.stream.RegisteredStream;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +37,7 @@ import java.util.Map;
  */
 @Log4j
 @RequiredArgsConstructor
-public class JasperSDSBuilder implements SDSManager {
+public class JasperSDSManager implements SDSManager {
 
     private final ContinuousQuery query;
     private final QueryConfiguration queryConfiguration;
@@ -71,7 +71,7 @@ public class JasperSDSBuilder implements SDSManager {
     private String tboxLocation;
     private Model tbox;
 
-    public JasperSDSBuilder(RSPQLJenaQuery query, QueryConfiguration queryConfiguration, Entailment ent, IRIResolver resolver, Report report, String responseFormat, Boolean enabled_recursion, Boolean usingEventTime, ReportGrain reportGrain, Tick tick, EsperStreamRegistrationService stream_registration_service, Map<String, WindowAssigner> stream_dispatching_service) {
+    public JasperSDSManager(RSPQLJenaQuery query, QueryConfiguration queryConfiguration, Entailment ent, IRIResolver resolver, Report report, String responseFormat, Boolean enabled_recursion, Boolean usingEventTime, ReportGrain reportGrain, Tick tick, EsperStreamRegistrationService stream_registration_service, Map<String, WindowAssigner> stream_dispatching_service) {
         this.query = query;
         this.queryConfiguration = queryConfiguration;
         this.ent = ent;
@@ -105,11 +105,11 @@ public class JasperSDSBuilder implements SDSManager {
         this.cqe = ContinuousQueryExecutionFactory.create(query, sds);
 
         if (query.isConstructType()) {
-            this.cqe.addFormatter(ResponseFormatterFactory.getConstructResponseSysOutFormatter(responseFormat, distinct));
+            this.cqe.add(ResponseFormatterFactory.getConstructResponseSysOutFormatter(responseFormat, distinct));
         } else if (query.isSelectType()) {
-            this.cqe.addFormatter(ResponseFormatterFactory.getSelectResponseSysOutFormatter(responseFormat, distinct));
+            this.cqe.add(ResponseFormatterFactory.getSelectResponseSysOutFormatter(responseFormat, distinct));
         } else {
-            this.cqe.addFormatter(ResponseFormatterFactory.getGenericResponseSysOutFormatter(responseFormat, distinct));
+            this.cqe.add(ResponseFormatterFactory.getGenericResponseSysOutFormatter(responseFormat, distinct));
         }
 
         query.getNamedGraphURIs().forEach(g -> {

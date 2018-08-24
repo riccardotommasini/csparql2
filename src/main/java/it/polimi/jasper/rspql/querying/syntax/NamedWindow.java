@@ -1,7 +1,7 @@
 package it.polimi.jasper.rspql.querying.syntax;
 
-import it.polimi.yasper.core.rspql.window.WindowNode;
-import it.polimi.yasper.core.spe.WindowType;
+import it.polimi.yasper.core.spe.operators.s2r.syntax.WindowNode;
+import it.polimi.yasper.core.spe.operators.s2r.syntax.WindowType;
 import lombok.Data;
 import org.apache.jena.graph.Node;
 

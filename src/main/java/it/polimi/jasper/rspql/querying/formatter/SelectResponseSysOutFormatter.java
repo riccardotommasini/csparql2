@@ -1,7 +1,7 @@
 package it.polimi.jasper.rspql.querying.formatter;
 
 import it.polimi.jasper.rspql.querying.response.SelectResponse;
-import it.polimi.yasper.core.rspql.formatter.QueryResponseFormatter;
+import it.polimi.yasper.core.spe.operators.r2s.result.QueryResultFormatter;
 import org.apache.jena.query.ResultSetFormatter;
 
 import java.util.Observable;
@@ -10,7 +10,7 @@ import java.util.Observable;
  * Created by riccardo on 03/07/2017.
  */
 
-public class SelectResponseSysOutFormatter extends QueryResponseFormatter {
+public class SelectResponseSysOutFormatter extends QueryResultFormatter {
 
     long last_result = -1L;
 

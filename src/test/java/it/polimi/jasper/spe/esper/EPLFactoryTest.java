@@ -2,14 +2,14 @@ package it.polimi.jasper.spe.esper;
 
 import com.espertech.esper.client.soda.EPStatementObjectModel;
 import com.espertech.esper.client.soda.View;
-import it.polimi.yasper.core.rspql.Maintenance;
-import it.polimi.yasper.core.spe.Tick;
-import it.polimi.yasper.core.spe.WindowType;
+import it.polimi.yasper.core.spe.content.Maintenance;
+import it.polimi.yasper.core.spe.operators.s2r.syntax.WindowType;
 import it.polimi.yasper.core.spe.report.Report;
 import it.polimi.yasper.core.spe.report.ReportImpl;
 import it.polimi.yasper.core.spe.report.strategies.NonEmptyContent;
 import it.polimi.yasper.core.spe.report.strategies.OnContentChange;
 import it.polimi.yasper.core.spe.report.strategies.OnWindowClose;
+import it.polimi.yasper.core.spe.tick.Tick;
 import org.junit.Test;
 
 import java.io.StringWriter;

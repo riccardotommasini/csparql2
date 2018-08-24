@@ -1,8 +1,8 @@
 package it.polimi.jasper.rspql.querying.response;
 
 import it.polimi.jasper.rspql.querying.execution.TimeVaryingResultSetMem;
-import it.polimi.yasper.core.rspql.querying.ContinuousQuery;
-import it.polimi.yasper.core.rspql.response.InstantaneousResponse;
+import it.polimi.yasper.core.spe.operators.r2r.ContinuousQuery;
+import it.polimi.yasper.core.spe.operators.r2s.result.InstantaneousResult;
 import lombok.Getter;
 import lombok.extern.java.Log;
 import org.apache.jena.query.*;
@@ -13,7 +13,7 @@ import java.util.List;
 
 @Log
 @Getter
-public final class SelectResponse extends InstantaneousResponse {
+public final class SelectResponse extends InstantaneousResult {
 
     private List<Binding> solutionSet;
     private ResultSet results;
@@ -49,7 +49,7 @@ public final class SelectResponse extends InstantaneousResponse {
     }
 
     @Override
-    public InstantaneousResponse difference(InstantaneousResponse new_response) {
+    public InstantaneousResult difference(InstantaneousResult new_response) {
         TimeVaryingResultSetMem tvResultSet;
         if (new_response == null) {
             tvResultSet = new TimeVaryingResultSetMem(new ArrayList<>(), result_vars);
@@ -70,7 +70,7 @@ public final class SelectResponse extends InstantaneousResponse {
     }
 
     @Override
-    public InstantaneousResponse intersection(InstantaneousResponse new_response) {
+    public InstantaneousResult intersection(InstantaneousResult new_response) {
         TimeVaryingResultSetMem tvResultSet;
         if (new_response == null) {
             tvResultSet = new TimeVaryingResultSetMem(new ArrayList<>(), result_vars);

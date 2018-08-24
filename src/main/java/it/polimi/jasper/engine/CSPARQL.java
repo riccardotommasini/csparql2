@@ -4,17 +4,17 @@ import it.polimi.jasper.rspql.querying.syntax.QueryFactory;
 import it.polimi.jasper.rspql.reasoning.EntailmentImpl;
 import it.polimi.jasper.rspql.reasoning.EntailmentType;
 import it.polimi.jasper.rspql.reasoning.ReasoningUtils;
-import it.polimi.jasper.rspql.sds.JasperSDSBuilder;
+import it.polimi.jasper.rspql.sds.JasperSDSManager;
 import it.polimi.jasper.spe.report.EsperNECReportStrategy;
 import it.polimi.jasper.spe.report.EsperWCReportStrategy;
 import it.polimi.yasper.core.engine.EngineConfiguration;
 import it.polimi.yasper.core.engine.features.QueryRegistrationFeature;
-import it.polimi.yasper.core.rspql.execution.ContinuousQueryExecution;
-import it.polimi.yasper.core.rspql.querying.ContinuousQuery;
-import it.polimi.yasper.core.rspql.querying.QueryConfiguration;
-import it.polimi.yasper.core.spe.Tick;
+import it.polimi.yasper.core.spe.operators.r2r.ContinuousQuery;
+import it.polimi.yasper.core.spe.operators.r2r.QueryConfiguration;
+import it.polimi.yasper.core.spe.operators.r2r.execution.ContinuousQueryExecution;
 import it.polimi.yasper.core.spe.report.ReportGrain;
 import it.polimi.yasper.core.spe.report.ReportImpl;
+import it.polimi.yasper.core.spe.tick.Tick;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j;
 import org.apache.jena.reasoner.rulesys.Rule;
@@ -72,7 +72,7 @@ public class CSPARQL extends EsperRSPEngine implements QueryRegistrationFeature 
     @Override
     public ContinuousQueryExecution register(ContinuousQuery q, QueryConfiguration c) {
 
-        JasperSDSBuilder builder = new JasperSDSBuilder(q,
+        JasperSDSManager builder = new JasperSDSManager(q,
                 c,
                 entailments.get(EntailmentType.RDFS.name()),
                 this.resolver,

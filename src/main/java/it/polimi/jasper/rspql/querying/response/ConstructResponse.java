@@ -1,7 +1,7 @@
 package it.polimi.jasper.rspql.querying.response;
 
-import it.polimi.yasper.core.rspql.querying.ContinuousQuery;
-import it.polimi.yasper.core.rspql.response.InstantaneousResponse;
+import it.polimi.yasper.core.spe.operators.r2r.ContinuousQuery;
+import it.polimi.yasper.core.spe.operators.r2s.result.InstantaneousResult;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j;
 import org.apache.jena.rdf.model.Model;
@@ -9,12 +9,10 @@ import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
 
-import java.util.List;
-
 
 @Getter
 @Log4j
-public final class ConstructResponse extends InstantaneousResponse {
+public final class ConstructResponse extends InstantaneousResult {
     private Model results;
 
     public ConstructResponse(String id, ContinuousQuery query, Model results, long cep_timestamp) {
@@ -37,12 +35,12 @@ public final class ConstructResponse extends InstantaneousResponse {
     }
 
     @Override
-    public ConstructResponse difference(InstantaneousResponse r) {
+    public ConstructResponse difference(InstantaneousResult r) {
         return new ConstructResponse(getId(), getQuery(), results.difference(((ConstructResponse) r).getResults()), getCep_timestamp());
     }
 
     @Override
-    public InstantaneousResponse intersection(InstantaneousResponse new_response) {
+    public InstantaneousResult intersection(InstantaneousResult new_response) {
         Model i;
         if (new_response == null) {
             i = ModelFactory.createDefaultModel();

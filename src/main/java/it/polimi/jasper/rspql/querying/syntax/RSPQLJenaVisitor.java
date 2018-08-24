@@ -1,6 +1,6 @@
 package it.polimi.jasper.rspql.querying.syntax;
 
-import it.polimi.yasper.core.rspql.syntax.RSPQLParser;
+import it.polimi.yasper.core.spe.operators.r2r.syntax.RSPQLParser;
 import org.apache.jena.graph.Node;
 import org.apache.jena.sparql.core.*;
 import org.apache.jena.sparql.modify.request.QuadAcc;

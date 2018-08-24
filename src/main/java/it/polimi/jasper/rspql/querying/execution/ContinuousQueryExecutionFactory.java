@@ -2,13 +2,9 @@ package it.polimi.jasper.rspql.querying.execution;
 
 import it.polimi.jasper.rspql.reasoning.Entailment;
 import it.polimi.jasper.rspql.sds.JenaSDS;
-import it.polimi.yasper.core.rspql.StreamOperator;
-import it.polimi.yasper.core.rspql.execution.ContinuousQueryExecutionObserver;
-import it.polimi.yasper.core.rspql.operators.r2s.Dstream;
-import it.polimi.yasper.core.rspql.operators.r2s.Istream;
-import it.polimi.yasper.core.rspql.operators.r2s.RelationToStreamOperator;
-import it.polimi.yasper.core.rspql.operators.r2s.Rstream;
-import it.polimi.yasper.core.rspql.querying.ContinuousQuery;
+import it.polimi.yasper.core.spe.operators.r2r.ContinuousQuery;
+import it.polimi.yasper.core.spe.operators.r2r.execution.ContinuousQueryExecutionObserver;
+import it.polimi.yasper.core.spe.operators.r2s.*;
 import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;

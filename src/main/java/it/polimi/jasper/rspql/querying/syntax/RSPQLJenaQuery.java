@@ -1,9 +1,9 @@
 package it.polimi.jasper.rspql.querying.syntax;
 
-import it.polimi.yasper.core.rspql.StreamOperator;
-import it.polimi.yasper.core.rspql.querying.ContinuousQuery;
-import it.polimi.yasper.core.rspql.querying.QueryConfiguration;
-import it.polimi.yasper.core.rspql.window.WindowNode;
+import it.polimi.yasper.core.spe.operators.r2r.ContinuousQuery;
+import it.polimi.yasper.core.spe.operators.r2r.QueryConfiguration;
+import it.polimi.yasper.core.spe.operators.r2s.StreamOperator;
+import it.polimi.yasper.core.spe.operators.s2r.syntax.WindowNode;
 import it.polimi.yasper.core.spe.time.Time;
 import it.polimi.yasper.core.stream.Stream;
 import lombok.Getter;

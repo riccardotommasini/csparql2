@@ -1,6 +1,6 @@
 package it.polimi.jasper.spe.windowing;
 
-import it.polimi.yasper.core.rspql.Maintenance;
+import it.polimi.yasper.core.spe.content.Maintenance;
 import it.polimi.yasper.core.spe.report.Report;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j;

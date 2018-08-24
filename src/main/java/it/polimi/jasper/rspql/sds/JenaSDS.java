@@ -2,7 +2,7 @@ package it.polimi.jasper.rspql.sds;
 
 import it.polimi.jasper.spe.windowing.EsperTimeVaryingGraphImpl;
 import it.polimi.yasper.core.rspql.sds.SDS;
-import it.polimi.yasper.core.rspql.tvg.TimeVarying;
+import it.polimi.yasper.core.rspql.timevarying.TimeVarying;
 import it.polimi.yasper.core.spe.time.Time;
 import it.polimi.yasper.core.spe.time.TimeFactory;
 import lombok.Getter;

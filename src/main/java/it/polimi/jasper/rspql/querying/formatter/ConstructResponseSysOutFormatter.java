@@ -1,7 +1,7 @@
 package it.polimi.jasper.rspql.querying.formatter;
 
 import it.polimi.jasper.rspql.querying.response.ConstructResponse;
-import it.polimi.yasper.core.rspql.formatter.QueryResponseFormatter;
+import it.polimi.yasper.core.spe.operators.r2s.result.QueryResultFormatter;
 import lombok.Getter;
 import lombok.NonNull;
 
@@ -11,7 +11,7 @@ import java.util.Observable;
  * Created by riccardo on 03/07/2017.
  */
 
-public class ConstructResponseSysOutFormatter extends QueryResponseFormatter {
+public class ConstructResponseSysOutFormatter extends QueryResultFormatter {
 
     long last_result = -1L;
 

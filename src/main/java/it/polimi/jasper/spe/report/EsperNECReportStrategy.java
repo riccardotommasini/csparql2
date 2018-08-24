@@ -1,8 +1,8 @@
 package it.polimi.jasper.spe.report;
 
 import it.polimi.yasper.core.spe.content.Content;
+import it.polimi.yasper.core.spe.operators.s2r.execution.instance.Window;
 import it.polimi.yasper.core.spe.report.strategies.ReportingStrategy;
-import it.polimi.yasper.core.spe.windowing.definition.Window;
 
 public class EsperNECReportStrategy implements ReportingStrategy {
 

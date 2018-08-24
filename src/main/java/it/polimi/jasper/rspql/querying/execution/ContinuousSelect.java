@@ -1,10 +1,10 @@
 package it.polimi.jasper.rspql.querying.execution;
 
 import it.polimi.jasper.rspql.querying.response.SelectResponse;
-import it.polimi.yasper.core.rspql.operators.r2s.RelationToStreamOperator;
-import it.polimi.yasper.core.rspql.querying.ContinuousQuery;
-import it.polimi.yasper.core.rspql.response.InstantaneousResponse;
 import it.polimi.yasper.core.rspql.sds.SDS;
+import it.polimi.yasper.core.spe.operators.r2r.ContinuousQuery;
+import it.polimi.yasper.core.spe.operators.r2s.RelationToStreamOperator;
+import it.polimi.yasper.core.spe.operators.r2s.result.InstantaneousResult;
 import org.apache.jena.query.QueryExecutionFactory;
 
 /**
@@ -18,7 +18,7 @@ public class ContinuousSelect extends JenaContinuousQueryExecution {
 
 
     @Override
-    public InstantaneousResponse eval(long ts) {
+    public InstantaneousResult eval(long ts) {
         this.execution = QueryExecutionFactory.create(getQuery(), getDataset());
         this.last_response = new SelectResponse("http://streamreasoning.org/jasper/", query, execution.execSelect(), q.getResultVars(), ts);
         return s2r.eval(last_response);

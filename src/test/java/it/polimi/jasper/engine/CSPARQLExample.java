@@ -2,9 +2,9 @@ package it.polimi.jasper.engine;
 
 import it.polimi.jasper.streams.RegisteredEPLStream;
 import it.polimi.yasper.core.engine.EngineConfiguration;
-import it.polimi.yasper.core.rspql.execution.ContinuousQueryExecution;
-import it.polimi.yasper.core.rspql.querying.ContinuousQuery;
-import it.polimi.yasper.core.rspql.querying.QueryConfiguration;
+import it.polimi.yasper.core.spe.operators.r2r.ContinuousQuery;
+import it.polimi.yasper.core.spe.operators.r2r.QueryConfiguration;
+import it.polimi.yasper.core.spe.operators.r2r.execution.ContinuousQueryExecution;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.io.FileUtils;
 

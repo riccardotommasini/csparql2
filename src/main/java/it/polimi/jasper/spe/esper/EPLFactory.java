@@ -3,10 +3,10 @@ package it.polimi.jasper.spe.esper;
 import com.espertech.esper.client.soda.*;
 import it.polimi.jasper.spe.EncodingUtils;
 import it.polimi.jasper.spe.windowing.EsperWindowAssigner;
-import it.polimi.yasper.core.rspql.Maintenance;
-import it.polimi.yasper.core.spe.Tick;
-import it.polimi.yasper.core.spe.WindowType;
+import it.polimi.yasper.core.spe.content.Maintenance;
+import it.polimi.yasper.core.spe.operators.s2r.syntax.WindowType;
 import it.polimi.yasper.core.spe.report.Report;
+import it.polimi.yasper.core.spe.tick.Tick;
 import it.polimi.yasper.core.stream.Stream;
 import lombok.extern.log4j.Log4j;
 

@@ -1,10 +1,10 @@
 package it.polimi.jasper.rspql.querying.execution;
 
-import it.polimi.yasper.core.rspql.execution.ContinuousQueryExecutionObserver;
-import it.polimi.yasper.core.rspql.operators.r2s.RelationToStreamOperator;
-import it.polimi.yasper.core.rspql.querying.ContinuousQuery;
-import it.polimi.yasper.core.rspql.response.InstantaneousResponse;
 import it.polimi.yasper.core.rspql.sds.SDS;
+import it.polimi.yasper.core.spe.operators.r2r.ContinuousQuery;
+import it.polimi.yasper.core.spe.operators.r2r.execution.ContinuousQueryExecutionObserver;
+import it.polimi.yasper.core.spe.operators.r2s.RelationToStreamOperator;
+import it.polimi.yasper.core.spe.operators.r2s.result.InstantaneousResult;
 import org.apache.jena.atlas.json.JsonArray;
 import org.apache.jena.atlas.json.JsonObject;
 import org.apache.jena.graph.Triple;
@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit;
 public abstract class JenaContinuousQueryExecution extends ContinuousQueryExecutionObserver implements QueryExecution {
 
     protected final Query q;
-    protected InstantaneousResponse last_response = null;
+    protected InstantaneousResult last_response = null;
     protected QueryExecution execution;
 
     public JenaContinuousQueryExecution(ContinuousQuery query, SDS sds, RelationToStreamOperator s2r) {
@@ -33,7 +33,7 @@ public abstract class JenaContinuousQueryExecution extends ContinuousQueryExecut
 
     @Override
     public void update(Observable o, Object arg) {
-        InstantaneousResponse r = eval((Long) arg);
+        InstantaneousResult r = eval((Long) arg);
         setChanged();
         notifyObservers(r);
     }

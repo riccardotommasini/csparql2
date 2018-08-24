@@ -12,14 +12,14 @@ import it.polimi.yasper.core.engine.EngineConfiguration;
 import it.polimi.yasper.core.engine.features.QueryDeletionFeature;
 import it.polimi.yasper.core.engine.features.StreamDeletionFeature;
 import it.polimi.yasper.core.engine.features.StreamRegistrationFeature;
-import it.polimi.yasper.core.rspql.execution.ContinuousQueryExecution;
-import it.polimi.yasper.core.rspql.formatter.QueryResponseFormatter;
-import it.polimi.yasper.core.rspql.querying.ContinuousQuery;
 import it.polimi.yasper.core.rspql.sds.SDS;
-import it.polimi.yasper.core.spe.Tick;
+import it.polimi.yasper.core.spe.operators.r2r.ContinuousQuery;
+import it.polimi.yasper.core.spe.operators.r2r.execution.ContinuousQueryExecution;
+import it.polimi.yasper.core.spe.operators.r2s.result.QueryResultFormatter;
+import it.polimi.yasper.core.spe.operators.s2r.execution.assigner.WindowAssigner;
 import it.polimi.yasper.core.spe.report.Report;
 import it.polimi.yasper.core.spe.report.ReportGrain;
-import it.polimi.yasper.core.spe.windowing.assigner.WindowAssigner;
+import it.polimi.yasper.core.spe.tick.Tick;
 import it.polimi.yasper.core.stream.rdf.RDFStream;
 import it.polimi.yasper.core.stream.schema.StreamSchema;
 import lombok.extern.log4j.Log4j;
@@ -43,7 +43,7 @@ public abstract class EsperRSPEngine implements StreamRegistrationFeature<Regist
     protected Map<String, SDS> assignedSDS;
     protected Map<String, ContinuousQueryExecution> queryExecutions;
     protected Map<String, ContinuousQuery> registeredQueries;
-    protected Map<String, List<QueryResponseFormatter>> queryObservers;
+    protected Map<String, List<QueryResultFormatter>> queryObservers;
     protected HashMap<String, Entailment> entailments;
 
     protected EsperStreamRegistrationService stream_registration_service;

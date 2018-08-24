@@ -6,15 +6,16 @@ import it.polimi.jasper.streams.items.GraphStreamItem;
 import it.polimi.jasper.spe.content.ContentGraphBean;
 import it.polimi.jasper.spe.esper.EsperTime;
 import it.polimi.jasper.spe.esper.RuntimeManager;
-import it.polimi.yasper.core.rspql.Maintenance;
-import it.polimi.yasper.core.rspql.execution.ContinuousQueryExecution;
-import it.polimi.yasper.core.rspql.tvg.TimeVarying;
-import it.polimi.yasper.core.spe.Tick;
+import it.polimi.yasper.core.rspql.timevarying.TimeVarying;
 import it.polimi.yasper.core.spe.content.Content;
+import it.polimi.yasper.core.spe.content.Maintenance;
+import it.polimi.yasper.core.spe.operators.r2r.execution.ContinuousQueryExecution;
+import it.polimi.yasper.core.spe.operators.s2r.execution.assigner.WindowAssigner;
+import it.polimi.yasper.core.spe.operators.s2r.execution.instance.Window;
 import it.polimi.yasper.core.spe.report.Report;
 import it.polimi.yasper.core.spe.report.ReportGrain;
+import it.polimi.yasper.core.spe.tick.Tick;
 import it.polimi.yasper.core.spe.time.Time;
-import it.polimi.yasper.core.spe.windowing.assigner.WindowAssigner;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
@@ -66,6 +67,11 @@ public class EsperWindowAssigner implements WindowAssigner<Graph>, Observer {
     @Override
     public Tick tick() {
         return tick;
+    }
+
+    @Override
+    public Time time() {
+        return time;
     }
 
     @Override
@@ -139,6 +145,12 @@ public class EsperWindowAssigner implements WindowAssigner<Graph>, Observer {
     @Override
     public boolean named() {
         return name != null;
+    }
+
+    @Override
+    public Content<Graph> compute(long l, Window window) {
+        return null;
+        //TODO
     }
 
 }
