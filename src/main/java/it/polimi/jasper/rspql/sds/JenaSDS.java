@@ -1,6 +1,5 @@
 package it.polimi.jasper.rspql.sds;
 
-import it.polimi.jasper.spe.windowing.EsperTimeVaryingGraphImpl;
 import it.polimi.yasper.core.rspql.sds.SDS;
 import it.polimi.yasper.core.rspql.timevarying.TimeVarying;
 import it.polimi.yasper.core.spe.time.Time;
@@ -25,39 +24,35 @@ import java.util.List;
  * Created by riccardo on 01/07/2017.
  */
 @Log4j
-public class JenaSDS extends DatasetImpl implements SDS {
+public class JenaSDS extends DatasetImpl implements SDS<Graph> {
 
     private boolean partialWindowsEnabled = false;
     private Time time = TimeFactory.getInstance();
     @Getter
     protected Reasoner reasoner;
 
-    private List<TimeVarying> tvgs = new ArrayList<>();
+    private List<TimeVarying<Graph>> tvgs = new ArrayList<>();
 
     protected JenaSDS(Graph def) {
         super(DatasetGraphFactory.create(def));
     }
 
     @Override
-    public void add(IRI iri, TimeVarying tvg) {
+    public void add(IRI iri, TimeVarying<Graph> tvg) {
         tvgs.add(tvg);
-        if (tvg instanceof EsperTimeVaryingGraphImpl) {
-            Model m;
-            if (reasoner != null)
-                m = new InfModelImpl((InfGraph) ((EsperTimeVaryingGraphImpl) tvg).getGraph());
-            else
-                m = new ModelCom(((EsperTimeVaryingGraphImpl) tvg).getGraph());
-            addNamedModel(iri.getIRIString(), m);
-        }
+        Model m;
+        if (reasoner != null)
+            m = new InfModelImpl((InfGraph) (tvg.get()));
+        else
+            m = new ModelCom(tvg.get());
+        addNamedModel(iri.getIRIString(), m);
     }
 
     @Override
-    public void add(TimeVarying tvg) {
+    public void add(TimeVarying<Graph> tvg) {
         tvgs.add(tvg);
-        if (tvg instanceof EsperTimeVaryingGraphImpl) {
-            ((MultiUnion) getDefaultModel().getGraph())
-                    .addGraph((((EsperTimeVaryingGraphImpl) tvg).getGraph()));
-        }
+        ((MultiUnion) getDefaultModel().getGraph())
+                .addGraph((tvg.get()));
     }
 
     @Override

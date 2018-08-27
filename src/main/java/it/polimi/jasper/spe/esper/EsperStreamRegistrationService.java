@@ -13,6 +13,7 @@ import it.polimi.yasper.core.stream.Stream;
 import it.polimi.yasper.core.stream.rdf.RDFStream;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j;
+import org.apache.jena.graph.Graph;
 
 import java.io.StringWriter;
 import java.util.*;
@@ -23,7 +24,7 @@ public class EsperStreamRegistrationService {
     private final EPAdministrator cepAdm;
 
     @Getter
-    private Map<String, RegisteredStream> registeredStreams;
+    private Map<String, RegisteredStream<Graph>> registeredStreams;
 
     public EsperStreamRegistrationService(EPAdministrator cepAdm) {
         this.cepAdm = cepAdm;

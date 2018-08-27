@@ -24,3 +24,5 @@ hs_err_pid*
 .idea/
 .project
 .settings/
+src/test/java/it/polimi/jasper/rspql/
+src/test/java/it/polimi/jasper/sep/

@@ -1,18 +1,17 @@
 package it.polimi.jasper.rspql.sds;
 
-import it.polimi.jasper.rspql.querying.execution.ContinuousQueryExecutionFactory;
-import it.polimi.jasper.rspql.querying.formatter.ResponseFormatterFactory;
-import it.polimi.jasper.rspql.querying.syntax.RSPQLJenaQuery;
 import it.polimi.jasper.rspql.reasoning.Entailment;
 import it.polimi.jasper.spe.esper.EsperStreamRegistrationService;
-import it.polimi.jasper.spe.windowing.EsperWindowOperator;
+import it.polimi.jasper.spe.operators.r2r.execution.ContinuousQueryExecutionFactory;
+import it.polimi.jasper.spe.operators.r2r.syntax.RSPQLJenaQuery;
+import it.polimi.jasper.spe.operators.r2s.formatter.ResponseFormatterFactory;
+import it.polimi.jasper.spe.operators.s2r.EsperWindowOperator;
 import it.polimi.yasper.core.engine.exceptions.StreamRegistrationException;
 import it.polimi.yasper.core.rspql.RDFUtils;
 import it.polimi.yasper.core.rspql.sds.SDS;
 import it.polimi.yasper.core.rspql.sds.SDSManager;
 import it.polimi.yasper.core.rspql.timevarying.TimeVarying;
 import it.polimi.yasper.core.spe.content.Maintenance;
-import it.polimi.yasper.core.spe.operators.r2r.ContinuousQuery;
 import it.polimi.yasper.core.spe.operators.r2r.QueryConfiguration;
 import it.polimi.yasper.core.spe.operators.r2r.execution.ContinuousQueryExecution;
 import it.polimi.yasper.core.spe.operators.s2r.execution.assigner.WindowAssigner;
@@ -23,23 +22,22 @@ import it.polimi.yasper.core.stream.RegisteredStream;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
+import org.apache.jena.graph.Graph;
 import org.apache.jena.graph.compose.MultiUnion;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.impl.InfModelImpl;
 import org.apache.jena.reasoner.Reasoner;
 import org.apache.jena.riot.system.IRIResolver;
-
 import java.util.Map;
 
 /**
  * Created by Riccardo on 05/09/2017.
  */
 @Log4j
-@RequiredArgsConstructor
 public class JasperSDSManager implements SDSManager {
 
-    private final ContinuousQuery query;
+    private final RSPQLJenaQuery query;
     private final QueryConfiguration queryConfiguration;
 
     private final Entailment ent;
@@ -132,7 +130,7 @@ public class JasperSDSManager implements SDSManager {
                 this.sds.getDefaultModel().add(m);
         });
 
-        Map<String, RegisteredStream> registeredStreams = stream_registration_service.getRegisteredStreams();
+        Map<String, RegisteredStream<Graph>> registeredStreams = stream_registration_service.getRegisteredStreams();
 
         query.getWindowMap().forEach((wo, s) -> {
             String key = this.resolver.resolveToString("streams/" + s.getURI());
@@ -149,11 +147,11 @@ public class JasperSDSManager implements SDSManager {
                         this.maintenance,
                         wo);
 
-                WindowAssigner wa = ewo.apply(registeredStreams.get(key));
+                WindowAssigner<Graph> wa = ewo.apply(registeredStreams.get(key));
 
                 this.stream_dispatching_service.put(key, wa);
 
-                TimeVarying tvii = wa.set(cqe);
+                TimeVarying<Graph> tvii = wa.set(cqe);
 
                 if (ewo.named())
                     this.sds.add(RDFUtils.createIRI(wo.iri()), tvii);

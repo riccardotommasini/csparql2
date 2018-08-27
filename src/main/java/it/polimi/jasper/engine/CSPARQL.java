@@ -1,10 +1,11 @@
 package it.polimi.jasper.engine;
 
-import it.polimi.jasper.rspql.querying.syntax.QueryFactory;
+import it.polimi.jasper.spe.operators.r2r.syntax.QueryFactory;
 import it.polimi.jasper.rspql.reasoning.EntailmentImpl;
 import it.polimi.jasper.rspql.reasoning.EntailmentType;
 import it.polimi.jasper.rspql.reasoning.ReasoningUtils;
 import it.polimi.jasper.rspql.sds.JasperSDSManager;
+import it.polimi.jasper.spe.operators.r2r.syntax.RSPQLJenaQuery;
 import it.polimi.jasper.spe.report.EsperNECReportStrategy;
 import it.polimi.jasper.spe.report.EsperWCReportStrategy;
 import it.polimi.yasper.core.engine.EngineConfiguration;
@@ -24,7 +25,7 @@ import java.io.IOException;
 import java.util.HashMap;
 
 @Log4j
-public class CSPARQL extends EsperRSPEngine implements QueryRegistrationFeature {
+public class CSPARQL extends EsperRSPEngine implements QueryRegistrationFeature<RSPQLJenaQuery> {
 
     @Getter
     private final IRIResolver resolver;
@@ -64,13 +65,13 @@ public class CSPARQL extends EsperRSPEngine implements QueryRegistrationFeature 
     }
 
     @Override
-    public ContinuousQueryExecution register(ContinuousQuery continuousQuery) {
+    public ContinuousQueryExecution register(RSPQLJenaQuery continuousQuery) {
         return register(continuousQuery, null);
     }
 
 
     @Override
-    public ContinuousQueryExecution register(ContinuousQuery q, QueryConfiguration c) {
+    public ContinuousQueryExecution register(RSPQLJenaQuery q, QueryConfiguration c) {
 
         JasperSDSManager builder = new JasperSDSManager(q,
                 c,

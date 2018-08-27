@@ -2,7 +2,7 @@ package it.polimi.jasper.spe.esper;
 
 import com.espertech.esper.client.soda.*;
 import it.polimi.jasper.spe.EncodingUtils;
-import it.polimi.jasper.spe.windowing.EsperWindowAssigner;
+import it.polimi.jasper.spe.operators.s2r.EsperWindowAssigner;
 import it.polimi.yasper.core.spe.content.Maintenance;
 import it.polimi.yasper.core.spe.operators.s2r.syntax.WindowType;
 import it.polimi.yasper.core.spe.report.Report;
