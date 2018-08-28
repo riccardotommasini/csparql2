@@ -147,7 +147,7 @@ public class JasperSDSManager implements SDSManager {
                         this.maintenance,
                         wo);
 
-                WindowAssigner<Graph> wa = ewo.apply(registeredStreams.get(key));
+                WindowAssigner<Graph, Graph> wa = ewo.apply(registeredStreams.get(key));
 
                 this.stream_dispatching_service.put(key, wa);
 

@@ -14,7 +14,7 @@ import org.apache.jena.graph.Graph;
 import org.apache.jena.reasoner.Reasoner;
 
 @RequiredArgsConstructor
-public class EsperWindowOperator implements WindowOperator<Graph> {
+public class EsperWindowOperator implements WindowOperator<Graph, Graph> {
 
     private final Tick tick;
     private final Report report;
@@ -37,7 +37,7 @@ public class EsperWindowOperator implements WindowOperator<Graph> {
     }
 
     @Override
-    public WindowAssigner<Graph> apply(RegisteredStream<Graph> s) {
+    public WindowAssigner<Graph, Graph> apply(RegisteredStream<Graph> s) {
         EsperWindowAssigner windowAssigner = EPLFactory.getWindowAssigner(tick, maintenance, report, eventtime, s.getURI(), wo.getStep(), wo.getRange(), wo.getUnitStep(), wo.getUnitRange(), wo.getType());
         windowAssigner.setReasoner(reasoner);
         windowAssigner.setMaintenance(maintenance);

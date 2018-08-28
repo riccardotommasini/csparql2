@@ -5,6 +5,7 @@ import com.espertech.esper.client.time.CurrentTimeEvent;
 import it.polimi.yasper.core.spe.time.ET;
 import it.polimi.yasper.core.spe.time.Time;
 import it.polimi.yasper.core.spe.time.TimeFactory;
+import it.polimi.yasper.core.spe.time.TimeInstant;
 
 public class EsperTime implements Time {
 
@@ -27,5 +28,10 @@ public class EsperTime implements Time {
     @Override
     public ET getEvaluationTimeInstants() {
         return TimeFactory.getEvaluationTimeInstants();
+    }
+
+    @Override
+    public void addEvaluationTimeInstants(TimeInstant i) {
+        TimeFactory.getEvaluationTimeInstants().add(i);
     }
 }

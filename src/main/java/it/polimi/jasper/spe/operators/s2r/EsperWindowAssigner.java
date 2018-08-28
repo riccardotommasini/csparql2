@@ -4,10 +4,10 @@ import com.espertech.esper.client.*;
 import com.espertech.esper.client.soda.EPStatementObjectModel;
 import it.polimi.jasper.rspql.tvg.EsperTimeVaryingGraphImpl;
 import it.polimi.jasper.rspql.tvg.NamedEsperTimeVaryingGraph;
-import it.polimi.jasper.streams.items.GraphStreamItem;
 import it.polimi.jasper.spe.content.ContentGraphBean;
 import it.polimi.jasper.spe.esper.EsperTime;
 import it.polimi.jasper.spe.esper.RuntimeManager;
+import it.polimi.jasper.streams.items.GraphStreamItem;
 import it.polimi.yasper.core.rspql.timevarying.TimeVarying;
 import it.polimi.yasper.core.spe.content.Content;
 import it.polimi.yasper.core.spe.content.Maintenance;
@@ -31,7 +31,7 @@ import java.util.Observer;
 
 @Log4j
 @Getter
-public class EsperWindowAssigner implements WindowAssigner<Graph>, Observer {
+public class EsperWindowAssigner implements WindowAssigner<Graph, Graph>, Observer {
 
     private final String name;
     private final boolean eventtime;
@@ -88,18 +88,8 @@ public class EsperWindowAssigner implements WindowAssigner<Graph>, Observer {
     }
 
     @Override
-    public List<Content> getContents(long now) {
+    public List<Content<Graph>> getContents(long now) {
         return null;
-    }
-
-    @Override
-    public void report(Report report) {
-        this.report = report;
-    }
-
-    @Override
-    public void tick(Tick tick) {
-        this.tick = tick;
     }
 
     @Override
@@ -111,11 +101,6 @@ public class EsperWindowAssigner implements WindowAssigner<Graph>, Observer {
         statement.addListener(n);
         n.addObserver(execution);
         return n;
-    }
-
-    @Override
-    public void report_grain(ReportGrain aw) {
-        this.reportGrain = aw;
     }
 
     @Override
