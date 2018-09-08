@@ -14,12 +14,11 @@
             <url>https://jitpack.io</url>
         </repository>
     </repositories>
-
     <dependencies>
         <dependency>
             <groupId>com.espertech</groupId>
             <artifactId>esper</artifactId>
-            <version>6.1.0</version>
+            <version>7.1.0</version>
         </dependency>
         <!--<dependency>-->
         <!--<groupId>it.polimi.sr.yasper</groupId>-->
@@ -87,8 +86,17 @@
             <artifactId>antlr4-runtime</artifactId>
             <version>4.7</version>
         </dependency>
+        <dependency>
+  			<groupId>org.eclipse.jetty.websocket</groupId>
+  			<artifactId>websocket-client</artifactId>
+  			<version>9.3.24.v20180605</version>
+		</dependency>
+		<dependency>
+    		<groupId>org.eclipse.jetty.websocket</groupId>
+    		<artifactId>websocket-api</artifactId>
+    		<version>9.3.24.v20180605</version>
+		</dependency>
     </dependencies>
-
     <build>
         <plugins>
             <plugin>
