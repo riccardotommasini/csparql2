@@ -1,0 +1,432 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns="http://polimi.deib/tracing#"
+     xml:base="http://polimi.deib/tracing"
+     xmlns:obda="https://w3id.org/obda/vocabulary#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+    <owl:Ontology rdf:about="http://polimi.deib/tracing"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://polimi.deib/tracing#childOf -->
+
+    <owl:ObjectProperty rdf:about="http://polimi.deib/tracing#childOf">
+        <rdfs:subPropertyOf rdf:resource="http://polimi.deib/tracing#reference"/>
+        <rdfs:domain rdf:resource="http://polimi.deib/tracing#Span"/>
+        <rdfs:range rdf:resource="http://polimi.deib/tracing#Span"/>
+        <owl:propertyDisjointWith rdf:resource="http://polimi.deib/tracing#followsFrom"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://polimi.deib/tracing#followsFrom -->
+
+    <owl:ObjectProperty rdf:about="http://polimi.deib/tracing#followsFrom">
+        <rdfs:subPropertyOf rdf:resource="http://polimi.deib/tracing#reference"/>
+        <rdfs:domain rdf:resource="http://polimi.deib/tracing#Span"/>
+        <rdfs:range rdf:resource="http://polimi.deib/tracing#Span"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://polimi.deib/tracing#hasField -->
+
+    <owl:ObjectProperty rdf:about="http://polimi.deib/tracing#hasField">
+        <rdfs:subPropertyOf rdf:resource="http://polimi.deib/tracing#hasTag"/>
+        <rdfs:domain rdf:resource="http://polimi.deib/tracing#Log"/>
+        <rdfs:range rdf:resource="http://polimi.deib/tracing#Tag"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://polimi.deib/tracing#hasLog -->
+
+    <owl:ObjectProperty rdf:about="http://polimi.deib/tracing#hasLog">
+        <owl:inverseOf rdf:resource="http://polimi.deib/tracing#logOf"/>
+        <rdfs:domain rdf:resource="http://polimi.deib/tracing#Span"/>
+        <rdfs:range rdf:resource="http://polimi.deib/tracing#Log"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://polimi.deib/tracing#hasProcessTag -->
+
+    <owl:ObjectProperty rdf:about="http://polimi.deib/tracing#hasProcessTag">
+        <rdfs:subPropertyOf rdf:resource="http://polimi.deib/tracing#hasTag"/>
+        <rdfs:domain rdf:resource="http://polimi.deib/tracing#Process"/>
+        <rdfs:range rdf:resource="http://polimi.deib/tracing#Tag"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://polimi.deib/tracing#hasSpan -->
+
+    <owl:ObjectProperty rdf:about="http://polimi.deib/tracing#hasSpan">
+        <owl:inverseOf rdf:resource="http://polimi.deib/tracing#spanOf"/>
+        <rdfs:range rdf:resource="http://polimi.deib/tracing#Span"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://polimi.deib/tracing#hasSpanTag -->
+
+    <owl:ObjectProperty rdf:about="http://polimi.deib/tracing#hasSpanTag">
+        <rdfs:subPropertyOf rdf:resource="http://polimi.deib/tracing#hasTag"/>
+        <rdfs:domain rdf:resource="http://polimi.deib/tracing#Span"/>
+        <rdfs:range rdf:resource="http://polimi.deib/tracing#Tag"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://polimi.deib/tracing#hasTag -->
+
+    <owl:ObjectProperty rdf:about="http://polimi.deib/tracing#hasTag">
+        <owl:inverseOf rdf:resource="http://polimi.deib/tracing#tagOf"/>
+        <rdfs:range rdf:resource="http://polimi.deib/tracing#Tag"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://polimi.deib/tracing#logOf -->
+
+    <owl:ObjectProperty rdf:about="http://polimi.deib/tracing#logOf">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://polimi.deib/tracing#Log"/>
+        <rdfs:range rdf:resource="http://polimi.deib/tracing#Span"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://polimi.deib/tracing#reference -->
+
+    <owl:ObjectProperty rdf:about="http://polimi.deib/tracing#reference">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AsymmetricProperty"/>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#IrreflexiveProperty"/>
+        <rdfs:domain rdf:resource="http://polimi.deib/tracing#Span"/>
+        <rdfs:range rdf:resource="http://polimi.deib/tracing#Span"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://polimi.deib/tracing#spanOf -->
+
+    <owl:ObjectProperty rdf:about="http://polimi.deib/tracing#spanOf">
+        <rdfs:domain rdf:resource="http://polimi.deib/tracing#Span"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://polimi.deib/tracing#spanOfProcess -->
+
+    <owl:ObjectProperty rdf:about="http://polimi.deib/tracing#spanOfProcess">
+        <rdfs:subPropertyOf rdf:resource="http://polimi.deib/tracing#spanOf"/>
+        <rdfs:domain rdf:resource="http://polimi.deib/tracing#Span"/>
+        <rdfs:range rdf:resource="http://polimi.deib/tracing#Process"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://polimi.deib/tracing#spanOfTrace -->
+
+    <owl:ObjectProperty rdf:about="http://polimi.deib/tracing#spanOfTrace">
+        <rdfs:subPropertyOf rdf:resource="http://polimi.deib/tracing#spanOf"/>
+        <rdfs:domain rdf:resource="http://polimi.deib/tracing#Span"/>
+        <rdfs:range rdf:resource="http://polimi.deib/tracing#Trace"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://polimi.deib/tracing#tagOf -->
+
+    <owl:ObjectProperty rdf:about="http://polimi.deib/tracing#tagOf">
+        <rdfs:domain rdf:resource="http://polimi.deib/tracing#Tag"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Data properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://polimi.deib/tracing#binaryVal -->
+
+    <owl:DatatypeProperty rdf:about="http://polimi.deib/tracing#binaryVal">
+        <rdfs:subPropertyOf rdf:resource="http://polimi.deib/tracing#tagValue"/>
+        <rdfs:domain rdf:resource="http://polimi.deib/tracing#Tag"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#hexBinary"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://polimi.deib/tracing#boolVal -->
+
+    <owl:DatatypeProperty rdf:about="http://polimi.deib/tracing#boolVal">
+        <rdfs:subPropertyOf rdf:resource="http://polimi.deib/tracing#tagValue"/>
+        <rdfs:domain rdf:resource="http://polimi.deib/tracing#Tag"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://polimi.deib/tracing#doubleVal -->
+
+    <owl:DatatypeProperty rdf:about="http://polimi.deib/tracing#doubleVal">
+        <rdfs:subPropertyOf rdf:resource="http://polimi.deib/tracing#tagValue"/>
+        <rdfs:domain rdf:resource="http://polimi.deib/tracing#Tag"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#double"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://polimi.deib/tracing#duration -->
+
+    <owl:DatatypeProperty rdf:about="http://polimi.deib/tracing#duration">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://polimi.deib/tracing#Span"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://polimi.deib/tracing#flags -->
+
+    <owl:DatatypeProperty rdf:about="http://polimi.deib/tracing#flags">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://polimi.deib/tracing#Span"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://polimi.deib/tracing#longVal -->
+
+    <owl:DatatypeProperty rdf:about="http://polimi.deib/tracing#longVal">
+        <rdfs:subPropertyOf rdf:resource="http://polimi.deib/tracing#tagValue"/>
+        <rdfs:domain rdf:resource="http://polimi.deib/tracing#Tag"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://polimi.deib/tracing#operationName -->
+
+    <owl:DatatypeProperty rdf:about="http://polimi.deib/tracing#operationName">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://polimi.deib/tracing#Span"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://polimi.deib/tracing#serviceName -->
+
+    <owl:DatatypeProperty rdf:about="http://polimi.deib/tracing#serviceName">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://polimi.deib/tracing#Process"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://polimi.deib/tracing#spanId -->
+
+    <owl:DatatypeProperty rdf:about="http://polimi.deib/tracing#spanId">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://polimi.deib/tracing#Span"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://polimi.deib/tracing#startTime -->
+
+    <owl:DatatypeProperty rdf:about="http://polimi.deib/tracing#startTime">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://polimi.deib/tracing#Span"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://polimi.deib/tracing#stringVal -->
+
+    <owl:DatatypeProperty rdf:about="http://polimi.deib/tracing#stringVal">
+        <rdfs:subPropertyOf rdf:resource="http://polimi.deib/tracing#tagValue"/>
+        <rdfs:domain rdf:resource="http://polimi.deib/tracing#Tag"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://polimi.deib/tracing#tagKey -->
+
+    <owl:DatatypeProperty rdf:about="http://polimi.deib/tracing#tagKey">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://polimi.deib/tracing#Tag"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://polimi.deib/tracing#tagValue -->
+
+    <owl:DatatypeProperty rdf:about="http://polimi.deib/tracing#tagValue">
+        <rdfs:domain rdf:resource="http://polimi.deib/tracing#Tag"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://polimi.deib/tracing#timestamp -->
+
+    <owl:DatatypeProperty rdf:about="http://polimi.deib/tracing#timestamp">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://polimi.deib/tracing#Log"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://polimi.deib/tracing#traceId -->
+
+    <owl:DatatypeProperty rdf:about="http://polimi.deib/tracing#traceId">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://polimi.deib/tracing#Trace"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://polimi.deib/tracing#Log -->
+
+    <owl:Class rdf:about="http://polimi.deib/tracing#Log">
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://polimi.deib/tracing#timestamp"/>
+                <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+                <owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+    </owl:Class>
+    
+
+
+    <!-- http://polimi.deib/tracing#Process -->
+
+    <owl:Class rdf:about="http://polimi.deib/tracing#Process">
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://polimi.deib/tracing#serviceName"/>
+                <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+                <owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+    </owl:Class>
+    
+
+
+    <!-- http://polimi.deib/tracing#Span -->
+
+    <owl:Class rdf:about="http://polimi.deib/tracing#Span">
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://polimi.deib/tracing#spanId"/>
+                <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+                <owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+    </owl:Class>
+    
+
+
+    <!-- http://polimi.deib/tracing#Tag -->
+
+    <owl:Class rdf:about="http://polimi.deib/tracing#Tag">
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://polimi.deib/tracing#tagKey"/>
+                <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+                <owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+    </owl:Class>
+    
+
+
+    <!-- http://polimi.deib/tracing#Trace -->
+
+    <owl:Class rdf:about="http://polimi.deib/tracing#Trace">
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://polimi.deib/tracing#traceId"/>
+                <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+                <owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+    </owl:Class>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // General axioms
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    <rdf:Description>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointProperties"/>
+        <owl:members rdf:parseType="Collection">
+            <rdf:Description rdf:about="http://polimi.deib/tracing#hasField"/>
+            <rdf:Description rdf:about="http://polimi.deib/tracing#hasProcessTag"/>
+            <rdf:Description rdf:about="http://polimi.deib/tracing#hasSpanTag"/>
+        </owl:members>
+    </rdf:Description>
+    <rdf:Description>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointProperties"/>
+        <owl:members rdf:parseType="Collection">
+            <rdf:Description rdf:about="http://polimi.deib/tracing#binaryVal"/>
+            <rdf:Description rdf:about="http://polimi.deib/tracing#boolVal"/>
+            <rdf:Description rdf:about="http://polimi.deib/tracing#doubleVal"/>
+            <rdf:Description rdf:about="http://polimi.deib/tracing#longVal"/>
+            <rdf:Description rdf:about="http://polimi.deib/tracing#stringVal"/>
+        </owl:members>
+    </rdf:Description>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 4.2.8.20170104-2310) https://github.com/owlcs/owlapi -->
+

@@ -1,0 +1,13 @@
+PREFIX tr: <http://polimi.deib/tracing#>
+
+REGISTER RSTREAM <s1> AS
+SELECT ?t (COUNT(?s) AS ?countSpan)
+FROM NAMED WINDOW <win2> ON <stream2> [RANGE PT1M STEP PT1M]
+WHERE  {
+    WINDOW ?w {
+        ?s a tr:Span .
+        ?s tr:spanOf ?t .
+        ?t a tr:Trace .
+    }
+}
+GROUP BY ?t
