@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.jena.query.Dataset;
 import org.apache.jena.query.DatasetFactory;
@@ -27,22 +26,21 @@ import it.polimi.jasper.streams.RegisteredEPLStream;
 
 
 @WebSocket(maxTextMessageSize = 1024 * 1024)
-public class SimpleClient {
+public class JsonLDSocket {
 	
     @SuppressWarnings("unused")
     private Session session;
     private Context ctx;
-    private AtomicInteger msgNum= new AtomicInteger(0);
     
     private RegisteredEPLStream s;
 
-    public SimpleClient(RegisteredEPLStream s) {
+    public JsonLDSocket(RegisteredEPLStream s, String resourceContext) {
 		this.s = s;
 		
 		ctx = new Context();
 	    Object jsonldContextAsObject;
 		try {
-			jsonldContextAsObject = JsonUtils.fromInputStream(new FileInputStream(SimpleClient.class.getResource("/tracing_ontology_context.json").getPath()));
+			jsonldContextAsObject = JsonUtils.fromInputStream(new FileInputStream(JsonLDSocket.class.getResource(resourceContext).getPath()));
 			ctx.set(RIOT.JSONLD_CONTEXT, jsonldContextAsObject);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -86,7 +84,7 @@ public class SimpleClient {
 		}
         
         if (s != null)
-            this.s.put(ds.getDefaultModel().getGraph(), msgNum.getAndAdd(10000));
+            this.s.put(ds.getDefaultModel().getGraph(), Instant.now().toEpochMilli());
        
     }
     
