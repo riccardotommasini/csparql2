@@ -30,16 +30,16 @@ public class GraphStreamKaiju extends RDFStream implements Runnable {
 
     public void run() {
     	
-    	String destUri = "ws://localhost:4567/jsonTraces";
         WebSocketClient client = new WebSocketClient();
-        SimpleClient socket = new SimpleClient(s);
+        JsonLDSocket socket = new JsonLDSocket(s, "/tracing_ontology_context.json");
+        
         try
         {
             client.start();
 
-            URI uri = new URI(destUri);
+            URI uri = new URI(stream_uri);
             ClientUpgradeRequest request = new ClientUpgradeRequest();
-            client.connect(socket,uri,request);
+            client.connect(socket, uri, request);
             System.out.printf("Connecting to : %s%n",uri);
             
             while(true) {}
