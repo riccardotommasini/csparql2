@@ -2,7 +2,7 @@ PREFIX tr: <http://polimi.deib/tracing#>
 
 REGISTER RSTREAM <s1> AS
 SELECT ?t (COUNT(?s) AS ?countSpan)
-FROM NAMED WINDOW <win2> ON <stream2> [RANGE PT1M STEP PT1M]
+FROM NAMED WINDOW <win> ON <jsonTraces> [RANGE PT10S STEP PT10S]
 WHERE  {
     WINDOW ?w {
         ?s a tr:Span .
