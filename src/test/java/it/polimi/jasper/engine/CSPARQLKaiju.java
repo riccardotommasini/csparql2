@@ -27,7 +27,7 @@ public class CSPARQLKaiju {
 
         sr = new Jasper(0, ec);
 
-        GraphStreamKaiju writer = new GraphStreamKaiju("http://streamreasoning.org/jasper/streams/stream2");
+        GraphStreamKaiju writer = new GraphStreamKaiju("ws://localhost:4567/streams/jsonTraces");
 
         RegisteredEPLStream register = sr.register(writer);
 
