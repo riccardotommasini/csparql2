@@ -27,7 +27,7 @@ public class CSPARQLExample {
 
         sr = new Jasper(0, ec);
 
-        GraphStream writer = new GraphStream("Writer", "http://streamreasoning.org/jasper/streams/stream2", 5);
+        GraphStream writer = new GraphStream("Writer", "http://streamreasoning.org/jasper/streams/stream2", 1);
 
         RegisteredEPLStream register = sr.register(writer);
 

@@ -27,7 +27,6 @@ public abstract class EsperTimeVaryingGraph extends Observable implements Statem
     protected Report report;
     protected EsperWindowAssigner wa;
     protected Maintenance maintenance;
-    protected Graph graph;
     protected long now;
 
     protected ContentGraphBean c;
@@ -36,7 +35,11 @@ public abstract class EsperTimeVaryingGraph extends Observable implements Statem
         this.maintenance = maintenance;
         this.wa = wa;
         this.report = report;
-        this.graph = content;
+
+        this.c = Maintenance.NAIVE.equals(maintenance)
+                ? new ContentGraphBean(content)
+                : new IncrementalContentGraphBean(content);
+
     }
 
     @Override
@@ -49,11 +52,7 @@ public abstract class EsperTimeVaryingGraph extends Observable implements Statem
 
         long systime = System.currentTimeMillis();
 
-        this.c = Maintenance.NAIVE.equals(maintenance)
-                ? new ContentGraphBean(graph, newData)
-                : new IncrementalContentGraphBean(graph, newData, oldData);
-
-        this.c.setLast_timestamp_changed(event_time);
+        this.c.update(newData, oldData, event_time);
 
         if (report.report(null, c, event_time, systime)) {
             log.info("[" + Thread.currentThread() + "][" + systime + "] FROM STATEMENT: " + stmt.getText() + " AT "
@@ -72,12 +71,15 @@ public abstract class EsperTimeVaryingGraph extends Observable implements Statem
 
     @Override
     public void materialize(long ts) {
-        graph = wa.getContent(ts).coalesce();
+        if (this.c.getTimeStampLastUpdate() < ts) {
+            this.c.replace(this.wa.getContent(ts).coalesce());
+        } else
+            this.c.coalesce();
     }
 
     @Override
     public Graph get() {
-        return graph;
+        return c.coalesce();
     }
 
     @Override

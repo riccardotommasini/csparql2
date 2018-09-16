@@ -57,9 +57,7 @@ public class JenaSDS extends DatasetImpl implements SDS<Graph> {
 
     @Override
     public void materialize(long ts) {
-        if (partialWindowsEnabled) {
-            tvgs.forEach(g -> g.materialize(time.getAppTime()));
-        } //I don't need to re add them to the sds
+        tvgs.forEach(g -> g.materialize(time.getAppTime()));
     }
 
 

@@ -79,7 +79,7 @@ public class EsperWindowAssigner implements WindowAssigner<Graph, Graph>, Observ
     @Override
     public Content<Graph> getContent(long now) {
         SafeIterator<EventBean> iterator = statement.safeIterator();
-        ContentGraphBean events = new ContentGraphBean();
+        ContentGraphBean events = new ContentGraphBean(new GraphMem());
         events.setLast_timestamp_changed(now);
         while (iterator.hasNext()) {
             events.add(iterator.next());

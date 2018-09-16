@@ -50,7 +50,7 @@ public class GraphStream extends RDFStream implements Runnable {
             Resource type = ResourceFactory.createResource(uri + this.type);
             Property hasAge = ResourceFactory.createProperty(uri + "hasAge");
             Property hasTimestamp = ResourceFactory.createProperty(uri + "generatedAt");
-            Literal age = m.createTypedLiteral(r.nextInt(99));
+            Literal age = m.createTypedLiteral(i);
             int appTimestamp1 = i * 1000;
             Literal ts = m.createTypedLiteral(new Integer(appTimestamp1));
 

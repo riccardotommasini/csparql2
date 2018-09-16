@@ -9,8 +9,9 @@ import org.apache.jena.graph.Graph;
 @Log4j
 public class IncrementalContentGraphBean extends ContentGraphBean {
 
-    public IncrementalContentGraphBean(Graph g, EventBean[] newData, EventBean[] oldData) {
-        super(g, newData, oldData);
+    public IncrementalContentGraphBean(Graph graph) {
+        super(graph);
+
     }
 
     @Override

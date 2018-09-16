@@ -9,7 +9,6 @@ import lombok.Setter;
 import lombok.extern.log4j.Log4j;
 import org.apache.jena.graph.Graph;
 import org.apache.jena.graph.GraphUtil;
-import org.apache.jena.rdf.model.ModelFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,25 +22,10 @@ public class ContentGraphBean implements Content<Graph> {
     @Setter
     private long last_timestamp_changed;
 
-    public ContentGraphBean() {
+    public ContentGraphBean(Graph graph) {
+        this.graph = graph;
         this.elements = new ArrayList<>();
-        this.graph = ModelFactory.createDefaultModel().getGraph();
     }
-
-    public ContentGraphBean(Graph g, EventBean[] newData) {
-        this();
-        this.graph = g;
-        eval(newData, null);
-        coalesce();
-    }
-
-    public ContentGraphBean(Graph g, EventBean[] newData, EventBean[] oldData) {
-        this();
-        this.graph = g;
-        eval(newData, oldData);
-        coalesce();
-    }
-
 
     public void eval(EventBean[] newData, EventBean[] oldData) {
         DStreamUpdate(oldData);
@@ -75,6 +59,7 @@ public class ContentGraphBean implements Content<Graph> {
 
     protected void DStreamUpdate(EventBean[] oldData) {
         elements.clear();
+        graph.clear();
     }
 
     @Override
@@ -86,6 +71,7 @@ public class ContentGraphBean implements Content<Graph> {
     public void add(Graph e) {
         elements.add(e);
     }
+
 
     public void add(EventBean e) {
         if (e instanceof MapEventBean) {
@@ -119,5 +105,15 @@ public class ContentGraphBean implements Content<Graph> {
 
     public EventBean[] asArray() {
         return elements.toArray(new EventBean[size()]);
+    }
+
+    public void update(EventBean[] newData, EventBean[] oldData, long event_time) {
+        eval(newData, oldData);
+        setLast_timestamp_changed(event_time);
+    }
+
+    public void replace(Graph coalesce) {
+        this.graph.clear();
+        GraphUtil.addInto(graph, coalesce);
     }
 }
