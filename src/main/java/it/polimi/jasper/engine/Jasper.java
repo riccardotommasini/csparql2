@@ -79,7 +79,7 @@ public class Jasper extends EsperRSPEngine implements QueryObserverRegistrationF
 
     @Override
     public ContinuousQueryExecution register(RSPQLJenaQuery q, QueryConfiguration c) {
-        JasperSD sSManager builder = new JasperSDSManager(
+        JasperSDSManager builder = new JasperSDSManager(
                 q,
                 c,
                 entailments.get(EntailmentType.RDFS.name()),
