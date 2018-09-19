@@ -81,7 +81,6 @@ public class Jasper extends EsperRSPEngine implements QueryObserverRegistrationF
     public ContinuousQueryExecution register(RSPQLJenaQuery q, QueryConfiguration c) {
         JasperSDSManager builder = new JasperSDSManager(
                 q,
-                c,
                 entailments.get(EntailmentType.RDFS.name()),
                 this.resolver,
                 this.report,
@@ -91,7 +90,9 @@ public class Jasper extends EsperRSPEngine implements QueryObserverRegistrationF
                 this.reportGrain,
                 this.tick,
                 this.stream_registration_service,
-                this.stream_dispatching_service);
+                this.stream_dispatching_service,
+                c.getSdsMaintainance(),
+                c.getTboxLocation());
 
         return save(q, builder.build(), builder.getContinuousQueryExecution());
     }

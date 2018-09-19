@@ -22,9 +22,9 @@
             <version>6.1.0</version>
         </dependency>
         <!--<dependency>-->
-            <!--<groupId>it.polimi.sr.yasper</groupId>-->
-            <!--<artifactId>yasper-core</artifactId>-->
-            <!--<version>2.1.0</version>-->
+        <!--<groupId>it.polimi.sr.yasper</groupId>-->
+        <!--<artifactId>yasper-core</artifactId>-->
+        <!--<version>2.1.0</version>-->
         <!--</dependency>-->
         <dependency>
             <groupId>com.github.riccardotommasini.yasper</groupId>
@@ -33,18 +33,29 @@
         </dependency>
         <dependency>
             <groupId>org.apache.jena</groupId>
-            <artifactId>jena-arq</artifactId>
-            <version>3.1.0</version>
+            <artifactId>jena-core</artifactId>
+            <version>3.7.0</version>
         </dependency>
         <dependency>
-            <groupId>com.github.galigator.openllet</groupId>
-            <artifactId>openllet-jena</artifactId>
-            <version>2.6.1</version>
+            <groupId>org.apache.jena</groupId>
+            <artifactId>jena-arq</artifactId>
+            <version>3.7.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.jena</groupId>
+            <artifactId>jena-elephas-io</artifactId>
+            <version>3.7.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-rdf-jena</artifactId>
             <version>0.5.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.jena</groupId>
+                    <artifactId>jena-osgi</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>

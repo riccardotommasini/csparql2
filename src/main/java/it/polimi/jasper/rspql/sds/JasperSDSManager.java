@@ -12,7 +12,6 @@ import it.polimi.yasper.core.rspql.sds.SDS;
 import it.polimi.yasper.core.rspql.sds.SDSManager;
 import it.polimi.yasper.core.rspql.timevarying.TimeVarying;
 import it.polimi.yasper.core.spe.content.Maintenance;
-import it.polimi.yasper.core.spe.operators.r2r.QueryConfiguration;
 import it.polimi.yasper.core.spe.operators.r2r.execution.ContinuousQueryExecution;
 import it.polimi.yasper.core.spe.operators.s2r.execution.assigner.WindowAssigner;
 import it.polimi.yasper.core.spe.report.Report;
@@ -20,7 +19,6 @@ import it.polimi.yasper.core.spe.report.ReportGrain;
 import it.polimi.yasper.core.spe.tick.Tick;
 import it.polimi.yasper.core.stream.RegisteredStream;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import org.apache.jena.graph.Graph;
 import org.apache.jena.graph.compose.MultiUnion;
@@ -29,6 +27,7 @@ import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.impl.InfModelImpl;
 import org.apache.jena.reasoner.Reasoner;
 import org.apache.jena.riot.system.IRIResolver;
+
 import java.util.Map;
 
 /**
@@ -38,7 +37,6 @@ import java.util.Map;
 public class JasperSDSManager implements SDSManager {
 
     private final RSPQLJenaQuery query;
-    private final QueryConfiguration queryConfiguration;
 
     private final Entailment ent;
 
@@ -69,9 +67,8 @@ public class JasperSDSManager implements SDSManager {
     private String tboxLocation;
     private Model tbox;
 
-    public JasperSDSManager(RSPQLJenaQuery query, QueryConfiguration queryConfiguration, Entailment ent, IRIResolver resolver, Report report, String responseFormat, Boolean enabled_recursion, Boolean usingEventTime, ReportGrain reportGrain, Tick tick, EsperStreamRegistrationService stream_registration_service, Map<String, WindowAssigner> stream_dispatching_service) {
+    public JasperSDSManager(RSPQLJenaQuery query, Entailment ent, IRIResolver resolver, Report report, String responseFormat, Boolean enabled_recursion, Boolean usingEventTime, ReportGrain reportGrain, Tick tick, EsperStreamRegistrationService stream_registration_service, Map<String, WindowAssigner> stream_dispatching_service, Maintenance sdsMaintainance, String tboxLocation) {
         this.query = query;
-        this.queryConfiguration = queryConfiguration;
         this.ent = ent;
         this.resolver = resolver;
         this.report = report;
@@ -87,9 +84,6 @@ public class JasperSDSManager implements SDSManager {
     @Override
     public SDS build() {
 
-        this.maintenance = queryConfiguration.getSdsMaintainance();
-
-        this.tboxLocation = queryConfiguration.getTboxLocation();
         this.tbox = ModelFactory.createDefaultModel().read(tboxLocation);
 
         this.reasoner = ContinuousQueryExecutionFactory.getGenericRuleReasoner(ent, tbox);
