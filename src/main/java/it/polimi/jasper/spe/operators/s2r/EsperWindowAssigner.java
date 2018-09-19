@@ -110,12 +110,18 @@ public class EsperWindowAssigner implements WindowAssigner<Graph, Graph>, Observ
 
     public boolean process(Graph g, long now) {
 
-        if (time.getAppTime() <= now) {
-            time.setAppTime(now);
-        }
+        long appTime = time.getAppTime();
 
-        runtime.sendEvent(new GraphStreamItem(now, g, name), name);
-        return true;
+        if (appTime < now) {
+            time.setAppTime(now);
+            runtime.sendEvent(new GraphStreamItem(now, g, name), name);
+            return true;
+        } else if (appTime == now) {
+            runtime.sendEvent(new GraphStreamItem(now, g, name), name);
+            return true;
+        } else
+            return false;
+
     }
 
     @Override
