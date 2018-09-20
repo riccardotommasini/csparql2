@@ -1,13 +1,11 @@
 PREFIX tr: <http://polimi.deib/tracing#>
 
 REGISTER RSTREAM <s1> AS
-SELECT ?t (COUNT(?s) AS ?countSpan)
+SELECT (COUNT(distinct ?sid) AS ?countSpan)
 FROM NAMED WINDOW <win> ON <jsonTraces> [RANGE PT10S STEP PT10S]
 WHERE  {
     WINDOW ?w {
         ?s a tr:Span .
-        ?s tr:spanOf ?t .
-        ?t a tr:Trace .
+        ?s tr:spanId ?sid .
     }
 }
-GROUP BY ?t
