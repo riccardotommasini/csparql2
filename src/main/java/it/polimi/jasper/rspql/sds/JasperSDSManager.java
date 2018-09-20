@@ -80,6 +80,7 @@ public class JasperSDSManager implements SDSManager {
         this.stream_registration_service = stream_registration_service;
         this.stream_dispatching_service = stream_dispatching_service;
         this.tboxLocation = tboxLocation;
+        this.maintenance=sdsMaintainance;
     }
 
     @Override

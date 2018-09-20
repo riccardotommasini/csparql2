@@ -138,7 +138,7 @@ public class EPLFactory {
         View window = EPLFactory.getWindow((int) range, unitRange, type);
         EPStatementObjectModel epStatementObjectModel = EPLFactory.toEPL(tick, report, maintenance, step, unitStep, type, name, window, annotations);
         log.info(epStatementObjectModel.toEPL());
-        return new EsperWindowAssigner(EncodingUtils.encode(name), tick, report, time, epStatementObjectModel);
+        return new EsperWindowAssigner(EncodingUtils.encode(name), tick, report, time, maintenance, epStatementObjectModel);
     }
 
 

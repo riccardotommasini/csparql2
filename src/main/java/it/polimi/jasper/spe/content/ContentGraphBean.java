@@ -59,7 +59,6 @@ public class ContentGraphBean implements Content<Graph> {
 
     protected void DStreamUpdate(EventBean[] oldData) {
         elements.clear();
-        graph.clear();
     }
 
     @Override
@@ -94,6 +93,7 @@ public class ContentGraphBean implements Content<Graph> {
 
     @Override
     public Graph coalesce() {
+        graph.clear();
         elements.forEach(ig -> GraphUtil.addInto(this.graph, ig));
         return this.graph;
     }

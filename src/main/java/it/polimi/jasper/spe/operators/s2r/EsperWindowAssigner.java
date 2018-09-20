@@ -50,7 +50,7 @@ public class EsperWindowAssigner implements WindowAssigner<Graph, Graph>, Observ
     @Getter
     private Maintenance maintenance;
 
-    public EsperWindowAssigner(String name, Tick tick, Report report, boolean event_time, EPStatementObjectModel stm) {
+    public EsperWindowAssigner(String name, Tick tick, Report report, boolean event_time, Maintenance maintenance, EPStatementObjectModel stm) {
         this.name = name;
         this.tick = tick;
         this.report = report;
@@ -58,6 +58,7 @@ public class EsperWindowAssigner implements WindowAssigner<Graph, Graph>, Observ
         this.runtime = RuntimeManager.getEPRuntime();
         this.admin = RuntimeManager.getAdmin();
         this.statement = admin.create(stm, name);
+        this.maintenance = maintenance;
         this.time = new EsperTime(runtime);
     }
 
