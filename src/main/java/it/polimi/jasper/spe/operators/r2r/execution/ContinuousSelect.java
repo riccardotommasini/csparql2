@@ -5,7 +5,11 @@ import it.polimi.yasper.core.rspql.sds.SDS;
 import it.polimi.yasper.core.spe.operators.r2r.ContinuousQuery;
 import it.polimi.yasper.core.spe.operators.r2s.RelationToStreamOperator;
 import it.polimi.yasper.core.spe.operators.r2s.result.InstantaneousResult;
+import org.apache.jena.atlas.json.JsonArray;
+import org.apache.jena.atlas.json.JsonObject;
 import org.apache.jena.query.QueryExecutionFactory;
+
+import java.util.Iterator;
 
 /**
  * Created by riccardo on 03/07/2017.
