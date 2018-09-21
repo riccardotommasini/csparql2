@@ -1,0 +1,14 @@
+PREFIX c: <http://www.streamreasoning.org/ontologies/2018/9/colors#>
+
+CONSTRUCT { 
+	UUID() a c:Yellow; 
+		   c:from ?r ; 
+		   c:from ?g .
+}
+FROM NAMED WINDOW <rw> ON <red> [RANGE PT15S STEP PT5S]
+FROM NAMED WINDOW <gw> ON <green> [RANGE PT15S STEP PT5S]
+WHERE {
+	WINDOW ?rw { ?r a c:Red .}
+
+	WINDOW ?gw { ?g a c:Green .}
+}
