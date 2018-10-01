@@ -72,7 +72,7 @@ public class ColorsGraphStream extends RDFStream implements Runnable {
                 log.info("Sleep");
                 int randSleep = 1 + r.nextInt(8);
                 j += randSleep;
-                Thread.sleep(1000 * randSleep);
+                Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

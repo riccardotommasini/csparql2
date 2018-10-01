@@ -1,12 +1,14 @@
 PREFIX ars: <http://www.streamreasoning/it.polimi.jasper.test/artist#>
-
+PREFIX afn: <http://jena.apache.org/ARQ/function#>
 REGISTER RSTREAM <s1> AS
-SELECT (AVG(?age) AS ?sum) ?a
-FROM NAMED WINDOW <win2> ON <stream2> [RANGE PT1M STEP PT1M]
+SELECT (?uuid AS ?sum) ?a
+FROM NAMED WINDOW <win2> ON <http://differenthost:12134/stream2> [RANGE PT10S STEP PT10S]
 WHERE  {
     WINDOW ?w {
         ?a a ars:Writer ;
            ars:hasAge ?age .
     }
+
+     BIND( UUID() as ?uuid )
+
 }
-GROUP BY ?a

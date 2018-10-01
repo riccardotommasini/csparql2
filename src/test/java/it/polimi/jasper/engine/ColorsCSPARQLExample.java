@@ -1,5 +1,6 @@
 package it.polimi.jasper.engine;
 
+import it.polimi.jasper.spe.operators.r2s.formatter.ResponseFormatterFactory;
 import it.polimi.jasper.streams.RegisteredEPLStream;
 import it.polimi.yasper.core.engine.EngineConfiguration;
 import it.polimi.yasper.core.spe.operators.r2r.ContinuousQuery;
@@ -30,53 +31,56 @@ public class ColorsCSPARQLExample {
         ColorsGraphStream red = new ColorsGraphStream("Red", "http://localhost:1255/streams/red");
         ColorsGraphStream green = new ColorsGraphStream("Green", "http://localhost:1255/streams/green");
         ColorsGraphStream blue = new ColorsGraphStream("Blue", "http://localhost:1255/streams/blue");
-        
+
         //FAKE STREAM: we insert y1 as from r1 and g1
         //qYellowStream must be fixed to build this stream as JOIN of red and green streams
-        ColorsGraphStream yellow = new ColorsGraphStream("Yellow", "http://localhost:1255/streams/yellow");
+        //   ColorsGraphStream yellow = new ColorsGraphStream("Yellow", "http://localhost:1255/streams/yellow");
 
         RegisteredEPLStream registerRed = sr.register(red);
         RegisteredEPLStream registerGreen = sr.register(green);
         RegisteredEPLStream registerBlue = sr.register(blue);
-        RegisteredEPLStream registerYellow = sr.register(yellow);
+        //RegisteredEPLStream registerYellow = sr.register(yellow);
 
         red.setWritable(registerRed);
         green.setWritable(registerGreen);
         blue.setWritable(registerBlue);
-        yellow.setWritable(registerYellow);
+        //yellow.setWritable(registerYellow);
 
-        ContinuousQueryExecution cqe1 = sr.register(getQuery("OneStream",".rspql"), config);
-        ContinuousQueryExecution cqe2 = sr.register(getQuery("TwoStreams",".rspql"), config);
-        //ContinuousQueryExecution cqe3 = sr.register(getQuery("YellowStream",".rspql"), config); NOT WORKING UUID() and CONSTRUCT
-        ContinuousQueryExecution cqe4 = sr.register(getQuery("ReasoningSubClass",".rspql"), config);
-        ContinuousQueryExecution cqe5 = sr.register(getQuery("ReasoningDomainRange",".rspql"), config);
+        //ContinuousQueryExecution cqe = sr.register(getQuery("OneStream", ".rspql"), config);
+       // ContinuousQueryExecution cqe = sr.register(getQuery("TwoStreams", ".rspql"), config);
+        //ContinuousQueryExecution cqe = sr.register(getQuery("YellowStream", ".rspql"), config);
+        ContinuousQueryExecution cqe = sr.register(getQuery("ReasoningSubClass", ".rspql"), config);
+        //ContinuousQueryExecution cqe = sr.register(getQuery("ReasoningDomainRange", ".rspql"), config);
 
-        ContinuousQuery qOneStream = cqe1.getContinuousQuery();
-        ContinuousQuery qTwoStreams = cqe2.getContinuousQuery();
-        //ContinuousQuery qYellowStream = cqe3.getContinuousQuery(); NOT WORKING
-        ContinuousQuery qReasoningSubClass = cqe4.getContinuousQuery();
-        ContinuousQuery qReasoningDomainRange = cqe5.getContinuousQuery();
+        ContinuousQuery query = cqe.getContinuousQuery();
 
-        System.out.println(qOneStream.toString());
-        System.out.println("<<------>>");
-        System.out.println(qTwoStreams.toString());
+        //   System.out.println(qOneStream.toString());
+        //   System.out.println("<<------>>");
+        //   System.out.println(qTwoStreams.toString());
 //        System.out.println("<<------>>");
-//        System.out.println(qYellowStream.toString());
+        System.out.println(query.toString());
         System.out.println("<<------>>");
-        System.out.println(qReasoningSubClass.toString());
-        System.out.println("<<------>>");
-        System.out.println(qReasoningDomainRange.toString());
+        //  System.out.println(qReasoningSubClass.toString());
+        //  System.out.println("<<------>>");
+        //  System.out.println(qReasoningDomainRange.toString());
 
         //In real application we do not have to start the stream.
         (new Thread(red)).start();
         (new Thread(green)).start();
-        (new Thread(blue)).start();
-        (new Thread(yellow)).start();
+        //  (new Thread(blue)).start();
+        //  (new Thread(yellow)).start();
+
+        if (query.isConstructType()) {
+            cqe.add(ResponseFormatterFactory.getConstructResponseSysOutFormatter("JSON-LD", true));
+        } else if (query.isSelectType()) {
+            cqe.add(ResponseFormatterFactory.getSelectResponseSysOutFormatter("CSV", true));
+        }
+
 
     }
 
     @SuppressWarnings("deprecation")
-	public static String getQuery(String nameQuery, String suffix) throws IOException {
+    public static String getQuery(String nameQuery, String suffix) throws IOException {
         URL resource = ColorsCSPARQLExample.class.getResource("/q" + nameQuery + suffix);
         System.out.println(resource.getPath());
         File file = new File(resource.getPath());
