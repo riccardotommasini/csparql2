@@ -55,7 +55,7 @@ public abstract class EsperTimeVaryingGraph extends Observable implements Statem
         this.c.update(newData, oldData, event_time);
 
         if (report.report(null, c, event_time, systime)) {
-            log.info("[" + Thread.currentThread() + "][" + systime + "] FROM STATEMENT: " + stmt.getText() + " AT "
+            log.debug("[" + Thread.currentThread() + "][" + systime + "] FROM STATEMENT: " + stmt.getText() + " AT "
                     + event_time);
 
             setChanged();

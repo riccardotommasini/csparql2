@@ -69,6 +69,7 @@ public class CQELS extends EsperRSPEngine implements QueryRegistrationFeature<RS
     @Override
     public ContinuousQueryExecution register(RSPQLJenaQuery q, QueryConfiguration c) {
         JasperSDSManager builder = new JasperSDSManager(q,
+                EntailmentType.RDFS,
                 entailments.get(EntailmentType.RDFS.name()),
                 this.resolver,
                 this.report,
