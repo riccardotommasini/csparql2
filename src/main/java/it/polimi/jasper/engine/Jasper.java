@@ -1,11 +1,11 @@
 package it.polimi.jasper.engine;
 
-import it.polimi.jasper.spe.operators.r2r.syntax.QueryFactory;
-import it.polimi.jasper.spe.operators.r2r.syntax.RSPQLJenaQuery;
 import it.polimi.jasper.rspql.reasoning.EntailmentImpl;
 import it.polimi.jasper.rspql.reasoning.EntailmentType;
 import it.polimi.jasper.rspql.reasoning.ReasoningUtils;
 import it.polimi.jasper.rspql.sds.JasperSDSManager;
+import it.polimi.jasper.spe.operators.r2r.syntax.QueryFactory;
+import it.polimi.jasper.spe.operators.r2r.syntax.RSPQLJenaQuery;
 import it.polimi.yasper.core.engine.EngineConfiguration;
 import it.polimi.yasper.core.engine.exceptions.UnregisteredQueryExeception;
 import it.polimi.yasper.core.engine.features.QueryObserverRegistrationFeature;
@@ -42,6 +42,7 @@ public class Jasper extends EsperRSPEngine implements QueryObserverRegistrationF
         this.reportGrain = ReportGrain.SINGLE;
 
         //Adding default entailments
+
         String ent = EntailmentType.RDFS.name();
         this.entailments.put(ent, new EntailmentImpl(ent, Rule.rulesFromURL(ReasoningUtils.RHODF_RULE_SET_RUNTIME), EntailmentType.RDFS));
         ent = EntailmentType.RHODF.name();
@@ -81,7 +82,8 @@ public class Jasper extends EsperRSPEngine implements QueryObserverRegistrationF
     public ContinuousQueryExecution register(RSPQLJenaQuery q, QueryConfiguration c) {
         JasperSDSManager builder = new JasperSDSManager(
                 q,
-                entailments.get(EntailmentType.RDFS.name()),
+                EntailmentType.OWL,
+                entailments.get(EntailmentType.OWL.name()),
                 this.resolver,
                 this.report,
                 this.responseFormat,

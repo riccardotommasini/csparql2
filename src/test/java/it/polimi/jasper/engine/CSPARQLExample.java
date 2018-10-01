@@ -1,6 +1,7 @@
 package it.polimi.jasper.engine;
 
 import it.polimi.jasper.streams.RegisteredEPLStream;
+import it.polimi.yasper.core.engine.ConfigurationUtils;
 import it.polimi.yasper.core.engine.EngineConfiguration;
 import it.polimi.yasper.core.spe.operators.r2r.ContinuousQuery;
 import it.polimi.yasper.core.spe.operators.r2r.QueryConfiguration;
@@ -25,9 +26,11 @@ public class CSPARQLExample {
         QueryConfiguration config = new QueryConfiguration(resource.getPath());
         EngineConfiguration ec = EngineConfiguration.loadConfig("/csparql.properties");
 
+        config.setProperty(ConfigurationUtils.TBOX_LOCATION, "https://raw.githubusercontent.com/riccardotommasini/csparql2/master/src/test/resources/artist.tbox.owl?token=ACeO0Zrl_qG-5YPpHh6T_VvZYqXsxFgJks5brMV-wA%3D%3D");
+
         sr = new Jasper(0, ec);
 
-        GraphStream writer = new GraphStream("Writer", "http://streamreasoning.org/jasper/streams/stream2", 1);
+        GraphStream writer = new GraphStream("Writer", "http://differenthost:12134/stream2", 1);
 
         RegisteredEPLStream register = sr.register(writer);
 

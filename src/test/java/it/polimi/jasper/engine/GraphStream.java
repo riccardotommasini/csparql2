@@ -66,7 +66,7 @@ public class GraphStream extends RDFStream implements Runnable {
                 this.s.put(m.getGraph(), appTimestamp1);
             try {
                 log.info("Sleep");
-                Thread.sleep(1000);
+                Thread.sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

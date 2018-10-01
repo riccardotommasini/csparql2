@@ -1,10 +1,10 @@
 package it.polimi.jasper.rspql.sds;
 
 import it.polimi.jasper.rspql.reasoning.Entailment;
+import it.polimi.jasper.rspql.reasoning.EntailmentType;
 import it.polimi.jasper.spe.esper.EsperStreamRegistrationService;
 import it.polimi.jasper.spe.operators.r2r.execution.ContinuousQueryExecutionFactory;
 import it.polimi.jasper.spe.operators.r2r.syntax.RSPQLJenaQuery;
-import it.polimi.jasper.spe.operators.r2s.formatter.ResponseFormatterFactory;
 import it.polimi.jasper.spe.operators.s2r.EsperWindowOperator;
 import it.polimi.yasper.core.engine.exceptions.StreamRegistrationException;
 import it.polimi.yasper.core.rspql.RDFUtils;
@@ -52,6 +52,7 @@ public class JasperSDSManager implements SDSManager {
 
     private final EsperStreamRegistrationService stream_registration_service;
     private final Map<String, WindowAssigner> stream_dispatching_service;
+    private final EntailmentType et;
 
     @Getter
     protected Reasoner reasoner;
@@ -67,7 +68,7 @@ public class JasperSDSManager implements SDSManager {
     private String tboxLocation;
     private Model tbox;
 
-    public JasperSDSManager(RSPQLJenaQuery query, Entailment ent, IRIResolver resolver, Report report, String responseFormat, Boolean enabled_recursion, Boolean usingEventTime, ReportGrain reportGrain, Tick tick, EsperStreamRegistrationService stream_registration_service, Map<String, WindowAssigner> stream_dispatching_service, Maintenance sdsMaintainance, String tboxLocation) {
+    public JasperSDSManager(RSPQLJenaQuery query, EntailmentType et, Entailment ent, IRIResolver resolver, Report report, String responseFormat, Boolean enabled_recursion, Boolean usingEventTime, ReportGrain reportGrain, Tick tick, EsperStreamRegistrationService stream_registration_service, Map<String, WindowAssigner> stream_dispatching_service, Maintenance sdsMaintainance, String tboxLocation) {
         this.query = query;
         this.ent = ent;
         this.resolver = resolver;
@@ -80,7 +81,8 @@ public class JasperSDSManager implements SDSManager {
         this.stream_registration_service = stream_registration_service;
         this.stream_dispatching_service = stream_dispatching_service;
         this.tboxLocation = tboxLocation;
-        this.maintenance=sdsMaintainance;
+        this.maintenance = sdsMaintainance;
+        this.et=et;
     }
 
     @Override
@@ -88,7 +90,7 @@ public class JasperSDSManager implements SDSManager {
 
         this.tbox = ModelFactory.createDefaultModel().read(tboxLocation);
 
-        this.reasoner = ContinuousQueryExecutionFactory.getGenericRuleReasoner(ent, tbox);
+        this.reasoner = ContinuousQueryExecutionFactory.getReasoner(et, ent, tbox);
 
         if (query.isRecursive() && !this.enabled_recursion) {
             throw new UnsupportedOperationException("Recursion must be enabled");
@@ -98,14 +100,7 @@ public class JasperSDSManager implements SDSManager {
 
         this.cqe = ContinuousQueryExecutionFactory.create(query, sds);
 
-        if (query.isConstructType()) {
-            this.cqe.add(ResponseFormatterFactory.getConstructResponseSysOutFormatter(responseFormat, distinct));
-        } else if (query.isSelectType()) {
-            this.cqe.add(ResponseFormatterFactory.getSelectResponseSysOutFormatter(responseFormat, distinct));
-        } else {
-            this.cqe.add(ResponseFormatterFactory.getGenericResponseSysOutFormatter(responseFormat, distinct));
-        }
-
+        //Load Static Knowledge
         query.getNamedGraphURIs().forEach(g -> {
             Model m = ModelFactory.createDefaultModel();
             if (!query.getNamedwindowsURIs().contains(g)) {
@@ -129,8 +124,9 @@ public class JasperSDSManager implements SDSManager {
         Map<String, RegisteredStream<Graph>> registeredStreams = stream_registration_service.getRegisteredStreams();
 
         query.getWindowMap().forEach((wo, s) -> {
-            String key = this.resolver.resolveToString("streams/" + s.getURI());
-            if (!registeredStreams.containsKey(key)) {
+
+            String key = this.resolver.resolveToString(s.getURI());
+            if (!registeredStreams.containsKey(s.getURI())) {
                 throw new StreamRegistrationException(s.getURI());
             } else {
 

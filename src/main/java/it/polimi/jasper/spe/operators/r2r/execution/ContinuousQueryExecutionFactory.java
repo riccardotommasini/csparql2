@@ -1,14 +1,16 @@
 package it.polimi.jasper.spe.operators.r2r.execution;
 
 import it.polimi.jasper.rspql.reasoning.Entailment;
+import it.polimi.jasper.rspql.reasoning.EntailmentType;
 import it.polimi.jasper.rspql.sds.JenaSDS;
 import it.polimi.jasper.spe.operators.r2r.syntax.RSPQLJenaQuery;
-import it.polimi.yasper.core.spe.operators.r2r.ContinuousQuery;
 import it.polimi.yasper.core.spe.operators.r2r.execution.ContinuousQueryExecutionObserver;
 import it.polimi.yasper.core.spe.operators.r2s.*;
 import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.reasoner.Reasoner;
+import org.apache.jena.reasoner.ReasonerRegistry;
 import org.apache.jena.reasoner.rulesys.GenericRuleReasoner;
 import org.apache.jena.reasoner.rulesys.Rule;
 
@@ -53,7 +55,19 @@ public final class ContinuousQueryExecutionFactory extends QueryExecutionFactory
     }
 
 
-    public static GenericRuleReasoner getGenericRuleReasoner(Entailment ent, Model tbox) {
+    public static Reasoner getReasoner(EntailmentType et, Entailment ent, Model tbox) {
+
+        switch (et) {
+            case OWL:
+                return ReasonerRegistry.getOWLReasoner().bindSchema(tbox);
+            case RDFS:
+                return ReasonerRegistry.getRDFSReasoner().bindSchema(tbox);
+            case OWL2RL:
+                return ReasonerRegistry.getRDFSReasoner().bindSchema(tbox);
+
+            default:
+                break;
+        }
         return getTvgReasoner(tbox, ent.getRules());
     }
 

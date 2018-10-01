@@ -74,6 +74,7 @@ public class CSPARQL extends EsperRSPEngine implements QueryRegistrationFeature<
     public ContinuousQueryExecution register(RSPQLJenaQuery q, QueryConfiguration c) {
 
         JasperSDSManager builder = new JasperSDSManager(q,
+                EntailmentType.RDFS,
                 entailments.get(EntailmentType.RDFS.name()),
                 this.resolver,
                 this.report,
