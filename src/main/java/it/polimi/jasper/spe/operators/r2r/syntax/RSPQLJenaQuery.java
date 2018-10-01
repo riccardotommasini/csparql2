@@ -27,12 +27,14 @@ public class RSPQLJenaQuery extends Query implements ContinuousQuery {
     public static String ISTREAM = "ISTREAM";
     public static String DSTREAM = "DSTREAM";
     public static String defaultStreamType = RSTREAM;
+    private IRIResolver stream_resolver;
 
     private String streamType = defaultStreamType;
     private String outputStreamUri;
     private List<NamedWindow> namedWindows = new ArrayList<>();
     private List<ElementNamedWindow> elementNamedWindows = new ArrayList<>();
     private Map<WindowNode, Stream> windowMap = new HashMap<>();
+
     @Getter
     @Setter
     private QueryConfiguration configuration;
@@ -42,9 +44,11 @@ public class RSPQLJenaQuery extends Query implements ContinuousQuery {
 
     public RSPQLJenaQuery(IRIResolver resolver) {
         super.setResolver(resolver);
+        this.stream_resolver = IRIResolver.create(resolver.getBaseIRIasString() + "streams/");
     }
 
     public void addNamedWindow(Node windowUri, Node streamUri, Duration range, Duration step) {
+        streamUri = NodeFactory.createURI(stream_resolver.resolveToString(streamUri.toString()));
         NamedWindow namedWindow = new NamedWindow(this, windowUri, streamUri, NamedWindow.LOGICAL_WINDOW);
         namedWindow.setLogicalRange(range);
         namedWindow.setLogicalStep(step);
@@ -53,6 +57,7 @@ public class RSPQLJenaQuery extends Query implements ContinuousQuery {
     }
 
     public void addNamedWindow(Node windowUri, Node streamUri, int range, int step) {
+        streamUri = NodeFactory.createURI(stream_resolver.resolveToString(streamUri.toString()));
         NamedWindow namedWindow = new NamedWindow(this, windowUri, streamUri, NamedWindow.PHYSICAL_WINDOW);
         namedWindow.setPhysicalRange(range);
         namedWindow.setPhysicalStep(step);

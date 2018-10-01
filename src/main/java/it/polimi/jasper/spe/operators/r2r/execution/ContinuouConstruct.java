@@ -8,6 +8,7 @@ import it.polimi.yasper.core.spe.operators.r2s.result.InstantaneousResult;
 import org.apache.jena.atlas.json.JsonArray;
 import org.apache.jena.atlas.json.JsonObject;
 import org.apache.jena.query.QueryExecutionFactory;
+import org.apache.jena.rdf.model.Model;
 
 import java.util.Iterator;
 
@@ -23,7 +24,8 @@ public class ContinuouConstruct extends JenaContinuousQueryExecution {
     @Override
     public InstantaneousResult eval(long ts) {
         this.execution = QueryExecutionFactory.create(getQuery(), getDataset());
-        this.last_response = new ConstructResponse("http://streamreasoning.org/jasper/", query, execution.execConstruct(), ts);
+        Model results = execution.execConstruct();
+        this.last_response = new ConstructResponse("http://streamreasoning.org/jasper/", query, results, ts);
         return s2r.eval(last_response);
     }
 }
