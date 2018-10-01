@@ -18,7 +18,6 @@ public final class SelectResponse extends InstantaneousResult {
     private ResultSet results;
     protected final List<String> result_vars;
 
-
     public SelectResponse(String id, ContinuousQuery query, ResultSet results, List<String> resultVars, long cep_timestamp) {
         super(id, System.currentTimeMillis(), cep_timestamp, query);
         ResultSetRewindable resultSetRewindable = ResultSetFactory.copyResults(results);
@@ -102,5 +101,7 @@ public final class SelectResponse extends InstantaneousResult {
         return solutions;
     }
 
-
+    public ResultSetRewindable getResults() {
+        return ResultSetFactory.copyResults(results);
+    }
 }
