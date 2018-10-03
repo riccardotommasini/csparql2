@@ -38,7 +38,7 @@ public class CSPARQLExample {
         writer.setWritable(register);
 
         ContinuousQueryExecution cqe = sr.register(getQuery(".rspql"), config);
-        cqe.add(new SelectSysOutDefaultFormatter("JSON-LD", true)); //or "CSV"
+        cqe.add(new SelectSysOutDefaultFormatter("TABLE", true)); //or "CSV" or "JSON" or "JSON-LD"
 
         ContinuousQuery q2 = cqe.getContinuousQuery();
 
