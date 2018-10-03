@@ -1,5 +1,6 @@
 package it.polimi.jasper.engine;
 
+import it.polimi.jasper.spe.operators.r2s.formatter.sysout.SelectSysOutDefaultFormatter;
 import it.polimi.jasper.streams.RegisteredEPLStream;
 import it.polimi.yasper.core.engine.ConfigurationUtils;
 import it.polimi.yasper.core.engine.EngineConfiguration;
@@ -37,6 +38,7 @@ public class CSPARQLExample {
         writer.setWritable(register);
 
         ContinuousQueryExecution cqe = sr.register(getQuery(".rspql"), config);
+        cqe.add(new SelectSysOutDefaultFormatter("JSON-LD", true)); //or "CSV"
 
         ContinuousQuery q2 = cqe.getContinuousQuery();
 
