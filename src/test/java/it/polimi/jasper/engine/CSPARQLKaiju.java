@@ -35,7 +35,7 @@ public class CSPARQLKaiju {
 
         writer.setWritable(register);
 
-        ContinuousQueryExecution cqe = sr.register(getQuery("Kaiju_exp3_1",".rspql"), config);
+        ContinuousQueryExecution cqe = sr.register(getQuery("Kaiju_exp3_2",".rspql"), config);
         cqe.add(ResponseFormatterFactory.getSelectResponseSysOutFormatter("TABLE", true));//or "CSV" or "JSON" or "JSON-LD"
         ContinuousQueryExecution cqe2 = sr.register(getQuery("42",".rspql"), config);
         cqe2.add(ResponseFormatterFactory.getSelectResponseSysOutFormatter("TABLE", true));//or "CSV" or "JSON" or "JSON-LD"
