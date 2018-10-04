@@ -1,5 +1,6 @@
 package it.polimi.jasper.engine;
 
+import it.polimi.jasper.spe.operators.r2s.formatter.ResponseFormatterFactory;
 import it.polimi.jasper.spe.operators.r2s.formatter.sysout.SelectSysOutDefaultFormatter;
 import it.polimi.jasper.streams.RegisteredEPLStream;
 import it.polimi.yasper.core.engine.ConfigurationUtils;
@@ -38,13 +39,18 @@ public class CSPARQLExample {
         writer.setWritable(register);
 
         ContinuousQueryExecution cqe = sr.register(getQuery(".rspql"), config);
-        cqe.add(new SelectSysOutDefaultFormatter("TABLE", true)); //or "CSV" or "JSON" or "JSON-LD"
 
-        ContinuousQuery q2 = cqe.getContinuousQuery();
+        ContinuousQuery query = cqe.getContinuousQuery();
 
-        System.out.println(q2.toString());
+        System.out.println(query.toString());
 
         System.out.println("<<------>>");
+        
+        if (query.isConstructType()) {
+            cqe.add(ResponseFormatterFactory.getConstructResponseSysOutFormatter("JSON-LD", true));
+        } else if (query.isSelectType()) {
+            cqe.add(ResponseFormatterFactory.getSelectResponseSysOutFormatter("TABLE", true)); //or "CSV" or "JSON" or "JSON-LD"
+        }
 
         //In real application we do not have to start the stream.
         (new Thread(writer)).start();
