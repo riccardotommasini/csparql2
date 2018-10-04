@@ -1,0 +1,30 @@
+PREFIX tr: <http://polimi.deib/tracing#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+REGISTER RSTREAM <s1> AS
+SELECT (?sid AS ?SessionId) (SUM(?tCalc) AS ?timeCPURouteCalcperSessionId)
+FROM NAMED WINDOW <win> ON <jsonTraces> [RANGE PT10S STEP PT10S]
+WHERE  {
+    WINDOW ?w {
+        ?t a tr:Trace .
+        ?s a tr:Span ;
+            tr:spanOfTrace ?t ;
+            tr:operationName "Driver::findNearest"^^xsd:string ;
+            tr:hasLog ?log .
+        ?log tr:hasField ?fs .
+        ?fs tr:stringVal "session"^^xsd:string .
+        ?log tr:hasField ?fsid .
+        ?fsid tr:tagKey "value"^^xsd:string .
+        ?fsid tr:stringVal ?sid .
+        ?s2 a tr:Span ;
+            tr:spanOfTrace ?t ;
+            tr:operationName "HTTP GET /route"^^xsd:string ;
+            tr:hasLog ?log2 .
+        ?log2 tr:hasField ?fR .
+        ?fR tr:stringVal "RouteCalc"^^xsd:string .
+        ?log2 tr:hasField ?fT .
+        ?fT tr:tagKey "time"^^xsd:string .
+        ?fT tr:doubleVal ?tCalc .   
+    }
+} 
+GROUP BY ?sid

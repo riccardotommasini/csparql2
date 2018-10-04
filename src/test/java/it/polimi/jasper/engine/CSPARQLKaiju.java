@@ -1,6 +1,6 @@
 package it.polimi.jasper.engine;
 
-import it.polimi.jasper.spe.operators.r2s.formatter.sysout.SelectSysOutDefaultFormatter;
+import it.polimi.jasper.spe.operators.r2s.formatter.ResponseFormatterFactory;
 import it.polimi.jasper.streams.RegisteredEPLStream;
 import it.polimi.yasper.core.engine.EngineConfiguration;
 import it.polimi.yasper.core.spe.operators.r2r.ContinuousQuery;
@@ -12,6 +12,7 @@ import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 
 /**
  * Created by Riccardo on 03/08/16.
@@ -34,12 +35,20 @@ public class CSPARQLKaiju {
 
         writer.setWritable(register);
 
-        ContinuousQueryExecution cqe = sr.register(getQuery(".rspql"), config);
-        cqe.add(new SelectSysOutDefaultFormatter("TABLE", true)); //or "CSV" or "JSON" or "JSON-LD"
+        ContinuousQueryExecution cqe = sr.register(getQuery("Kaiju_exp3_1",".rspql"), config);
+        cqe.add(ResponseFormatterFactory.getSelectResponseSysOutFormatter("TABLE", true));//or "CSV" or "JSON" or "JSON-LD"
+        ContinuousQueryExecution cqe2 = sr.register(getQuery("42",".rspql"), config);
+        cqe2.add(ResponseFormatterFactory.getSelectResponseSysOutFormatter("TABLE", true));//or "CSV" or "JSON" or "JSON-LD"
         
-        ContinuousQuery q2 = cqe.getContinuousQuery();
-
-        System.out.println(q2.toString());
+        ArrayList<ContinuousQuery> queries = new ArrayList<>();
+        ContinuousQuery q = cqe.getContinuousQuery();
+        queries.add(q);
+        ContinuousQuery q2 = cqe2.getContinuousQuery();
+        queries.add(q2);
+        
+        for (ContinuousQuery query : queries) {
+	        System.out.println(query.toString());
+        }
 
         System.out.println("<<------>>");
 
@@ -48,8 +57,9 @@ public class CSPARQLKaiju {
 
     }
 
-    public static String getQuery(String suffix) throws IOException {
-        URL resource = CSPARQLKaiju.class.getResource("/q42" + suffix);
+    @SuppressWarnings("deprecation")
+    public static String getQuery(String nameQuery, String suffix) throws IOException {
+        URL resource = ColorsCSPARQLExample.class.getResource("/q" + nameQuery + suffix);
         System.out.println(resource.getPath());
         File file = new File(resource.getPath());
         return FileUtils.readFileToString(file);
