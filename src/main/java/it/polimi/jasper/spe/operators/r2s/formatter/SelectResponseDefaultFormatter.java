@@ -64,6 +64,9 @@ public abstract class SelectResponseDefaultFormatter extends QueryResultFormatte
                 case "JSON":
                     ResultSetFormatter.outputAsJSON(outputStream, results);
                     break;
+                case "TABLE":
+                    ResultSetFormatter.out(outputStream, results);
+                    break;
                 default:
                     throw new IllegalArgumentException("Invalid Format: " + format);
             }
