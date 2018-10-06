@@ -33,7 +33,7 @@ public class ContentGraphBean implements Content<Graph> {
     }
 
     private void handleSingleIStream(GraphStreamItem st) {
-        log.debug("Handling single IStreamTest [" + st + "]");
+       // log.debug("Handling single IStreamTest [" + st + "]");
         elements.add(st.getTypedContent());
     }
 
@@ -95,6 +95,8 @@ public class ContentGraphBean implements Content<Graph> {
     public Graph coalesce() {
         graph.clear();
         elements.forEach(ig -> GraphUtil.addInto(this.graph, ig));
+        //        elements.stream().flatMap(ig->GraphUtil.findAll(ig).toList().stream()).forEach(this.graph::add);
+
         return this.graph;
     }
 
