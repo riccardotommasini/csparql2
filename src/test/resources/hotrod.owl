@@ -1,0 +1,253 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns="http://polimi.deib/hotrod#"
+     xml:base="http://polimi.deib/hotrod"
+     xmlns:hotrod="http://polimi.deib/hotrod#"
+     xmlns:obda="https://w3id.org/obda/vocabulary#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+    <owl:Ontology rdf:about="http://polimi.deib/hotrod"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://polimi.deib/hotrod#assignedDriver -->
+
+    <owl:ObjectProperty rdf:about="http://polimi.deib/hotrod#assignedDriver">
+        <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2002/07/owl#topObjectProperty"/>
+        <rdfs:domain rdf:resource="http://polimi.deib/hotrod#User"/>
+        <rdfs:range rdf:resource="http://polimi.deib/hotrod#Driver"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://polimi.deib/hotrod#driverToCustomer -->
+
+    <owl:ObjectProperty rdf:about="http://polimi.deib/hotrod#driverToCustomer">
+        <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2002/07/owl#topObjectProperty"/>
+        <rdfs:domain rdf:resource="http://polimi.deib/hotrod#Driver"/>
+        <rdfs:range rdf:resource="http://polimi.deib/hotrod#Customer"/>
+        <owl:propertyChainAxiom rdf:parseType="Collection">
+            <rdf:Description>
+                <owl:inverseOf rdf:resource="http://polimi.deib/hotrod#requestCarTo"/>
+            </rdf:Description>
+            <rdf:Description rdf:about="http://polimi.deib/hotrod#assignedDriver"/>
+        </owl:propertyChainAxiom>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://polimi.deib/hotrod#requestCarTo -->
+
+    <owl:ObjectProperty rdf:about="http://polimi.deib/hotrod#requestCarTo">
+        <rdfs:domain rdf:resource="http://polimi.deib/hotrod#User"/>
+        <rdfs:range rdf:resource="http://polimi.deib/hotrod#Customer"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Data properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://polimi.deib/hotrod#customerID -->
+
+    <owl:DatatypeProperty rdf:about="http://polimi.deib/hotrod#customerID">
+        <rdfs:subPropertyOf rdf:resource="http://polimi.deib/hotrod#customerProperty"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://polimi.deib/hotrod#customerName -->
+
+    <owl:DatatypeProperty rdf:about="http://polimi.deib/hotrod#customerName">
+        <rdfs:subPropertyOf rdf:resource="http://polimi.deib/hotrod#customerProperty"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://polimi.deib/hotrod#customerProperty -->
+
+    <owl:DatatypeProperty rdf:about="http://polimi.deib/hotrod#customerProperty">
+        <rdfs:domain rdf:resource="http://polimi.deib/hotrod#Customer"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://polimi.deib/hotrod#driverProperty -->
+
+    <owl:DatatypeProperty rdf:about="http://polimi.deib/hotrod#driverProperty">
+        <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2002/07/owl#topDataProperty"/>
+        <rdfs:domain rdf:resource="http://polimi.deib/hotrod#Driver"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://polimi.deib/hotrod#licensePlateNumber -->
+
+    <owl:DatatypeProperty rdf:about="http://polimi.deib/hotrod#licensePlateNumber">
+        <rdfs:subPropertyOf rdf:resource="http://polimi.deib/hotrod#driverProperty"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://polimi.deib/hotrod#location -->
+
+    <owl:DatatypeProperty rdf:about="http://polimi.deib/hotrod#location">
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://polimi.deib/hotrod#requestID -->
+
+    <owl:DatatypeProperty rdf:about="http://polimi.deib/hotrod#requestID">
+        <rdfs:subPropertyOf rdf:resource="http://polimi.deib/hotrod#userProperty"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://polimi.deib/hotrod#sessionID -->
+
+    <owl:DatatypeProperty rdf:about="http://polimi.deib/hotrod#sessionID">
+        <rdfs:subPropertyOf rdf:resource="http://polimi.deib/hotrod#userProperty"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://polimi.deib/hotrod#userProperty -->
+
+    <owl:DatatypeProperty rdf:about="http://polimi.deib/hotrod#userProperty">
+        <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2002/07/owl#topDataProperty"/>
+        <rdfs:domain rdf:resource="http://polimi.deib/hotrod#User"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://polimi.deib/hotrod#Customer -->
+
+    <owl:Class rdf:about="http://polimi.deib/hotrod#Customer"/>
+    
+
+
+    <!-- http://polimi.deib/hotrod#Driver -->
+
+    <owl:Class rdf:about="http://polimi.deib/hotrod#Driver"/>
+    
+
+
+    <!-- http://polimi.deib/hotrod#User -->
+
+    <owl:Class rdf:about="http://polimi.deib/hotrod#User"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Individuals
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://polimi.deib/hotrod#Customer123 -->
+
+    <owl:NamedIndividual rdf:about="http://polimi.deib/hotrod#Customer123">
+        <rdf:type rdf:resource="http://polimi.deib/hotrod#Customer"/>
+        <customerID rdf:datatype="http://www.w3.org/2001/XMLSchema#string">123</customerID>
+        <customerName rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Rachel&apos;s Floral Designs</customerName>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://polimi.deib/hotrod#Customer392 -->
+
+    <owl:NamedIndividual rdf:about="http://polimi.deib/hotrod#Customer392">
+        <rdf:type rdf:resource="http://polimi.deib/hotrod#Customer"/>
+        <customerID rdf:datatype="http://www.w3.org/2001/XMLSchema#string">392</customerID>
+        <customerName rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Trom Chocolatier</customerName>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://polimi.deib/hotrod#Customer567 -->
+
+    <owl:NamedIndividual rdf:about="http://polimi.deib/hotrod#Customer567">
+        <rdf:type rdf:resource="http://polimi.deib/hotrod#Customer"/>
+        <customerID rdf:datatype="http://www.w3.org/2001/XMLSchema#string">567</customerID>
+        <customerName rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Amazing Coffee Roasters</customerName>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://polimi.deib/hotrod#Customer731 -->
+
+    <owl:NamedIndividual rdf:about="http://polimi.deib/hotrod#Customer731">
+        <rdf:type rdf:resource="http://polimi.deib/hotrod#Customer"/>
+        <customerID rdf:datatype="http://www.w3.org/2001/XMLSchema#string">731</customerID>
+        <customerName rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Japanese Deserts</customerName>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // General axioms
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    <rdf:Description>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDifferent"/>
+        <owl:distinctMembers rdf:parseType="Collection">
+            <rdf:Description rdf:about="http://polimi.deib/hotrod#Customer123"/>
+            <rdf:Description rdf:about="http://polimi.deib/hotrod#Customer392"/>
+            <rdf:Description rdf:about="http://polimi.deib/hotrod#Customer567"/>
+            <rdf:Description rdf:about="http://polimi.deib/hotrod#Customer731"/>
+        </owl:distinctMembers>
+    </rdf:Description>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 4.2.8.20170104-2310) https://github.com/owlcs/owlapi -->
+
