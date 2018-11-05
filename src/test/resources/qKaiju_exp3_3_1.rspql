@@ -1,0 +1,14 @@
+PREFIX tr: <http://polimi.deib/tracing#>
+PREFIX ht: <http://polimi.deib/hotrod#>
+
+REGISTER RSTREAM <s1> AS
+SELECT ?did (COUNT(*) AS ?numDriverToCustomer)
+FROM NAMED WINDOW <win> ON <jsonTraces> [RANGE PT10S STEP PT10S]
+WHERE  {
+    WINDOW <win> {
+        ?d ht:driverToCustomer ?c.
+        ?d ht:licensePlateNumber ?did.
+    }
+}
+GROUP BY ?did
+
