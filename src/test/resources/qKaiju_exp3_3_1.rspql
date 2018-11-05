@@ -1,5 +1,6 @@
 PREFIX tr: <http://polimi.deib/tracing#>
 PREFIX ht: <http://polimi.deib/hotrod#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 
 REGISTER RSTREAM <s1> AS
 SELECT ?did (COUNT(*) AS ?numDriverToCustomer)

@@ -1,4 +1,5 @@
 PREFIX tr: <http://polimi.deib/tracing#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX ht: <http://polimi.deib/hotrod#>
 
 REGISTER RSTREAM <s1> AS
