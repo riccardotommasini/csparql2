@@ -1,23 +1,17 @@
 package it.polimi.jasper.engine;
 
 import it.polimi.jasper.streams.RegisteredEPLStream;
-import it.polimi.jasper.streams.schema.GraphStreamSchema;
 import it.polimi.yasper.core.stream.rdf.RDFStream;
-import it.polimi.yasper.core.stream.schema.StreamSchema;
 import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
 import org.eclipse.jetty.websocket.client.WebSocketClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URI;
 
 public class GraphStreamKaiju extends RDFStream implements Runnable {
-
-    private StreamSchema schema = new GraphStreamSchema();
-
-    @Override
-    public StreamSchema getSchema() {
-        return schema;
-    }
-
+	
+	private final static Logger log = LoggerFactory.getLogger(GraphStreamKaiju.class); 
     private RegisteredEPLStream s;
 
     public GraphStreamKaiju(String stream_uri) {
@@ -47,7 +41,7 @@ public class GraphStreamKaiju extends RDFStream implements Runnable {
         }
         catch (Throwable t)
         {
-            t.printStackTrace();
+            log.error("Socket error");
         }
         finally
         {
@@ -57,7 +51,7 @@ public class GraphStreamKaiju extends RDFStream implements Runnable {
             }
             catch (Exception e)
             {
-                e.printStackTrace();
+            	log.error("Error closing socket");
             }
         }
     }

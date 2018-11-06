@@ -1,11 +1,14 @@
 package it.polimi.jasper.engine;
 
 import it.polimi.jasper.spe.operators.r2s.formatter.ResponseFormatterFactory;
+import it.polimi.jasper.spe.operators.r2s.formatter.register.ConstructResponseRegister;
 import it.polimi.jasper.streams.RegisteredEPLStream;
 import it.polimi.yasper.core.engine.EngineConfiguration;
 import it.polimi.yasper.core.spe.operators.r2r.ContinuousQuery;
 import it.polimi.yasper.core.spe.operators.r2r.QueryConfiguration;
 import it.polimi.yasper.core.spe.operators.r2r.execution.ContinuousQueryExecution;
+import it.polimi.yasper.core.stream.rdf.RDFStream;
+
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.io.FileUtils;
 
@@ -26,18 +29,26 @@ public class CSPARQLKaiju {
         URL resource = CSPARQLKaiju.class.getResource("/csparqlKaiju.properties");
         QueryConfiguration config = new QueryConfiguration(resource.getPath());
         EngineConfiguration ec = EngineConfiguration.loadConfig("/csparqlKaiju.properties");
+        
+        URL resourceHotrod = CSPARQLKaiju.class.getResource("/csparqlHotrod.properties");
+        QueryConfiguration configHotrod = new QueryConfiguration(resourceHotrod.getPath());
 
         sr = new Jasper(0, ec);
 
         GraphStreamKaiju writer = new GraphStreamKaiju("ws://localhost:4567/streams/jsonTraces");
-
         RegisteredEPLStream register = sr.register(writer);
-
         writer.setWritable(register);
+        
+        RDFStream hotrod = new RDFStream("ws://localhost:4567/streams/constructHotrod");
+        RegisteredEPLStream registerHotrod = sr.register(hotrod);
 
         ContinuousQueryExecution cqe = sr.register(getQuery("Kaiju_exp3_3_Construct",".rspql"), config);
-        cqe.add(ResponseFormatterFactory.getConstructResponseSysOutFormatter("JSON-LD", true));//or "CSV" or "JSON" or "JSON-LD"
-        ContinuousQueryExecution cqe2 = sr.register(getQuery("Kaiju_exp3_3_1",".rspql"), config);
+        try {
+			cqe.add(new ConstructResponseRegister("RDF/XML", true, registerHotrod)); //ConstructSysOutDefaultFormatter("JSON-LD", true));
+		} catch (Throwable e) {
+			System.out.println(e.getMessage());
+		} 
+        ContinuousQueryExecution cqe2 = sr.register(getQuery("Kaiju_exp3_3_2",".rspql"), configHotrod);
         cqe2.add(ResponseFormatterFactory.getSelectResponseSysOutFormatter("TABLE", true));//or "CSV" or "JSON" or "JSON-LD"
         
         ArrayList<ContinuousQuery> queries = new ArrayList<>();

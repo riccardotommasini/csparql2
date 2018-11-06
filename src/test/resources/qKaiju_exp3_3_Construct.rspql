@@ -11,7 +11,7 @@ CONSTRUCT {
     ?driver a ht:Driver;
         ht:licensePlateNumber ?did .
 }
-FROM NAMED WINDOW <win> ON <jsonTraces> [RANGE PT10S STEP PT10S]
+FROM NAMED WINDOW <win> ON <jsonTraces> [RANGE PT5S STEP PT5S]
 WHERE  {
     WINDOW <win> {
         ?t a tr:Trace .
@@ -44,7 +44,7 @@ WHERE  {
     }
 
     BIND(URI(CONCAT("http://polimi.deib/hotrod#User", MD5(STR(?sid)))) as ?user)
-    BIND(URI(CONCAT("http://polimi.deib/hotrod#Customer", MD5(STR(?cid)))) as ?customer)
+    BIND(URI(CONCAT("http://polimi.deib/hotrod#Customer", STR(?cid))) as ?customer)
     BIND(URI(CONCAT("http://polimi.deib/hotrod#Driver", MD5(STR(?did)))) as ?driver)
 
 }
