@@ -1,5 +1,7 @@
-package it.polimi.jasper.engine;
+package it.polimi.jasper.kaijurdf;
 
+import it.polimi.jasper.engine.ColorsCSPARQLExample;
+import it.polimi.jasper.engine.Jasper;
 import it.polimi.jasper.spe.operators.r2s.formatter.ResponseFormatterFactory;
 import it.polimi.jasper.spe.operators.r2s.formatter.register.ConstructResponseRegister;
 import it.polimi.jasper.streams.RegisteredEPLStream;
@@ -35,7 +37,7 @@ public class CSPARQLKaiju {
 
         sr = new Jasper(0, ec);
 
-        GraphStreamKaiju writer = new GraphStreamKaiju("ws://localhost:4567/streams/jsonTraces");
+        GraphStream writer = new GraphStream("ws://localhost:4567/streams/jsonTraces");
         RegisteredEPLStream register = sr.register(writer);
         writer.setWritable(register);
         
@@ -69,7 +71,7 @@ public class CSPARQLKaiju {
     }
 
     @SuppressWarnings("deprecation")
-    public static String getQuery(String nameQuery, String suffix) throws IOException {
+    private static String getQuery(String nameQuery, String suffix) throws IOException {
         URL resource = ColorsCSPARQLExample.class.getResource("/q" + nameQuery + suffix);
         System.out.println(resource.getPath());
         File file = new File(resource.getPath());
