@@ -5,19 +5,15 @@ SELECT (?tid AS ?traceId) (?sn2 AS ?serviceFrom) (?sn AS ?serviceTo) (COUNT(*) A
 FROM NAMED WINDOW <win> ON <jsonTraces> [RANGE PT10S STEP PT10S]
 WHERE  {
     WINDOW ?w {
-    	?t a tr:Trace ;
-    		tr:traceId ?tid .
-        ?s a tr:Span ;
-            tr:spanOfTrace ?t ;
-        	tr:spanId ?sid ;
-        	tr:spanOfProcess ?p .
-        ?p tr:serviceName ?sn .
-        ?s2 a tr:Span ;
-            tr:spanOfTrace ?t ;
-        	tr:spanId ?sid2 ;
-        	tr:spanOfProcess ?p2 .
-        ?p2 tr:serviceName ?sn2 .
         ?s tr:reference ?s2 .
+        ?s tr:spanId ?sid ;
+            tr:spanOfProcess ?p .
+        ?p tr:serviceName ?sn .
+        ?s2 tr:spanOfTrace ?t ;
+            tr:spanId ?sid2 ;
+            tr:spanOfProcess ?p2 .
+        ?t tr:traceId ?tid.
+        ?p2 tr:serviceName ?sn2 .
     }
 }
 GROUP BY ?tid ?sn ?sn2
