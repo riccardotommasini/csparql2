@@ -4,8 +4,8 @@ PREFIX ht: <http://polimi.deib/hotrod#>
 
 REGISTER RSTREAM <s1> AS
 CONSTRUCT {
-	?user a ht:User;
-		ht:sessionID ?sid ;
+    ?user a ht:User;
+        ht:sessionID ?sid ;
         ht:assignedDriver ?driver ;
         ht:requestCarTo ?customer .
     ?driver a ht:Driver;
@@ -20,32 +20,29 @@ WHERE  {
             tr:operationName "HTTP GET /dispatch"^^xsd:string ;
             tr:hasLog ?logd ;
             tr:hasLog ?logc .
-        ?logd tr:hasField ?fd .
-        ?fd tr:stringVal "Dispatch successful"^^xsd:string .
-        ?logd tr:hasField ?fdid .
-        ?fdid tr:tagKey "driver"^^xsd:string .
-        ?fdid tr:stringVal ?did .
-
-        ?logc tr:hasField ?fc .
-        ?fc tr:stringVal "Getting customer"^^xsd:string .
-        ?logc tr:hasField ?fcid .
-        ?fcid tr:tagKey "customer_id"^^xsd:string .
-        ?fcid tr:stringVal ?cid .
+        ?logd tr:hasField ?fd ;
+            tr:hasField ?fdid .
+        ?fd tr:stringVal "Dispatch successful"^^xsd:string .      
+        ?fdid tr:tagKey "driver"^^xsd:string ;
+            tr:stringVal ?did .
+        ?logc tr:hasField ?fc ;
+            tr:hasField ?fcid .
+        ?fc tr:stringVal "Getting customer"^^xsd:string .      
+        ?fcid tr:tagKey "customer_id"^^xsd:string ;
+            tr:stringVal ?cid .
 
         ?s2 a tr:Span ;
             tr:spanOfTrace ?t ;
             tr:operationName "Driver::findNearest"^^xsd:string ;
             tr:hasLog ?log .
-        ?log2 tr:hasField ?fs .
+        ?log2 tr:hasField ?fs ;
+            tr:hasField ?fsid .
         ?fs tr:stringVal "session"^^xsd:string .
-        ?log2 tr:hasField ?fsid .
-        ?fsid tr:tagKey "value"^^xsd:string .
-        ?fsid tr:stringVal ?sid .
+        ?fsid tr:tagKey "value"^^xsd:string ;
+            tr:stringVal ?sid .
     }
 
     BIND(URI(CONCAT("http://polimi.deib/hotrod#User", MD5(STR(?sid)))) as ?user)
     BIND(URI(CONCAT("http://polimi.deib/hotrod#Customer", STR(?cid))) as ?customer)
     BIND(URI(CONCAT("http://polimi.deib/hotrod#Driver", MD5(STR(?did)))) as ?driver)
-
 }
-

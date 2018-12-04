@@ -11,20 +11,20 @@ WHERE  {
             tr:spanOfTrace ?t ;
             tr:operationName "Driver::findNearest"^^xsd:string ;
             tr:hasLog ?log .
-        ?log tr:hasField ?fs .
-        ?fs tr:stringVal "session"^^xsd:string .
-        ?log tr:hasField ?fsid .
-        ?fsid tr:tagKey "value"^^xsd:string .
-        ?fsid tr:stringVal ?sid .
+        ?log tr:hasField ?fs ;
+            tr:hasField ?fsid .
+        ?fs tr:stringVal "session"^^xsd:string .       
+        ?fsid tr:tagKey "value"^^xsd:string ;
+            tr:stringVal ?sid .
         ?s2 a tr:Span ;
             tr:spanOfTrace ?t ;
             tr:operationName "HTTP GET /route"^^xsd:string ;
             tr:hasLog ?log2 .
-        ?log2 tr:hasField ?fR .
-        ?fR tr:stringVal "RouteCalc"^^xsd:string .
-        ?log2 tr:hasField ?fT .
-        ?fT tr:tagKey "time"^^xsd:string .
-        ?fT tr:doubleVal ?tCalc .   
+        ?log2 tr:hasField ?fR ;
+            tr:hasField ?fT .
+        ?fR tr:stringVal "RouteCalc"^^xsd:string .      
+        ?fT tr:tagKey "time"^^xsd:string ;
+            tr:doubleVal ?tCalc .   
     }
 } 
 GROUP BY ?sid

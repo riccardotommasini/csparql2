@@ -4,7 +4,7 @@ REGISTER RSTREAM <s1> AS
 SELECT (?tid AS ?traceId) (?sn2 AS ?serviceFrom) (?sn AS ?serviceTo) (COUNT(*) AS ?n_interactions)
 FROM NAMED WINDOW <win> ON <jsonTraces> [RANGE PT10S STEP PT10S]
 WHERE  {
-    WINDOW ?w {
+    WINDOW <win> {
         ?s tr:reference ?s2 .
         ?s tr:spanId ?sid ;
             tr:spanOfProcess ?p .

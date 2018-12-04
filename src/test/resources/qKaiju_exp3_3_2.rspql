@@ -3,14 +3,13 @@ PREFIX ht: <http://polimi.deib/hotrod#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 
 REGISTER RSTREAM <s1> AS
-SELECT ?uid ?did
+SELECT ?uid ?did (COUNT(*) AS ?n_requests)
 FROM NAMED WINDOW <win> ON <constructHotrod> [RANGE PT30S STEP PT30S]
 WHERE  {
     WINDOW <win> {
-        ?u ht:assignedDriver ?d.
-        ?d ht:licensePlateNumber ?did.
-   		?u ht:sessionID ?uid.
+        ?u ht:assignedDriver ?d ;
+        	ht:sessionID ?uid .
+        ?d ht:licensePlateNumber ?did .
     }
 }
 GROUP BY ?uid ?did
-

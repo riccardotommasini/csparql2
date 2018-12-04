@@ -12,17 +12,17 @@ WHERE  {
             tr:operationName "HTTP GET /customer"^^xsd:string ;
             tr:hasLog ?log .
         ?log tr:hasField ?f .
-        ?f tr:tagKey "customer_id"^^xsd:string .
-        ?f tr:stringVal ?cid.
+        ?f tr:tagKey "customer_id"^^xsd:string ;
+            tr:stringVal ?cid.
         ?s2 a tr:Span ;
             tr:spanOfTrace ?t ;
             tr:operationName "HTTP GET /route"^^xsd:string ;
             tr:hasLog ?log2 .
-        ?log2 tr:hasField ?fR .
-        ?fR tr:stringVal "RouteCalc"^^xsd:string .
-        ?log2 tr:hasField ?fT .
-        ?fT tr:tagKey "time"^^xsd:string .
-        ?fT tr:doubleVal ?tCalc .   
+        ?log2 tr:hasField ?fR ;
+            tr:hasField ?fT .
+        ?fR tr:stringVal "RouteCalc"^^xsd:string .      
+        ?fT tr:tagKey "time"^^xsd:string ;
+            tr:doubleVal ?tCalc .   
     }
 } 
 GROUP BY ?cid
