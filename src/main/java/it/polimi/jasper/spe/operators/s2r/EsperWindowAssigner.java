@@ -1,7 +1,13 @@
 package it.polimi.jasper.spe.operators.s2r;
 
-import com.espertech.esper.client.*;
-import com.espertech.esper.client.soda.EPStatementObjectModel;
+import com.espertech.esper.common.client.EPCompiled;
+import com.espertech.esper.common.client.EventBean;
+import com.espertech.esper.common.client.soda.EPStatementObjectModel;
+import com.espertech.esper.common.client.util.SafeIterator;
+import com.espertech.esper.compiler.client.CompilerArguments;
+import com.espertech.esper.compiler.client.EPCompileException;
+import com.espertech.esper.compiler.client.EPCompilerProvider;
+import com.espertech.esper.runtime.client.*;
 import it.polimi.jasper.rspql.tvg.EsperTimeVaryingGraphImpl;
 import it.polimi.jasper.rspql.tvg.NamedEsperTimeVaryingGraph;
 import it.polimi.jasper.spe.content.ContentGraphBean;
@@ -33,11 +39,13 @@ import java.util.Observer;
 @Getter
 public class EsperWindowAssigner implements WindowAssigner<Graph, Graph>, Observer {
 
-    private final String name;
+    private final String stream_iri_encoded;
     private final boolean eventtime;
-    private EPAdministrator admin;
+    private final EPDeployment deployment;
+    private final String window_iri_encoded;
+    private EPDeploymentService admin;
     private EPStatement statement;
-    private EPRuntime runtime;
+    private EPEventService runtime;
     private Time time;
     private Report report;
     private Tick tick;
@@ -50,16 +58,33 @@ public class EsperWindowAssigner implements WindowAssigner<Graph, Graph>, Observ
     @Getter
     private Maintenance maintenance;
 
-    public EsperWindowAssigner(String name, Tick tick, Report report, boolean event_time, Maintenance maintenance, EPStatementObjectModel stm) {
-        this.name = name;
+    public EsperWindowAssigner(String stream_iri_encoded, String window_iri_encoded, Tick tick, Report report, boolean event_time, Maintenance maintenance, EPStatementObjectModel stm) {
+        this.stream_iri_encoded = stream_iri_encoded;
+        this.window_iri_encoded = window_iri_encoded;
         this.tick = tick;
         this.report = report;
         this.eventtime = event_time;
         this.runtime = RuntimeManager.getEPRuntime();
         this.admin = RuntimeManager.getAdmin();
-        this.statement = admin.create(stm, name);
-        this.maintenance = maintenance;
         this.time = new EsperTime(runtime);
+        this.maintenance = maintenance;
+
+        try {
+            // Build compiler arguments
+            CompilerArguments args = new CompilerArguments(RuntimeManager.getRuntimeConfiguration());
+
+            // Make the existing EPL objects available to the compiler
+            args.getPath().add(RuntimeManager.getCEP().getRuntimePath());
+
+            EPCompiled compile = EPCompilerProvider.getCompiler().compile(stm.toEPL(), args);
+
+            this.deployment = admin.deploy(compile);
+            this.statement = admin.getStatement(deployment.getDeploymentId(), window_iri_encoded);
+
+        } catch (EPDeployException | EPCompileException e) {
+            throw new RuntimeException(e.getCause());
+        }
+
     }
 
     @Override
@@ -97,7 +122,7 @@ public class EsperWindowAssigner implements WindowAssigner<Graph, Graph>, Observ
     public TimeVarying<Graph> set(ContinuousQueryExecution execution) {
         Graph content = reasoner != null ? reasoner.bind(new GraphMem()) : new GraphMem();
         EsperTimeVaryingGraphImpl n = named()
-                ? new NamedEsperTimeVaryingGraph(name, content, maintenance, report, this)
+                ? new NamedEsperTimeVaryingGraph(stream_iri_encoded, content, maintenance, report, this)
                 : new EsperTimeVaryingGraphImpl(content, maintenance, report, this);
         statement.addListener(n);
         n.addObserver(execution);
@@ -115,10 +140,10 @@ public class EsperWindowAssigner implements WindowAssigner<Graph, Graph>, Observ
 
         if (appTime < now) {
             time.setAppTime(now);
-            runtime.sendEvent(new GraphStreamItem(now, g, name), name);
+            runtime.sendEventMap(new GraphStreamItem(now, g, stream_iri_encoded), stream_iri_encoded);
             return true;
         } else if (appTime == now) {
-            runtime.sendEvent(new GraphStreamItem(now, g, name), name);
+            runtime.sendEventMap(new GraphStreamItem(now, g, stream_iri_encoded), stream_iri_encoded);
             return true;
         } else
             return false;
@@ -133,12 +158,12 @@ public class EsperWindowAssigner implements WindowAssigner<Graph, Graph>, Observ
 
     @Override
     public String iri() {
-        return name;
+        return stream_iri_encoded;
     }
 
     @Override
     public boolean named() {
-        return name != null;
+        return stream_iri_encoded != null;
     }
 
     @Override

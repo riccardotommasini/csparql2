@@ -1,9 +1,8 @@
 package it.polimi.jasper.engine;
 
-import com.espertech.esper.client.EPAdministrator;
-import com.espertech.esper.client.EPRuntime;
-import com.espertech.esper.client.EPServiceProvider;
-import com.espertech.esper.client.time.CurrentTimeEvent;
+import com.espertech.esper.runtime.client.EPDeploymentService;
+import com.espertech.esper.runtime.client.EPEventService;
+import com.espertech.esper.runtime.client.EPRuntime;
 import it.polimi.jasper.rspql.reasoning.Entailment;
 import it.polimi.jasper.spe.esper.EsperStreamRegistrationService;
 import it.polimi.jasper.spe.esper.RuntimeManager;
@@ -51,9 +50,9 @@ public abstract class EsperRSPEngine implements StreamRegistrationFeature<Regist
     protected EngineConfiguration rsp_config;
 
     private final RuntimeManager manager;
-    private final EPServiceProvider cep;
-    private final EPRuntime runtime;
-    protected final EPAdministrator admin;
+    private final EPRuntime cep;
+    private final EPEventService runtime;
+    protected final EPDeploymentService admin;
 
     public EsperRSPEngine(long t0, EngineConfiguration configuration) {
         this.assignedSDS = new HashMap<>();
@@ -86,7 +85,8 @@ public abstract class EsperRSPEngine implements StreamRegistrationFeature<Regist
         log.debug("Query Class [" + this.rsp_config.getQueryClass() + "]");
         log.debug("StreamItem Class [" + this.rsp_config.getStreamSchema() + "]");
 
-        runtime.sendEvent(new CurrentTimeEvent(t0));
+        runtime.clockExternal();
+        runtime.advanceTime(t0);
     }
 
     @Override

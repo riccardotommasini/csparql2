@@ -1,7 +1,7 @@
 package it.polimi.jasper.spe.content;
 
-import com.espertech.esper.client.EventBean;
-import com.espertech.esper.event.map.MapEventBean;
+import com.espertech.esper.common.client.EventBean;
+import com.espertech.esper.common.internal.event.map.MapEventBean;
 import it.polimi.jasper.streams.items.GraphStreamItem;
 import lombok.extern.log4j.Log4j;
 import org.apache.jena.graph.Graph;

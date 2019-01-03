@@ -25,7 +25,6 @@ public class EsperWindowOperator implements WindowOperator<Graph, Graph> {
 
     private final WindowNode wo;
 
-
     @Override
     public String iri() {
         return wo.iri();
@@ -38,7 +37,7 @@ public class EsperWindowOperator implements WindowOperator<Graph, Graph> {
 
     @Override
     public WindowAssigner<Graph, Graph> apply(RegisteredStream<Graph> s) {
-        EsperWindowAssigner windowAssigner = EPLFactory.getWindowAssigner(tick, maintenance, report, eventtime, s.getURI(), wo.getStep(), wo.getRange(), wo.getUnitStep(), wo.getUnitRange(), wo.getType());
+        EsperWindowAssigner windowAssigner = EPLFactory.getWindowAssigner(tick, maintenance, report, eventtime, wo.iri(), s.getURI(), wo.getStep(), wo.getRange(), wo.getUnitStep(), wo.getUnitRange(), wo.getType());
         windowAssigner.setReasoner(reasoner);
         windowAssigner.setMaintenance(maintenance);
         s.addWindowAssiger(windowAssigner);

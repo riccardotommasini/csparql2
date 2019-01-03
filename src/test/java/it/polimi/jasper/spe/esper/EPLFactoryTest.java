@@ -1,7 +1,8 @@
 package it.polimi.jasper.spe.esper;
 
-import com.espertech.esper.client.soda.EPStatementObjectModel;
-import com.espertech.esper.client.soda.View;
+import com.espertech.esper.common.client.soda.AnnotationPart;
+import com.espertech.esper.common.client.soda.EPStatementObjectModel;
+import com.espertech.esper.common.client.soda.View;
 import it.polimi.yasper.core.spe.content.Maintenance;
 import it.polimi.yasper.core.spe.operators.s2r.syntax.WindowType;
 import it.polimi.yasper.core.spe.report.Report;
@@ -13,7 +14,9 @@ import it.polimi.yasper.core.spe.tick.Tick;
 import org.junit.Test;
 
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
@@ -84,11 +87,18 @@ public class EPLFactoryTest {
         long step = 5;
         View window = EPLFactory.getWindow(step, unit, logical);
 
-        EPStatementObjectModel epStatementObjectModel = EPLFactory.toEPL(tupleDriven, report, naive, step, unit, logical, stream, window, Collections.EMPTY_LIST);
+        List<AnnotationPart> annotations = new ArrayList<>();
+
+        AnnotationPart e = new AnnotationPart();
+        e.setName("name");
+        e.addValue("stmt1");
+        annotations.add(e);
+
+        EPStatementObjectModel epStatementObjectModel = EPLFactory.toEPL(tupleDriven, report, naive, step, unit, logical, stream, window, annotations);
 
         System.out.println(epStatementObjectModel.toEPL());
 
-        assertEquals("select * from " + stream + ".win:time(5 seconds) output snapshot every 1 events", epStatementObjectModel.toEPL());
+        assertEquals("@name('stmt1') select * from " + stream + ".win:time(5 seconds) output snapshot every 1 events", epStatementObjectModel.toEPL());
     }
 
 }

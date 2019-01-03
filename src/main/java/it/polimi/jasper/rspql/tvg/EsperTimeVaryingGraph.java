@@ -1,9 +1,9 @@
 package it.polimi.jasper.rspql.tvg;
 
-import com.espertech.esper.client.EPServiceProvider;
-import com.espertech.esper.client.EPStatement;
-import com.espertech.esper.client.EventBean;
-import com.espertech.esper.client.StatementAwareUpdateListener;
+import com.espertech.esper.common.client.EventBean;
+import com.espertech.esper.runtime.client.EPRuntime;
+import com.espertech.esper.runtime.client.EPStatement;
+import com.espertech.esper.runtime.client.UpdateListener;
 import it.polimi.jasper.spe.content.ContentGraphBean;
 import it.polimi.jasper.spe.content.IncrementalContentGraphBean;
 import it.polimi.jasper.spe.operators.s2r.EsperWindowAssigner;
@@ -22,7 +22,7 @@ import java.util.Observer;
  */
 @Log4j
 @Getter
-public abstract class EsperTimeVaryingGraph extends Observable implements StatementAwareUpdateListener, TimeVarying<Graph> {
+public abstract class EsperTimeVaryingGraph extends Observable implements UpdateListener, TimeVarying<Graph> {
 
     protected Report report;
     protected EsperWindowAssigner wa;
@@ -43,19 +43,19 @@ public abstract class EsperTimeVaryingGraph extends Observable implements Statem
     }
 
     @Override
-    public synchronized void update(EventBean[] newData, EventBean[] oldData, EPStatement stmt, EPServiceProvider eps) {
+    public synchronized void update(EventBean[] newData, EventBean[] oldData, EPStatement stmt, EPRuntime runtime) {
 
         if (!wa.getStatement().equals(stmt))
             throw new RuntimeException("Different Update Statement");
 
-        long event_time = eps.getEPRuntime().getCurrentTime();
+        long event_time = runtime.getEventService().getCurrentTime();
 
         long systime = System.currentTimeMillis();
 
         this.c.update(newData, oldData, event_time);
 
         if (report.report(null, c, event_time, systime)) {
-            log.debug("[" + Thread.currentThread() + "][" + systime + "] FROM STATEMENT: " + stmt.getText() + " AT "
+            log.debug("[" + Thread.currentThread() + "][" + systime + "] FROM STATEMENT: " + stmt.toString() + " AT "
                     + event_time);
 
             setChanged();

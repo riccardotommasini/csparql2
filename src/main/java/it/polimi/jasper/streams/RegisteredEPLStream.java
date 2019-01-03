@@ -1,6 +1,6 @@
 package it.polimi.jasper.streams;
 
-import com.espertech.esper.client.EPStatement;
+import com.espertech.esper.runtime.client.EPDeployment;
 import it.polimi.yasper.core.stream.Stream;
 import it.polimi.yasper.core.stream.rdf.RegisteredRDFStream;
 import lombok.Getter;
@@ -13,9 +13,9 @@ import org.apache.jena.graph.Graph;
 public class RegisteredEPLStream extends RegisteredRDFStream<Graph> {
 
     protected Stream stream;
-    protected EPStatement e;
+    protected EPDeployment e;
 
-    public RegisteredEPLStream(String uri, Stream s, EPStatement epl) {
+    public RegisteredEPLStream(String uri, Stream s, EPDeployment epl) {
         super(uri);
         this.stream = s;
         this.e = epl;

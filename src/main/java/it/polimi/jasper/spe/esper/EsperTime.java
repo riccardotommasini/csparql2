@@ -1,7 +1,6 @@
 package it.polimi.jasper.spe.esper;
 
-import com.espertech.esper.client.EPRuntime;
-import com.espertech.esper.client.time.CurrentTimeEvent;
+import com.espertech.esper.runtime.client.EPEventService;
 import it.polimi.yasper.core.spe.time.ET;
 import it.polimi.yasper.core.spe.time.Time;
 import it.polimi.yasper.core.spe.time.TimeFactory;
@@ -9,9 +8,9 @@ import it.polimi.yasper.core.spe.time.TimeInstant;
 
 public class EsperTime implements Time {
 
-    private final EPRuntime cepRT;
+    private final EPEventService cepRT;
 
-    public EsperTime(EPRuntime cepRT) {
+    public EsperTime(EPEventService cepRT) {
         this.cepRT = cepRT;
     }
 
@@ -22,7 +21,7 @@ public class EsperTime implements Time {
 
     @Override
     public void setAppTime(long now) {
-        cepRT.sendEvent(new CurrentTimeEvent(now));
+        cepRT.advanceTime(now);
     }
 
     @Override

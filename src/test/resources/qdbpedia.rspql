@@ -1,0 +1,13 @@
+PREFIX : <http://streamreasoning.org/iminds/massif/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX pizza: <http://www.co-ode.org/ontologies/pizza/pizza.owl#>
+REGISTER RSTREAM <http://streamreasoning.org/iminds/massif/s1> AS
+SELECT *
+FROM NAMED WINDOW :win1 ON :dbpediastream [RANGE PT%sS STEP PT%sS]
+WHERE  {
+
+    WINDOW ?w {
+        ?work <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://dbpedia.org/ontology/Work>.
+    }
+
+}

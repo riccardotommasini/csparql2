@@ -6,7 +6,7 @@
 
     <groupId>it.polimi.yasper</groupId>
     <artifactId>csparql</artifactId>
-    <version>2.0</version>
+    <version>2.1.2b</version>
 
     <repositories>
         <repository>
@@ -16,10 +16,23 @@
     </repositories>
 
     <dependencies>
+        <!-- https://mvnrepository.com/artifact/com.espertech/esper-common -->
         <dependency>
             <groupId>com.espertech</groupId>
-            <artifactId>esper</artifactId>
-            <version>6.1.0</version>
+            <artifactId>esper-runtime</artifactId>
+            <version>8.0.0</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.espertech/esper-common -->
+        <dependency>
+            <groupId>com.espertech</groupId>
+            <artifactId>esper-compiler</artifactId>
+            <version>8.0.0</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.espertech/esper-common -->
+        <dependency>
+            <groupId>com.espertech</groupId>
+            <artifactId>esper-common</artifactId>
+            <version>8.0.0</version>
         </dependency>
         <!--<dependency>-->
         <!--<groupId>it.polimi.sr.yasper</groupId>-->
@@ -86,6 +99,12 @@
             <groupId>org.antlr</groupId>
             <artifactId>antlr4-runtime</artifactId>
             <version>4.7</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sparkjava</groupId>
+            <artifactId>spark-core</artifactId>
+            <version>2.7.1</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

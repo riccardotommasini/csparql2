@@ -10,10 +10,11 @@ import java.net.URLEncoder;
 public class EncodingUtils {
     private static final String dotmark = "_1_";
     private static final String percentage = "_2_";
+    private static final String dash = "_3_";
 
     public static String encode(String uri) {
         try {
-            return URLEncoder.encode(uri, "UTF-8").replace(".", dotmark).replace("%", percentage);
+            return URLEncoder.encode(uri, "UTF-8").replace(".", dotmark).replace("%", percentage).replace("-", percentage);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
             return null;

@@ -1,5 +1,6 @@
 package it.polimi.jasper.engine;
 
+import it.polimi.jasper.rspql.reasoning.Entailment;
 import it.polimi.jasper.rspql.reasoning.EntailmentImpl;
 import it.polimi.jasper.rspql.reasoning.EntailmentType;
 import it.polimi.jasper.rspql.reasoning.ReasoningUtils;
@@ -80,10 +81,12 @@ public class Jasper extends EsperRSPEngine implements QueryObserverRegistrationF
 
     @Override
     public ContinuousQueryExecution register(RSPQLJenaQuery q, QueryConfiguration c) {
+        Entailment ent = new EntailmentImpl(EntailmentType.RDFS.name(), Rule.rulesFromURL("jena/rdfs-rules-rhodf-runtime.rules"), EntailmentType.RDFS);
+
         JasperSDSManager builder = new JasperSDSManager(
                 q,
-                EntailmentType.OWL,
-                entailments.get(EntailmentType.OWL.name()),
+                EntailmentType.RDFS,
+                ent,
                 this.resolver,
                 this.report,
                 this.responseFormat,
