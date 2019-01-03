@@ -5,6 +5,8 @@ import it.polimi.yasper.core.spe.operators.r2r.ContinuousQuery;
 import it.polimi.yasper.core.spe.operators.r2r.execution.ContinuousQueryExecutionObserver;
 import it.polimi.yasper.core.spe.operators.r2s.RelationToStreamOperator;
 import it.polimi.yasper.core.spe.operators.r2s.result.InstantaneousResult;
+import org.apache.jena.atlas.json.JsonArray;
+import org.apache.jena.atlas.json.JsonObject;
 import org.apache.jena.graph.Triple;
 import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.Model;
@@ -165,4 +167,13 @@ public abstract class JenaContinuousQueryExecution extends ContinuousQueryExecut
         return execution.getTimeout2();
     }
 
+    @Override
+    public JsonArray execJson() {
+        return execution.execJson();
+    }
+
+    @Override
+    public Iterator<JsonObject> execJsonItems() {
+        return execution.execJsonItems();
+    }
 }

@@ -28,4 +28,6 @@ public class ContinuouConstruct extends JenaContinuousQueryExecution {
         this.last_response = new ConstructResponse("http://streamreasoning.org/jasper/", query, results, ts);
         return s2r.eval(last_response);
     }
+
+
 }
