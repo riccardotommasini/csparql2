@@ -17,6 +17,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.github.jsonld-java.jsonld-java</groupId>
+            <artifactId>jsonld-java</artifactId>
+            <version>v0.12.2</version>
+        </dependency>
+        <dependency>
             <groupId>com.espertech</groupId>
             <artifactId>esper</artifactId>
             <version>7.1.0</version>
@@ -40,6 +45,12 @@
             <groupId>org.apache.jena</groupId>
             <artifactId>jena-arq</artifactId>
             <version>3.7.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.github.jsonld-java</groupId>
+                    <artifactId>jsonld-java</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.jena</groupId>
