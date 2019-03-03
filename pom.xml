@@ -4,9 +4,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>it.polimi.yasper</groupId>
-    <artifactId>csparql</artifactId>
-    <version>2.0</version>
+    <groupId>it.polimi.deib.rsp.jasper</groupId>
+    <artifactId>csparql2</artifactId>
+    <version>2.2.0</version>
 
     <repositories>
         <repository>
@@ -19,7 +19,7 @@
         <dependency>
             <groupId>com.espertech</groupId>
             <artifactId>esper</artifactId>
-            <version>6.1.0</version>
+            <version>7.1.0</version>
         </dependency>
         <!--<dependency>-->
         <!--<groupId>it.polimi.sr.yasper</groupId>-->
@@ -60,7 +60,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.16.10</version>
+            <version>1.18.6</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

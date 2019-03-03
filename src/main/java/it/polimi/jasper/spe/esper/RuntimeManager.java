@@ -15,6 +15,7 @@ public class RuntimeManager {
         if (cep == null) {
             Configuration cep_config = new Configuration();
             cep_config.getEngineDefaults().getThreading().setInternalTimerEnabled(false);
+            // cep_config.getEngineDefaults().getThreading().setThreadPoolInbound(true);
             cep_config.addEventType("TStream", new HashMap<>());
             String canonicalName = RuntimeManager.class.getCanonicalName();
             cep = EPServiceProviderManager.getProvider(canonicalName, cep_config);
