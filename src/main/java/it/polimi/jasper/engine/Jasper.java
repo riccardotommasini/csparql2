@@ -80,10 +80,11 @@ public class Jasper extends EsperRSPEngine implements QueryObserverRegistrationF
 
     @Override
     public ContinuousQueryExecution register(RSPQLJenaQuery q, QueryConfiguration c) {
+
         JasperSDSManager builder = new JasperSDSManager(
                 q,
-                EntailmentType.OWL,
-                entailments.get(EntailmentType.OWL.name()),
+                EntailmentType.RDFS,
+                null,
                 this.resolver,
                 this.report,
                 this.responseFormat,

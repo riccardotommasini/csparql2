@@ -1,4 +1,4 @@
-package it.polimi.jasper.engine;
+package it.polimi.jasper.engine.color;
 
 import it.polimi.jasper.streams.RegisteredEPLStream;
 import it.polimi.jasper.streams.schema.GraphStreamSchema;

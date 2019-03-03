@@ -64,7 +64,8 @@ public final class ContinuousQueryExecutionFactory extends QueryExecutionFactory
                 return ReasonerRegistry.getRDFSReasoner().bindSchema(tbox);
             case OWL2RL:
                 return ReasonerRegistry.getRDFSReasoner().bindSchema(tbox);
-
+            case NONE:
+                return null;
             default:
                 break;
         }

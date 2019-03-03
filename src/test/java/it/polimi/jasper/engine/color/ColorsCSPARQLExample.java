@@ -1,5 +1,6 @@
-package it.polimi.jasper.engine;
+package it.polimi.jasper.engine.color;
 
+import it.polimi.jasper.engine.Jasper;
 import it.polimi.jasper.spe.operators.r2s.formatter.ResponseFormatterFactory;
 import it.polimi.jasper.streams.RegisteredEPLStream;
 import it.polimi.yasper.core.engine.EngineConfiguration;
