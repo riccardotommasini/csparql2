@@ -54,6 +54,7 @@ public class CSPARQLReadyToGo {
 
                 cqe = sr.register(getQuery("rtgp-q1",".rspql"), config);
                 q = cqe.getContinuousQuery();
+                cqe.add(new GenericResponseSysOutFormatter("TABLE", true));
 
                 System.out.println(q.toString());
                 System.out.println("<<------>>");
@@ -70,6 +71,7 @@ public class CSPARQLReadyToGo {
 
                 cqe = sr.register(getQuery("rtgp-q2",".rspql"), config);
                 q = cqe.getContinuousQuery();
+                cqe.add(new GenericResponseSysOutFormatter("TABLE", true));
 
                 System.out.println(q.toString());
                 System.out.println("<<------>>");
@@ -90,6 +92,7 @@ public class CSPARQLReadyToGo {
 
                 cqe = sr.register(getQuery("rtgp-q3",".rspql"), config);
                 q = cqe.getContinuousQuery();
+                cqe.add(new GenericResponseSysOutFormatter("TABLE", true));
 
                 System.out.println(q.toString());
                 System.out.println("<<------>>");
