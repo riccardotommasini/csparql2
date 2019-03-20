@@ -2,6 +2,7 @@ package it.polimi.jasper.CSPARQLReadyToGo;
 
 import it.polimi.jasper.CSPARQLReadyToGo.streams.LBSMARDFStreamTestGenerator;
 import it.polimi.jasper.engine.Jasper;
+import it.polimi.jasper.spe.operators.r2s.formatter.sysout.GenericResponseSysOutFormatter;
 import it.polimi.jasper.streams.RegisteredEPLStream;
 import it.polimi.yasper.core.engine.EngineConfiguration;
 import it.polimi.yasper.core.spe.operators.r2r.ContinuousQuery;
@@ -52,6 +53,7 @@ public class CSPARQLReadyToGo {
 
                 cqe = sr.register(getQuery("rtgp-q1", ".rspql"), config);
                 q = cqe.getContinuousQuery();
+                cqe.add(new GenericResponseSysOutFormatter("TABLE", true));
 
 
                 System.out.println(q.toString());
@@ -68,6 +70,7 @@ public class CSPARQLReadyToGo {
 
                 cqe = sr.register(getQuery("rtgp-q2", ".rspql"), config);
                 q = cqe.getContinuousQuery();
+                cqe.add(new GenericResponseSysOutFormatter("TABLE", true));
 
                 System.out.println(q.toString());
                 System.out.println("<<------>>");
@@ -87,6 +90,7 @@ public class CSPARQLReadyToGo {
 
                 cqe = sr.register(getQuery("rtgp-q3", ".rspql"), config);
                 q = cqe.getContinuousQuery();
+                cqe.add(new GenericResponseSysOutFormatter("TABLE", true));
 
                 System.out.println(q.toString());
                 System.out.println("<<------>>");
