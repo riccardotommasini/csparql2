@@ -1,31 +1,40 @@
 package it.polimi.jasper.spe.operators.r2r.syntax;
 
+import it.polimi.jasper.CSPARQLReadyToGo.CSPARQLReadyToGo;
+import it.polimi.jasper.engine.Jasper;
+import it.polimi.yasper.core.engine.EngineConfiguration;
+import it.polimi.yasper.core.spe.operators.r2r.QueryConfiguration;
+import org.apache.commons.configuration.ConfigurationException;
 import org.apache.jena.query.Syntax;
 
 import java.io.IOException;
 
 public class TestRSPQLParser {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, ConfigurationException {
+
+        String path = CSPARQLReadyToGo.class.getResource("/csparql.properties").getPath();
+        QueryConfiguration config = new QueryConfiguration(path);
+        EngineConfiguration ec = EngineConfiguration.loadConfig("/csparql.properties");
+
+
+        Jasper sr = new Jasper(0, ec);
         String trickyQuery = "" +
                 "PREFIX ars: <http://www.streamreasoning/it.polimi.jasper.test/artist#>\n" +
                 "REGISTER RSTREAM <s1> AS\n" +
-                "SELECT (SUM(?age) AS ?sum) ?a \n" +
+                "SELECT2 (SUM(?age) AS ?sum) ?a \n" +
                 "FROM NAMED WINDOW <win2> ON <stream2> [RANGE PT1M STEP PT1M]\n" +
                 "WHERE  {\n" +
                 "    WINDOW ?w {\n" +
                 "        ?a a ars:Writer ;\n" +
                 "           ars:hasAge ?age .\n" +
                 "    }\n" +
-                "}\n" ;
-        System.err.println(trickyQuery);
+                "}\n";
 
-        RSPQLJenaQuery query = QueryFactory.parse(null, trickyQuery);
-        query.setSyntax(Syntax.syntaxARQ);
+        RSPQLJenaQuery query = QueryFactory.parse(sr.getResolver(), trickyQuery);
         // Print the query (only the SPARQL 1.1 parts)
-        System.out.println(query);
 
-//        System.out.println("----------");
+        //        System.out.println("----------");
 //        // Print the RSP-QL specific parts
 //        System.out.printf("REGISTER %s <%s> AS \n", query.getStreamType(),  query.getOutputStreamUri());
 //        System.out.println("...");
@@ -39,7 +48,6 @@ public class TestRSPQLParser {
 //            System.out.println("}");
 //            System.out.println();
 //        }
-
 
 
     }

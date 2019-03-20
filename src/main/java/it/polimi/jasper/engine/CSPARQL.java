@@ -1,10 +1,10 @@
 package it.polimi.jasper.engine;
 
-import it.polimi.jasper.spe.operators.r2r.syntax.QueryFactory;
 import it.polimi.jasper.rspql.reasoning.EntailmentImpl;
 import it.polimi.jasper.rspql.reasoning.EntailmentType;
 import it.polimi.jasper.rspql.reasoning.ReasoningUtils;
 import it.polimi.jasper.rspql.sds.JasperSDSManager;
+import it.polimi.jasper.spe.operators.r2r.syntax.QueryFactory;
 import it.polimi.jasper.spe.operators.r2r.syntax.RSPQLJenaQuery;
 import it.polimi.jasper.spe.report.EsperNECReportStrategy;
 import it.polimi.jasper.spe.report.EsperWCReportStrategy;

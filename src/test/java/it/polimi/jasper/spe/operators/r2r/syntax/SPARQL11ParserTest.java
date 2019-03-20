@@ -112,7 +112,7 @@ public class SPARQL11ParserTest {
                 String f = root + rs.next().get("file").toString();
                 String q = readFile(f);
                 try {
-                    Query query = (Query) QueryFactory.parse(null, q);
+                    Query query = QueryFactory.parse(null, q);
                     failed++;
                 } catch (Exception e) {
                     correct++;

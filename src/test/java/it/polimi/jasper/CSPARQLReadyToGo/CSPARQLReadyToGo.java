@@ -1,7 +1,6 @@
 package it.polimi.jasper.CSPARQLReadyToGo;
 
 import it.polimi.jasper.CSPARQLReadyToGo.streams.LBSMARDFStreamTestGenerator;
-import it.polimi.jasper.engine.GraphStream;
 import it.polimi.jasper.engine.Jasper;
 import it.polimi.jasper.streams.RegisteredEPLStream;
 import it.polimi.yasper.core.engine.EngineConfiguration;
@@ -32,8 +31,8 @@ public class CSPARQLReadyToGo {
         // put here the example you want to run
         int key = MULTI_STREAM;
 
-        URL resource = CSPARQLReadyToGo.class.getResource("/csparql.properties");
-        QueryConfiguration config = new QueryConfiguration(resource.getPath());
+        String path = CSPARQLReadyToGo.class.getResource("/csparql.properties").getPath();
+        QueryConfiguration config = new QueryConfiguration(path);
         EngineConfiguration ec = EngineConfiguration.loadConfig("/csparql.properties");
 
         ContinuousQuery q;
@@ -45,15 +44,15 @@ public class CSPARQLReadyToGo {
 
         switch (key) {
             case WHO_LIKES_WHAT:
-                
                 System.out.println("WHO_LIKES_WHAT example");
 
                 writer = new LBSMARDFStreamTestGenerator("Writer", "http://streamreasoning.org/jasper/streams/stream2", 5);
                 register = sr.register(writer);
                 writer.setWritable(register);
 
-                cqe = sr.register(getQuery("rtgp-q1",".rspql"), config);
+                cqe = sr.register(getQuery("rtgp-q1", ".rspql"), config);
                 q = cqe.getContinuousQuery();
+
 
                 System.out.println(q.toString());
                 System.out.println("<<------>>");
@@ -63,12 +62,11 @@ public class CSPARQLReadyToGo {
 
                 break;
             case HOW_MANY_USERS_LIKE_THE_SAME_OBJ:
-
                 writer = new LBSMARDFStreamTestGenerator("Writer", "http://streamreasoning.org/jasper/streams/stream2", 5);
                 register = sr.register(writer);
                 writer.setWritable(register);
 
-                cqe = sr.register(getQuery("rtgp-q2",".rspql"), config);
+                cqe = sr.register(getQuery("rtgp-q2", ".rspql"), config);
                 q = cqe.getContinuousQuery();
 
                 System.out.println(q.toString());
@@ -79,7 +77,6 @@ public class CSPARQLReadyToGo {
                 break;
 
             case MULTI_STREAM:
-
                 writer = new LBSMARDFStreamTestGenerator("Writer", "http://streamreasoning.org/jasper/streams/stream2", 5);
                 register = sr.register(writer);
                 writer.setWritable(register);
@@ -88,7 +85,7 @@ public class CSPARQLReadyToGo {
                 RegisteredEPLStream register2 = sr.register(writer2);
                 writer2.setWritable(register2);
 
-                cqe = sr.register(getQuery("rtgp-q3",".rspql"), config);
+                cqe = sr.register(getQuery("rtgp-q3", ".rspql"), config);
                 q = cqe.getContinuousQuery();
 
                 System.out.println(q.toString());
@@ -96,7 +93,10 @@ public class CSPARQLReadyToGo {
 
                 //In real application we do not have to start the stream.
                 (new Thread(writer)).start();
+                (new Thread(writer2)).start();
                 break;
+
+
             default:
                 System.exit(0);
                 break;
