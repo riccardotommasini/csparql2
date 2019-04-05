@@ -1,8 +1,5 @@
 package it.polimi.jasper.engine;
 
-import it.polimi.jasper.rspql.reasoning.EntailmentImpl;
-import it.polimi.jasper.rspql.reasoning.EntailmentType;
-import it.polimi.jasper.rspql.reasoning.ReasoningUtils;
 import it.polimi.jasper.rspql.sds.JasperSDSManager;
 import it.polimi.jasper.spe.operators.r2r.syntax.QueryFactory;
 import it.polimi.jasper.spe.operators.r2r.syntax.RSPQLJenaQuery;
@@ -16,15 +13,16 @@ import it.polimi.yasper.core.spe.operators.r2r.QueryConfiguration;
 import it.polimi.yasper.core.spe.operators.r2r.execution.ContinuousQueryExecution;
 import it.polimi.yasper.core.spe.operators.r2s.result.QueryResultFormatter;
 import it.polimi.yasper.core.spe.report.ReportGrain;
+import it.polimi.yasper.core.spe.report.ReportImpl;
+import it.polimi.yasper.core.spe.report.strategies.ReportingStrategy;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j;
 import org.apache.commons.configuration.ConfigurationException;
-import org.apache.jena.reasoner.rulesys.Rule;
 import org.apache.jena.riot.system.IRIResolver;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.List;
 
 @Log4j
@@ -35,19 +33,13 @@ public class Jasper extends EsperRSPEngine implements QueryObserverRegistrationF
 
     public Jasper(long t0, EngineConfiguration configuration) {
         super(t0, configuration);
-        this.resolver = IRIResolver.create(configuration.getBaseURI());
-
-        this.entailments = new HashMap<>();
-
+        this.resolver = IRIResolver.create(base_uri);
         this.reportGrain = ReportGrain.SINGLE;
+    }
 
-        //Adding default entailments
-
-        String ent = EntailmentType.RDFS.name();
-        this.entailments.put(ent, new EntailmentImpl(ent, Rule.rulesFromURL(ReasoningUtils.RHODF_RULE_SET_RUNTIME), EntailmentType.RDFS));
-        ent = EntailmentType.RHODF.name();
-        this.entailments.put(ent, new EntailmentImpl(ent, Rule.rulesFromURL(ReasoningUtils.RHODF_RULE_SET_RUNTIME), EntailmentType.RHODF));
-
+    public void setReport(ReportingStrategy... sr) {
+        this.report = new ReportImpl();
+        Arrays.stream(sr).forEach(this.report::add);
     }
 
     @Override
@@ -83,8 +75,6 @@ public class Jasper extends EsperRSPEngine implements QueryObserverRegistrationF
 
         JasperSDSManager builder = new JasperSDSManager(
                 q,
-                EntailmentType.RDFS,
-                null,
                 this.resolver,
                 this.report,
                 this.responseFormat,
@@ -95,7 +85,9 @@ public class Jasper extends EsperRSPEngine implements QueryObserverRegistrationF
                 this.stream_registration_service,
                 this.stream_dispatching_service,
                 c.getSdsMaintainance(),
-                c.getTboxLocation());
+                c.getTboxLocation(),
+                this.entailment,
+                this.rules);
 
         return save(q, builder.build(), builder.getContinuousQueryExecution());
     }
