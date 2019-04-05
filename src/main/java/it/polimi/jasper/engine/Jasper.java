@@ -8,6 +8,7 @@ import it.polimi.yasper.core.engine.exceptions.UnregisteredQueryExeception;
 import it.polimi.yasper.core.engine.features.QueryObserverRegistrationFeature;
 import it.polimi.yasper.core.engine.features.QueryRegistrationFeature;
 import it.polimi.yasper.core.engine.features.QueryStringRegistrationFeature;
+import it.polimi.yasper.core.spe.content.Maintenance;
 import it.polimi.yasper.core.spe.operators.r2r.ContinuousQuery;
 import it.polimi.yasper.core.spe.operators.r2r.QueryConfiguration;
 import it.polimi.yasper.core.spe.operators.r2r.execution.ContinuousQueryExecution;
@@ -30,11 +31,14 @@ public class Jasper extends EsperRSPEngine implements QueryObserverRegistrationF
 
     @Getter
     private final IRIResolver resolver;
+    private Maintenance maintenance;
+
 
     public Jasper(long t0, EngineConfiguration configuration) {
         super(t0, configuration);
         this.resolver = IRIResolver.create(base_uri);
         this.reportGrain = ReportGrain.SINGLE;
+        this.maintenance=Maintenance.NAIVE;
     }
 
     public void setReport(ReportingStrategy... sr) {
@@ -84,8 +88,8 @@ public class Jasper extends EsperRSPEngine implements QueryObserverRegistrationF
                 this.tick,
                 this.stream_registration_service,
                 this.stream_dispatching_service,
-                c.getSdsMaintainance(),
-                c.getTboxLocation(),
+                this.maintenance,
+                this.tbox,
                 this.entailment,
                 this.rules);
 

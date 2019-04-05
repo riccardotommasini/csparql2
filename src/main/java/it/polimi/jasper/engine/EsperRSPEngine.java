@@ -45,6 +45,7 @@ public abstract class EsperRSPEngine implements StreamRegistrationFeature<Regist
     protected Report report;
     protected ReportGrain reportGrain;
     protected Tick tick;
+    protected String tbox;
 
     protected final String base_uri;
     protected Map<String, WindowAssigner> stream_dispatching_service;
@@ -90,8 +91,13 @@ public abstract class EsperRSPEngine implements StreamRegistrationFeature<Regist
 
         if (string == null)
             this.entailment = Entailment.NONE;
-        else
+        else {
             this.entailment = Entailment.valueOf(string);
+            this.tbox = rsp_config.getString("rsp_engine.tbox_location");
+            if (tbox == null) {
+                throw new RuntimeException("Not Specified TBOX");
+            }
+        }
 
         this.report = new ReportImpl();
 

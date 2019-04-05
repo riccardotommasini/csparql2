@@ -54,16 +54,16 @@ public final class ContinuousQueryExecutionFactory extends QueryExecutionFactory
     }
 
 
-    public static Reasoner getReasoner(Entailment et, List<Rule> rules, Model tbox) {
+    public static Reasoner getReasoner(Entailment et, List<Rule> rules, String tboxLocation) {
         switch (et) {
             case OWL:
-                return ReasonerRegistry.getOWLReasoner().bindSchema(tbox);
+                return ReasonerRegistry.getOWLReasoner().bindSchema(ModelFactory.createDefaultModel().read(tboxLocation));
             case RDFS:
-                return ReasonerRegistry.getRDFSReasoner().bindSchema(tbox);
+                return ReasonerRegistry.getRDFSReasoner().bindSchema(ModelFactory.createDefaultModel().read(tboxLocation));
             case OWL2RL:
-                return ReasonerRegistry.getRDFSReasoner().bindSchema(tbox);
+                return ReasonerRegistry.getRDFSReasoner().bindSchema(ModelFactory.createDefaultModel().read(tboxLocation));
             case CUSTOM:
-                return getTvgReasoner(tbox, rules);
+                return getTvgReasoner(ModelFactory.createDefaultModel().read(tboxLocation), rules);
             case NONE:
             default:
                 return null;
