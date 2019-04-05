@@ -1,7 +1,6 @@
 package it.polimi.jasper.spe.operators.r2r.execution;
 
 import it.polimi.jasper.rspql.reasoning.Entailment;
-import it.polimi.jasper.rspql.reasoning.EntailmentType;
 import it.polimi.jasper.rspql.sds.JenaSDS;
 import it.polimi.jasper.spe.operators.r2r.syntax.RSPQLJenaQuery;
 import it.polimi.yasper.core.spe.operators.r2r.execution.ContinuousQueryExecutionObserver;
@@ -55,8 +54,7 @@ public final class ContinuousQueryExecutionFactory extends QueryExecutionFactory
     }
 
 
-    public static Reasoner getReasoner(EntailmentType et, Entailment ent, Model tbox) {
-
+    public static Reasoner getReasoner(Entailment et, List<Rule> rules, Model tbox) {
         switch (et) {
             case OWL:
                 return ReasonerRegistry.getOWLReasoner().bindSchema(tbox);
@@ -64,12 +62,13 @@ public final class ContinuousQueryExecutionFactory extends QueryExecutionFactory
                 return ReasonerRegistry.getRDFSReasoner().bindSchema(tbox);
             case OWL2RL:
                 return ReasonerRegistry.getRDFSReasoner().bindSchema(tbox);
+            case CUSTOM:
+                return getTvgReasoner(tbox, rules);
             case NONE:
-                return null;
             default:
-                break;
+                return null;
+
         }
-        return getTvgReasoner(tbox, ent.getRules());
     }
 
     private static GenericRuleReasoner getTvgReasoner(Model tbox, List<Rule> rules) {

@@ -3,6 +3,8 @@ package it.polimi.jasper.spe.esper;
 import com.espertech.esper.client.soda.*;
 import it.polimi.jasper.spe.EncodingUtils;
 import it.polimi.jasper.spe.operators.s2r.EsperWindowAssigner;
+import it.polimi.jasper.spe.report.EsperCCReportStrategy;
+import it.polimi.jasper.spe.report.EsperWCReportStrategy;
 import it.polimi.yasper.core.spe.content.Maintenance;
 import it.polimi.yasper.core.spe.operators.s2r.syntax.WindowType;
 import it.polimi.yasper.core.spe.report.Report;
@@ -38,6 +40,18 @@ public class EPLFactory {
             stmt.setSelectClause(selectClause1);
         }
 
+        OutputLimitClause outputLimitClause;
+        OutputLimitSelector snapshot = OutputLimitSelector.SNAPSHOT;
+
+        if (Arrays.stream(report.strategies()).anyMatch(rs -> rs instanceof EsperWCReportStrategy)) {
+            TimePeriodExpression timePeriod = getTimePeriod((int) step, unitStep);
+            outputLimitClause = OutputLimitClause.create(snapshot, timePeriod);
+            stmt.setOutputLimitClause(outputLimitClause);
+        } else if (Arrays.stream(report.strategies()).anyMatch(rs -> rs instanceof EsperCCReportStrategy)) {
+
+            //Default Esper
+        }
+
         FromClause fromClause = FromClause.create();
         FilterStream stream = FilterStream.create(EncodingUtils.encode(s));
         stream.addView(window);
@@ -46,21 +60,19 @@ public class EPLFactory {
 
 
         //SETTING TICK
-        OutputLimitClause outputLimitClause;
-        OutputLimitSelector snapshot = OutputLimitSelector.SNAPSHOT;
         OutputLimitUnit events = OutputLimitUnit.EVENTS;
-
-        if (Tick.TIME_DRIVEN.equals(tick)) {
-            TimePeriodExpression timePeriod = getTimePeriod((int) step, unitStep);
-            outputLimitClause = OutputLimitClause.create(snapshot, timePeriod);
-            stmt.setOutputLimitClause(outputLimitClause);
-        } else if (Tick.BATCH_DRIVEN.equals(tick)) {
-            outputLimitClause = new OutputLimitClause(snapshot, (double) step);
-            stmt.setOutputLimitClause(outputLimitClause);
-        } else if (Tick.TUPLE_DRIVEN.equals(tick)) {
-            outputLimitClause = new OutputLimitClause(snapshot, 1D);
-            stmt.setOutputLimitClause(outputLimitClause);
-        }
+//
+//        if (Tick.TIME_DRIVEN.equals(tick)) {
+//            TimePeriodExpression timePeriod = getTimePeriod((int) step, unitStep);
+//            outputLimitClause = OutputLimitClause.create(snapshot, timePeriod);
+//            stmt.setOutputLimitClause(outputLimitClause);
+//        } else if (Tick.BATCH_DRIVEN.equals(tick)) {
+//            outputLimitClause = new OutputLimitClause(snapshot, (double) step);
+//            stmt.setOutputLimitClause(outputLimitClause);
+//        } else if (Tick.TUPLE_DRIVEN.equals(tick)) {
+//            outputLimitClause = new OutputLimitClause(snapshot, 1D);
+//            stmt.setOutputLimitClause(outputLimitClause);
+//        }
 
         return stmt;
     }

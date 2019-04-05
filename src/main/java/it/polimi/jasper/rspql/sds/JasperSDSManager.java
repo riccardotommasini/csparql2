@@ -1,7 +1,6 @@
 package it.polimi.jasper.rspql.sds;
 
 import it.polimi.jasper.rspql.reasoning.Entailment;
-import it.polimi.jasper.rspql.reasoning.EntailmentType;
 import it.polimi.jasper.spe.esper.EsperStreamRegistrationService;
 import it.polimi.jasper.spe.operators.r2r.execution.ContinuousQueryExecutionFactory;
 import it.polimi.jasper.spe.operators.r2r.syntax.RSPQLJenaQuery;
@@ -26,8 +25,10 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.impl.InfModelImpl;
 import org.apache.jena.reasoner.Reasoner;
+import org.apache.jena.reasoner.rulesys.Rule;
 import org.apache.jena.riot.system.IRIResolver;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -37,8 +38,6 @@ import java.util.Map;
 public class JasperSDSManager implements SDSManager {
 
     private final RSPQLJenaQuery query;
-
-    private final Entailment ent;
 
     private final IRIResolver resolver;
 
@@ -52,7 +51,8 @@ public class JasperSDSManager implements SDSManager {
 
     private final EsperStreamRegistrationService stream_registration_service;
     private final Map<String, WindowAssigner> stream_dispatching_service;
-    private final EntailmentType et;
+    private final Entailment et;
+    private final List<Rule> rules;
 
     @Getter
     protected Reasoner reasoner;
@@ -68,9 +68,8 @@ public class JasperSDSManager implements SDSManager {
     private String tboxLocation;
     private Model tbox;
 
-    public JasperSDSManager(RSPQLJenaQuery query, EntailmentType et, Entailment ent, IRIResolver resolver, Report report, String responseFormat, Boolean enabled_recursion, Boolean usingEventTime, ReportGrain reportGrain, Tick tick, EsperStreamRegistrationService stream_registration_service, Map<String, WindowAssigner> stream_dispatching_service, Maintenance sdsMaintainance, String tboxLocation) {
+    public JasperSDSManager(RSPQLJenaQuery query, IRIResolver resolver, Report report, String responseFormat, Boolean enabled_recursion, Boolean usingEventTime, ReportGrain reportGrain, Tick tick, EsperStreamRegistrationService stream_registration_service, Map<String, WindowAssigner> stream_dispatching_service, Maintenance sdsMaintainance, String tboxLocation, Entailment et, List<Rule> rules) {
         this.query = query;
-        this.ent = ent;
         this.resolver = resolver;
         this.report = report;
         this.responseFormat = responseFormat;
@@ -82,7 +81,8 @@ public class JasperSDSManager implements SDSManager {
         this.stream_dispatching_service = stream_dispatching_service;
         this.tboxLocation = tboxLocation;
         this.maintenance = sdsMaintainance;
-        this.et=et;
+        this.et = et;
+        this.rules = rules;
     }
 
     @Override
@@ -90,7 +90,7 @@ public class JasperSDSManager implements SDSManager {
 
         this.tbox = ModelFactory.createDefaultModel().read(tboxLocation);
 
-        this.reasoner = ContinuousQueryExecutionFactory.getReasoner(et, ent, tbox);
+        this.reasoner = ContinuousQueryExecutionFactory.getReasoner(et, rules, tbox);
 
         if (query.isRecursive() && !this.enabled_recursion) {
             throw new UnsupportedOperationException("Recursion must be enabled");

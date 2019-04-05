@@ -6,7 +6,7 @@
 
     <groupId>it.polimi.deib.rsp.jasper</groupId>
     <artifactId>csparql2</artifactId>
-    <version>2.2.0</version>
+    <version>2.2.1</version>
 
     <repositories>
         <repository>
