@@ -24,15 +24,16 @@ import it.polimi.jasper.streams.RegisteredEPLStream;
 import it.polimi.jasper.streams.schema.GraphStreamSchema;
 import it.polimi.yasper.core.stream.rdf.RDFStream;
 import it.polimi.yasper.core.stream.schema.StreamSchema;
+import org.apache.jena.datatypes.RDFDatatype;
 import org.apache.jena.rdf.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.StringWriter;
-
 public class LBSMARDFStreamTestGenerator extends RDFStream implements Runnable {
 
-    /** The logger. */
+    /**
+     * The logger.
+     */
     protected final Logger logger = LoggerFactory.getLogger(LBSMARDFStreamTestGenerator.class);
 
     private StreamSchema schema = new GraphStreamSchema();
@@ -80,7 +81,7 @@ public class LBSMARDFStreamTestGenerator extends RDFStream implements Runnable {
             int appTimestamp1 = 0;
 
             while (true) {
-                appTimestamp1 = i * 1000;
+                appTimestamp1 = i * 2000;
 
                 m = ModelFactory.createDefaultModel();
 
@@ -98,6 +99,9 @@ public class LBSMARDFStreamTestGenerator extends RDFStream implements Runnable {
                     subject = ResourceFactory.createResource(uri + "user" + this.c + j);
                     property = ResourceFactory.createProperty(uri + "likes");
                     object = ResourceFactory.createResource(uri + "O" + this.c);
+                    Literal ts = ResourceFactory.createTypedLiteral(new Long(appTimestamp1));
+                    Property tsp = ResourceFactory.createProperty(uri + "timestamp");
+                    m.add(m.createStatement(subject, tsp, ts));
                     m.add(m.createStatement(subject, property, object));
                 }
 
@@ -109,7 +113,7 @@ public class LBSMARDFStreamTestGenerator extends RDFStream implements Runnable {
                 this.c++;
             }
 
-        } catch(InterruptedException e){
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }

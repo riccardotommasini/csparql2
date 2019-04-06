@@ -30,7 +30,7 @@ public class CSPARQLReadyToGo {
         final int MULTI_STREAM = 2;
 
         // put here the example you want to run
-        int key = MULTI_STREAM;
+        int key = WHO_LIKES_WHAT;
 
         String path = CSPARQLReadyToGo.class.getResource("/csparql.properties").getPath();
         QueryConfiguration config = new QueryConfiguration(path);

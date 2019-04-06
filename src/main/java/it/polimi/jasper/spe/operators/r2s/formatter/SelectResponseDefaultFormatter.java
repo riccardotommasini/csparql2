@@ -47,7 +47,7 @@ public abstract class SelectResponseDefaultFormatter extends QueryResultFormatte
         long cep_timestamp = sr.getCep_timestamp();
         if (cep_timestamp != last_result && distinct) {
             last_result = cep_timestamp;
-            log.debug("[" + System.currentTimeMillis() + "] Result at [" + last_result + "]");
+            log.info("[" + System.currentTimeMillis() + "] Result at [" + last_result + "]");
 
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             ResultSetRewindable results = sr.getResults();

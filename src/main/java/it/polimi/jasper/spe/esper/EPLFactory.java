@@ -38,10 +38,10 @@ public class EPLFactory {
         } else {
             SelectClause selectClause1 = SelectClause.createWildcard(StreamSelector.RSTREAM_ISTREAM_BOTH);
             stmt.setSelectClause(selectClause1);
-        }
+        }` `
 
         OutputLimitClause outputLimitClause;
-        OutputLimitSelector snapshot = OutputLimitSelector.SNAPSHOT;
+        OutputLimitSelector snapshot = OutputLimitSelector.ALL;
 
         if (Arrays.stream(report.strategies()).anyMatch(rs -> rs instanceof EsperWCReportStrategy)) {
             TimePeriodExpression timePeriod = getTimePeriod((int) step, unitStep);
