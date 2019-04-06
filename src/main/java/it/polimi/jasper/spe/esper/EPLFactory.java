@@ -38,7 +38,7 @@ public class EPLFactory {
         } else {
             SelectClause selectClause1 = SelectClause.createWildcard(StreamSelector.RSTREAM_ISTREAM_BOTH);
             stmt.setSelectClause(selectClause1);
-        }` `
+        }
 
         OutputLimitClause outputLimitClause;
         OutputLimitSelector snapshot = OutputLimitSelector.ALL;
