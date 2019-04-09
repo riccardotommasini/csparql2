@@ -1,22 +1,27 @@
 package it.polimi.jasper.rspql.sds;
 
+import it.polimi.jasper.engine.Jasper;
 import it.polimi.jasper.rspql.reasoning.Entailment;
 import it.polimi.jasper.spe.esper.EsperStreamRegistrationService;
-import it.polimi.jasper.spe.operators.r2r.execution.ContinuousQueryExecutionFactory;
+import it.polimi.jasper.spe.execution.ContinuousQueryExecutionFactory;
+import it.polimi.jasper.spe.execution.JenaContinuousQueryExecution;
 import it.polimi.jasper.spe.operators.r2r.syntax.RSPQLJenaQuery;
 import it.polimi.jasper.spe.operators.s2r.EsperWindowOperator;
-import it.polimi.yasper.core.engine.exceptions.StreamRegistrationException;
-import it.polimi.yasper.core.rspql.RDFUtils;
-import it.polimi.yasper.core.rspql.sds.SDS;
-import it.polimi.yasper.core.rspql.sds.SDSManager;
-import it.polimi.yasper.core.rspql.timevarying.TimeVarying;
-import it.polimi.yasper.core.spe.content.Maintenance;
-import it.polimi.yasper.core.spe.operators.r2r.execution.ContinuousQueryExecution;
-import it.polimi.yasper.core.spe.operators.s2r.execution.assigner.WindowAssigner;
-import it.polimi.yasper.core.spe.report.Report;
-import it.polimi.yasper.core.spe.report.ReportGrain;
-import it.polimi.yasper.core.spe.tick.Tick;
-import it.polimi.yasper.core.stream.RegisteredStream;
+import it.polimi.jasper.streams.EPLRDFStream;
+import it.polimi.yasper.core.RDFUtils;
+import it.polimi.yasper.core.enums.Maintenance;
+import it.polimi.yasper.core.enums.ReportGrain;
+import it.polimi.yasper.core.enums.Tick;
+import it.polimi.yasper.core.exceptions.StreamRegistrationException;
+import it.polimi.yasper.core.operators.s2r.execution.assigner.Assigner;
+import it.polimi.yasper.core.querying.ContinuousQueryExecution;
+import it.polimi.yasper.core.sds.SDS;
+import it.polimi.yasper.core.sds.SDSManager;
+import it.polimi.yasper.core.sds.timevarying.TimeVarying;
+import it.polimi.yasper.core.secret.report.Report;
+import it.polimi.yasper.core.secret.time.Time;
+import it.polimi.yasper.core.stream.data.WebDataStream;
+import it.polimi.yasper.core.stream.web.WebStream;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j;
 import org.apache.jena.graph.Graph;
@@ -50,9 +55,10 @@ public class JasperSDSManager implements SDSManager {
     private final Tick tick;
 
     private final EsperStreamRegistrationService stream_registration_service;
-    private final Map<String, WindowAssigner> stream_dispatching_service;
     private final Entailment et;
     private final List<Rule> rules;
+    private final Time time;
+    private final Jasper jasper;
 
     @Getter
     protected Reasoner reasoner;
@@ -61,15 +67,17 @@ public class JasperSDSManager implements SDSManager {
     private JenaSDS sds;
 
     @Getter
-    private ContinuousQueryExecution cqe;
+    private JenaContinuousQueryExecution cqe;
 
     private Maintenance maintenance;
 
     private String tboxLocation;
-    private Model tbox;
+    private EPLRDFStream out;
 
-    public JasperSDSManager(RSPQLJenaQuery query, IRIResolver resolver, Report report, String responseFormat, Boolean enabled_recursion, Boolean usingEventTime, ReportGrain reportGrain, Tick tick, EsperStreamRegistrationService stream_registration_service, Map<String, WindowAssigner> stream_dispatching_service, Maintenance sdsMaintainance, String tboxLocation, Entailment et, List<Rule> rules) {
+    public JasperSDSManager(Jasper jasper, RSPQLJenaQuery query, Time time, IRIResolver resolver, Report report, String responseFormat, Boolean enabled_recursion, Boolean usingEventTime, ReportGrain reportGrain, Tick tick, EsperStreamRegistrationService stream_registration_service, Map<String, Assigner> stream_dispatching_service, Maintenance sdsMaintainance, String tboxLocation, Entailment et, List<Rule> rules) {
+        this.jasper = jasper;
         this.query = query;
+        this.time = time;
         this.resolver = resolver;
         this.report = report;
         this.responseFormat = responseFormat;
@@ -78,7 +86,6 @@ public class JasperSDSManager implements SDSManager {
         this.reportGrain = reportGrain;
         this.tick = tick;
         this.stream_registration_service = stream_registration_service;
-        this.stream_dispatching_service = stream_dispatching_service;
         this.maintenance = sdsMaintainance;
         this.tboxLocation = tboxLocation;
         this.et = et;
@@ -95,8 +102,6 @@ public class JasperSDSManager implements SDSManager {
         }
 
         this.sds = new JenaSDS(new MultiUnion());
-
-        this.cqe = ContinuousQueryExecutionFactory.create(query, sds);
 
         //Load Static Knowledge
         query.getNamedGraphURIs().forEach(g -> {
@@ -119,7 +124,17 @@ public class JasperSDSManager implements SDSManager {
                 this.sds.getDefaultModel().add(m);
         });
 
-        Map<String, RegisteredStream<Graph>> registeredStreams = stream_registration_service.getRegisteredStreams();
+        Map<String, WebDataStream<Graph>> registeredStreams = stream_registration_service.getRegisteredStreams();
+
+
+        WebStream outputStream = query.getOutputStream();
+
+        if (query.isConstructType()) {
+            this.out = jasper.register(outputStream);
+        }
+
+
+        this.cqe = ContinuousQueryExecutionFactory.create(resolver, query, sds, out, null);
 
         query.getWindowMap().forEach((wo, s) -> {
 
@@ -135,13 +150,13 @@ public class JasperSDSManager implements SDSManager {
                         this.usingEventTime,
                         this.reportGrain,
                         this.maintenance,
-                        wo);
+                        this.time,
+                        wo,
+                        this.cqe);
 
-                WindowAssigner<Graph, Graph> wa = ewo.apply(registeredStreams.get(key));
+                cqe.addS2R(ewo);
 
-                this.stream_dispatching_service.put(key, wa);
-
-                TimeVarying<Graph> tvii = wa.set(cqe);
+                TimeVarying<Graph> tvii = ewo.apply(registeredStreams.get(key));
 
                 if (ewo.named())
                     this.sds.add(RDFUtils.createIRI(wo.iri()), tvii);

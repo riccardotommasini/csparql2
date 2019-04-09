@@ -1,6 +1,7 @@
 package it.polimi.jasper.streams.schema;
 
-import it.polimi.yasper.core.stream.schema.StreamSchema;
+
+import it.polimi.yasper.core.stream.metadata.StreamSchema;
 
 public abstract class RDFStreamSchema implements StreamSchema {
 

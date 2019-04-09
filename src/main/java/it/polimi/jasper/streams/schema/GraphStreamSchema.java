@@ -1,7 +1,7 @@
 package it.polimi.jasper.streams.schema;
 
 
-import it.polimi.yasper.core.stream.schema.SchemaEntry;
+import it.polimi.yasper.core.stream.metadata.SchemaEntry;
 import org.apache.jena.graph.Graph;
 
 import java.util.HashSet;
@@ -17,6 +17,11 @@ public class GraphStreamSchema extends RDFStreamSchema {
     @Override
     public Set<SchemaEntry> entrySet() {
         return new HashSet<>();
+    }
+
+    @Override
+    public boolean validate(Object o) {
+        return true;
     }
 }
 

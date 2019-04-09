@@ -2,10 +2,9 @@ package it.polimi.jasper.spe.operators.r2r.syntax;
 
 import it.polimi.jasper.CSPARQLReadyToGo.CSPARQLReadyToGo;
 import it.polimi.jasper.engine.Jasper;
-import it.polimi.yasper.core.engine.EngineConfiguration;
-import it.polimi.yasper.core.spe.operators.r2r.QueryConfiguration;
+import it.polimi.yasper.core.engine.config.EngineConfiguration;
+import it.polimi.yasper.core.sds.SDSConfiguration;
 import org.apache.commons.configuration.ConfigurationException;
-import org.apache.jena.query.Syntax;
 
 import java.io.IOException;
 
@@ -14,7 +13,7 @@ public class TestRSPQLParser {
     public static void main(String[] args) throws IOException, ConfigurationException {
 
         String path = CSPARQLReadyToGo.class.getResource("/csparql.properties").getPath();
-        QueryConfiguration config = new QueryConfiguration(path);
+        SDSConfiguration config = new SDSConfiguration(path);
         EngineConfiguration ec = EngineConfiguration.loadConfig("/csparql.properties");
 
 

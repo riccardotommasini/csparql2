@@ -3,19 +3,19 @@ package it.polimi.jasper.engine;
 import it.polimi.jasper.rspql.sds.JasperSDSManager;
 import it.polimi.jasper.spe.operators.r2r.syntax.QueryFactory;
 import it.polimi.jasper.spe.operators.r2r.syntax.RSPQLJenaQuery;
-import it.polimi.yasper.core.engine.EngineConfiguration;
-import it.polimi.yasper.core.engine.exceptions.UnregisteredQueryExeception;
+import it.polimi.yasper.core.engine.config.EngineConfiguration;
 import it.polimi.yasper.core.engine.features.QueryObserverRegistrationFeature;
 import it.polimi.yasper.core.engine.features.QueryRegistrationFeature;
 import it.polimi.yasper.core.engine.features.QueryStringRegistrationFeature;
-import it.polimi.yasper.core.spe.content.Maintenance;
-import it.polimi.yasper.core.spe.operators.r2r.ContinuousQuery;
-import it.polimi.yasper.core.spe.operators.r2r.QueryConfiguration;
-import it.polimi.yasper.core.spe.operators.r2r.execution.ContinuousQueryExecution;
-import it.polimi.yasper.core.spe.operators.r2s.result.QueryResultFormatter;
-import it.polimi.yasper.core.spe.report.ReportGrain;
-import it.polimi.yasper.core.spe.report.ReportImpl;
-import it.polimi.yasper.core.spe.report.strategies.ReportingStrategy;
+import it.polimi.yasper.core.enums.Maintenance;
+import it.polimi.yasper.core.enums.ReportGrain;
+import it.polimi.yasper.core.exceptions.UnregisteredQueryExeception;
+import it.polimi.yasper.core.format.QueryResultFormatter;
+import it.polimi.yasper.core.querying.ContinuousQuery;
+import it.polimi.yasper.core.querying.ContinuousQueryExecution;
+import it.polimi.yasper.core.sds.SDSConfiguration;
+import it.polimi.yasper.core.secret.report.ReportImpl;
+import it.polimi.yasper.core.secret.report.strategies.ReportingStrategy;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j;
 import org.apache.commons.configuration.ConfigurationException;
@@ -38,7 +38,7 @@ public class Jasper extends EsperRSPEngine implements QueryObserverRegistrationF
         super(t0, configuration);
         this.resolver = IRIResolver.create(base_uri);
         this.reportGrain = ReportGrain.SINGLE;
-        this.maintenance=Maintenance.NAIVE;
+        this.maintenance = Maintenance.NAIVE;
     }
 
     public void setReport(ReportingStrategy... sr) {
@@ -49,7 +49,7 @@ public class Jasper extends EsperRSPEngine implements QueryObserverRegistrationF
     @Override
     public ContinuousQueryExecution register(RSPQLJenaQuery continuousQuery) {
         try {
-            return register(continuousQuery, QueryConfiguration.getDefault());
+            return register(continuousQuery, SDSConfiguration.getDefault());
         } catch (ConfigurationException e) {
             throw new RuntimeException(e.getMessage());
         }
@@ -58,14 +58,14 @@ public class Jasper extends EsperRSPEngine implements QueryObserverRegistrationF
     @Override
     public ContinuousQueryExecution register(String s) {
         try {
-            return register(s, QueryConfiguration.getDefault());
+            return register(s, SDSConfiguration.getDefault());
         } catch (ConfigurationException e) {
             throw new RuntimeException(e.getMessage());
         }
     }
 
     @Override
-    public ContinuousQueryExecution register(String q, QueryConfiguration queryConfiguration) {
+    public ContinuousQueryExecution register(String q, SDSConfiguration queryConfiguration) {
         log.info("Parsing Query [" + q + "]");
         try {
             return register(QueryFactory.parse(resolver, q), queryConfiguration);
@@ -75,10 +75,12 @@ public class Jasper extends EsperRSPEngine implements QueryObserverRegistrationF
     }
 
     @Override
-    public ContinuousQueryExecution register(RSPQLJenaQuery q, QueryConfiguration c) {
+    public ContinuousQueryExecution register(RSPQLJenaQuery q, SDSConfiguration c) {
 
         JasperSDSManager builder = new JasperSDSManager(
+                this,
                 q,
+                this.time,
                 this.resolver,
                 this.report,
                 this.responseFormat,
@@ -92,6 +94,7 @@ public class Jasper extends EsperRSPEngine implements QueryObserverRegistrationF
                 this.tbox,
                 this.entailment,
                 this.rules);
+
 
         return save(q, builder.build(), builder.getContinuousQueryExecution());
     }

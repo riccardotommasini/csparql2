@@ -7,9 +7,10 @@ import com.espertech.esper.client.StatementAwareUpdateListener;
 import it.polimi.jasper.spe.content.ContentGraphBean;
 import it.polimi.jasper.spe.content.IncrementalContentGraphBean;
 import it.polimi.jasper.spe.operators.s2r.EsperWindowAssigner;
-import it.polimi.yasper.core.rspql.timevarying.TimeVarying;
-import it.polimi.yasper.core.spe.content.Maintenance;
-import it.polimi.yasper.core.spe.report.Report;
+import it.polimi.yasper.core.enums.Maintenance;
+import it.polimi.yasper.core.querying.ContinuousQueryExecution;
+import it.polimi.yasper.core.sds.timevarying.TimeVarying;
+import it.polimi.yasper.core.secret.report.Report;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j;
 import org.apache.jena.graph.Graph;
@@ -90,6 +91,16 @@ public abstract class EsperTimeVaryingGraph extends Observable implements Statem
     @Override
     public boolean named() {
         return false;
+    }
+
+    @Override
+    public void addListener(ContinuousQueryExecution cqe) {
+        this.addObserver((Observer) cqe);
+    }
+
+    @Override
+    public void removeListener(ContinuousQueryExecution cqe) {
+        this.deleteObserver((Observer) cqe);
     }
 
 }

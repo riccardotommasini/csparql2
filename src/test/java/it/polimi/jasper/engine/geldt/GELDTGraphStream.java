@@ -1,9 +1,9 @@
 package it.polimi.jasper.engine.geldt;
 
-import it.polimi.jasper.streams.RegisteredEPLStream;
+import it.polimi.jasper.streams.EPLRDFStream;
 import it.polimi.jasper.streams.schema.GraphStreamSchema;
-import it.polimi.yasper.core.stream.rdf.RDFStream;
-import it.polimi.yasper.core.stream.schema.StreamSchema;
+import it.polimi.yasper.core.stream.metadata.StreamSchema;
+import it.polimi.yasper.core.stream.web.WebStreamImpl;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j;
 import org.apache.jena.query.Query;
@@ -25,13 +25,13 @@ import java.util.Random;
  */
 @Getter
 @Log4j
-public class GELDTGraphStream extends RDFStream implements Runnable {
+public class GELDTGraphStream extends WebStreamImpl implements Runnable {
 
     private String igraphpath;
     private Model sgraph;
     private Model igraphlast;
 
-    private RegisteredEPLStream s;
+    private EPLRDFStream s;
     private int sample;
 
     private String type;
@@ -65,7 +65,7 @@ public class GELDTGraphStream extends RDFStream implements Runnable {
     }
 
 
-    public void setWritable(RegisteredEPLStream e) {
+    public void setWritable(EPLRDFStream e) {
         this.s = e;
     }
 

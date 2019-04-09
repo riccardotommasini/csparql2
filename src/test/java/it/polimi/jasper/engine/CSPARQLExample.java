@@ -1,13 +1,12 @@
 package it.polimi.jasper.engine;
 
-import it.polimi.jasper.spe.operators.r2s.formatter.ResponseFormatterFactory;
-import it.polimi.jasper.spe.operators.r2s.formatter.sysout.SelectSysOutDefaultFormatter;
-import it.polimi.jasper.streams.RegisteredEPLStream;
-import it.polimi.yasper.core.engine.ConfigurationUtils;
-import it.polimi.yasper.core.engine.EngineConfiguration;
-import it.polimi.yasper.core.spe.operators.r2r.ContinuousQuery;
-import it.polimi.yasper.core.spe.operators.r2r.QueryConfiguration;
-import it.polimi.yasper.core.spe.operators.r2r.execution.ContinuousQueryExecution;
+import it.polimi.jasper.formatter.ResponseFormatterFactory;
+import it.polimi.jasper.streams.EPLRDFStream;
+import it.polimi.yasper.core.engine.config.ConfigurationUtils;
+import it.polimi.yasper.core.engine.config.EngineConfiguration;
+import it.polimi.yasper.core.querying.ContinuousQuery;
+import it.polimi.yasper.core.querying.ContinuousQueryExecution;
+import it.polimi.yasper.core.sds.SDSConfiguration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.io.FileUtils;
 
@@ -25,7 +24,7 @@ public class CSPARQLExample {
     public static void main(String[] args) throws InterruptedException, IOException, ConfigurationException {
 
         URL resource = CSPARQLExample.class.getResource("/csparql.properties");
-        QueryConfiguration config = new QueryConfiguration(resource.getPath());
+        SDSConfiguration config = new SDSConfiguration(resource.getPath());
         EngineConfiguration ec = EngineConfiguration.loadConfig("/csparql.properties");
 
         config.setProperty(ConfigurationUtils.TBOX_LOCATION, "https://raw.githubusercontent.com/riccardotommasini/csparql2/master/src/test/resources/artist.tbox.owl?token=ACeO0Zrl_qG-5YPpHh6T_VvZYqXsxFgJks5brMV-wA%3D%3D");
@@ -34,7 +33,7 @@ public class CSPARQLExample {
 
         GraphStream writer = new GraphStream("Writer", "http://differenthost:12134/stream2", 1);
 
-        RegisteredEPLStream register = sr.register(writer);
+        EPLRDFStream register = sr.register(writer);
 
         writer.setWritable(register);
 
@@ -45,7 +44,7 @@ public class CSPARQLExample {
         System.out.println(query.toString());
 
         System.out.println("<<------>>");
-        
+
         if (query.isConstructType()) {
             cqe.add(ResponseFormatterFactory.getConstructResponseSysOutFormatter("JSON-LD", true));
         } else if (query.isSelectType()) {

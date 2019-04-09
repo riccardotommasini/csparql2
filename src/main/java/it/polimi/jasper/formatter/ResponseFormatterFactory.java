@@ -1,9 +1,9 @@
-package it.polimi.jasper.spe.operators.r2s.formatter;
+package it.polimi.jasper.formatter;
 
 
-import it.polimi.jasper.spe.operators.r2s.formatter.sysout.ConstructSysOutDefaultFormatter;
-import it.polimi.jasper.spe.operators.r2s.formatter.sysout.SelectSysOutDefaultFormatter;
-import it.polimi.yasper.core.spe.operators.r2s.result.QueryResultFormatter;
+import it.polimi.jasper.formatter.sysout.ConstructSysOutDefaultFormatter;
+import it.polimi.jasper.formatter.sysout.SelectSysOutDefaultFormatter;
+import it.polimi.yasper.core.format.QueryResultFormatter;
 
 /**
  * Created by riccardo on 10/07/2017.

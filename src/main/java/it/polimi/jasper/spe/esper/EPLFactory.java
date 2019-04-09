@@ -5,11 +5,12 @@ import it.polimi.jasper.spe.EncodingUtils;
 import it.polimi.jasper.spe.operators.s2r.EsperWindowAssigner;
 import it.polimi.jasper.spe.report.EsperCCReportStrategy;
 import it.polimi.jasper.spe.report.EsperWCReportStrategy;
-import it.polimi.yasper.core.spe.content.Maintenance;
-import it.polimi.yasper.core.spe.operators.s2r.syntax.WindowType;
-import it.polimi.yasper.core.spe.report.Report;
-import it.polimi.yasper.core.spe.tick.Tick;
-import it.polimi.yasper.core.stream.Stream;
+import it.polimi.yasper.core.enums.Maintenance;
+import it.polimi.yasper.core.enums.Tick;
+import it.polimi.yasper.core.operators.s2r.syntax.WindowType;
+import it.polimi.yasper.core.secret.report.Report;
+import it.polimi.yasper.core.secret.time.Time;
+import it.polimi.yasper.core.stream.web.WebStream;
 import lombok.extern.log4j.Log4j;
 
 import java.io.StringWriter;
@@ -41,7 +42,7 @@ public class EPLFactory {
         }
 
         OutputLimitClause outputLimitClause;
-        OutputLimitSelector snapshot = OutputLimitSelector.ALL;
+        OutputLimitSelector snapshot = OutputLimitSelector.SNAPSHOT;
 
         if (Arrays.stream(report.strategies()).anyMatch(rs -> rs instanceof EsperWCReportStrategy)) {
             TimePeriodExpression timePeriod = getTimePeriod((int) step, unitStep);
@@ -131,7 +132,7 @@ public class EPLFactory {
         return null;
     }
 
-    public static String toEPLSchema(Stream s) {
+    public static String toEPLSchema(WebStream s) {
         CreateSchemaClause schema = new CreateSchemaClause();
         schema.setSchemaName(EncodingUtils.encode(s.getURI()));
         schema.setInherits(new HashSet<String>(Arrays.asList(new String[]{"TStream"})));
@@ -145,12 +146,12 @@ public class EPLFactory {
         return writer.toString();
     }
 
-    public static EsperWindowAssigner getWindowAssigner(Tick tick, Maintenance maintenance, Report report, boolean time, String name, long step, long range, String unitStep, String unitRange, WindowType type) {
+    public static EsperWindowAssigner getWindowAssigner(Tick tick, Maintenance maintenance, Report report, boolean time, String name, long step, long range, String unitStep, String unitRange, WindowType type, Time time1) {
         List<AnnotationPart> annotations = new ArrayList<>();//EPLFactory.getAnnotations(name, range, step, name);
         View window = EPLFactory.getWindow((int) range, unitRange, type);
         EPStatementObjectModel epStatementObjectModel = EPLFactory.toEPL(tick, report, maintenance, step, unitStep, type, name, window, annotations);
         log.info(epStatementObjectModel.toEPL());
-        return new EsperWindowAssigner(EncodingUtils.encode(name), tick, report, time, maintenance, epStatementObjectModel);
+        return new EsperWindowAssigner(EncodingUtils.encode(name), tick, report, time, maintenance, epStatementObjectModel, time1);
     }
 
 

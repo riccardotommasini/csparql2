@@ -1,10 +1,17 @@
-package it.polimi.jasper.spe.operators.r2r.execution;
+package it.polimi.jasper.spe.execution;
 
 import it.polimi.jasper.rspql.reasoning.Entailment;
 import it.polimi.jasper.rspql.sds.JenaSDS;
+import it.polimi.jasper.spe.operators.r2r.R2ROperatorSPARQL;
 import it.polimi.jasper.spe.operators.r2r.syntax.RSPQLJenaQuery;
-import it.polimi.yasper.core.spe.operators.r2r.execution.ContinuousQueryExecutionObserver;
-import it.polimi.yasper.core.spe.operators.r2s.*;
+import it.polimi.jasper.spe.operators.r2s.JDStream;
+import it.polimi.jasper.spe.operators.r2s.JIStream;
+import it.polimi.jasper.spe.operators.r2s.JRStream;
+import it.polimi.yasper.core.enums.StreamOperator;
+import it.polimi.yasper.core.operators.r2r.RelationToRelationOperator;
+import it.polimi.yasper.core.operators.r2s.*;
+import it.polimi.yasper.core.operators.s2r.StreamToRelationOperator;
+import it.polimi.yasper.core.stream.data.WebDataStream;
 import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
@@ -12,6 +19,8 @@ import org.apache.jena.reasoner.Reasoner;
 import org.apache.jena.reasoner.ReasonerRegistry;
 import org.apache.jena.reasoner.rulesys.GenericRuleReasoner;
 import org.apache.jena.reasoner.rulesys.Rule;
+import org.apache.jena.riot.system.IRIResolver;
+import org.apache.jena.sparql.engine.binding.Binding;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,33 +32,23 @@ import java.util.List;
 public final class ContinuousQueryExecutionFactory extends QueryExecutionFactory {
 
 
-    static public ContinuousQueryExecutionObserver create(RSPQLJenaQuery query, JenaSDS sds) {
-        ContinuousQueryExecutionObserver cqe;
+    static public JenaContinuousQueryExecution create(IRIResolver resolver, RSPQLJenaQuery query, JenaSDS sds, WebDataStream out, StreamToRelationOperator... s2rs) {
         StreamOperator r2S = query.getR2S() != null ? query.getR2S() : StreamOperator.RSTREAM;
+        RelationToRelationOperator<Binding> r2r = new R2ROperatorSPARQL(query, sds, resolver.getBaseIRIasString());
         RelationToStreamOperator s2r = getToStreamOperator(r2S);
-
-        if (query.isSelectType()) {
-            cqe = new ContinuousSelect(query, sds, s2r);
-        } else if (query.isConstructType()) {
-            cqe = new ContinuouConstruct(query, sds, s2r);
-        } else {
-            throw new RuntimeException("Unsupported ContinuousQuery Type ");
-        }
-
-        return cqe;
+        return new JenaContinuousQueryExecution(resolver, out, query, sds, r2r, s2r, s2rs);
     }
-
 
     private static RelationToStreamOperator getToStreamOperator(StreamOperator r2S) {
         switch (r2S) {
             case DSTREAM:
-                return new Dstream(1);
+                return new JDStream(1);
             case ISTREAM:
-                return new Istream(1);
+                return new JIStream(1);
             case RSTREAM:
-                return new Rstream();
+                return new JRStream();
             default:
-                return new Rstream();
+                return new JRStream();
         }
     }
 

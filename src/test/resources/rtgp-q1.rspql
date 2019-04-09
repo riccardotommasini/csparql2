@@ -3,7 +3,7 @@
 PREFIX ex: <http://www.streamreasoning/jasper/test#>
 
 REGISTER RSTREAM <s1> AS
-SELECT ?s ?o ?t
+SELECT *
 FROM NAMED WINDOW <win2> ON <stream2> [RANGE PT10S STEP PT10S]
 WHERE  {
     WINDOW ?w {

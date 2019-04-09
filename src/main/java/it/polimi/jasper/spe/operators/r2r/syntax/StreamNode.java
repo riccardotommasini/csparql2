@@ -1,6 +1,6 @@
 package it.polimi.jasper.spe.operators.r2r.syntax;
 
-import it.polimi.yasper.core.stream.Stream;
+import it.polimi.yasper.core.stream.web.WebStream;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,7 +10,7 @@ import org.apache.jena.graph.Node;
  * Created by Riccardo on 14/08/16.
  */
 @AllArgsConstructor
-public class StreamNode implements Stream {
+public class StreamNode implements WebStream {
     @Getter
     @Setter
 

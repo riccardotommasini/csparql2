@@ -4,7 +4,7 @@ import com.espertech.esper.client.EventBean;
 import com.espertech.esper.event.map.MapEventBean;
 import it.polimi.jasper.streams.items.GraphStreamItem;
 import it.polimi.jasper.streams.items.StreamItem;
-import it.polimi.yasper.core.spe.content.Content;
+import it.polimi.yasper.core.secret.content.Content;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
 import org.apache.jena.graph.Graph;

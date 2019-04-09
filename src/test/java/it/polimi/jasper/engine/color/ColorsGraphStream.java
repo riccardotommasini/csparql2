@@ -1,9 +1,10 @@
 package it.polimi.jasper.engine.color;
 
-import it.polimi.jasper.streams.RegisteredEPLStream;
+import it.polimi.jasper.streams.EPLRDFStream;
 import it.polimi.jasper.streams.schema.GraphStreamSchema;
-import it.polimi.yasper.core.stream.rdf.RDFStream;
-import it.polimi.yasper.core.stream.schema.StreamSchema;
+import it.polimi.yasper.core.stream.metadata.StreamSchema;
+import it.polimi.yasper.core.stream.web.WebStream;
+import it.polimi.yasper.core.stream.web.WebStreamImpl;
 import lombok.extern.log4j.Log4j;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.vocabulary.RDF;
@@ -15,7 +16,7 @@ import java.util.Random;
  * Created by Riccardo on 13/08/16.
  */
 @Log4j
-public class ColorsGraphStream extends RDFStream implements Runnable {
+public class ColorsGraphStream extends WebStreamImpl implements Runnable {
 
     private StreamSchema schema = new GraphStreamSchema();
 
@@ -24,7 +25,7 @@ public class ColorsGraphStream extends RDFStream implements Runnable {
         return schema;
     }
 
-    private RegisteredEPLStream s;
+    private EPLRDFStream s;
 
     private String type;
 
@@ -33,7 +34,7 @@ public class ColorsGraphStream extends RDFStream implements Runnable {
         this.type = name;
     }
 
-    public void setWritable(RegisteredEPLStream e) {
+    public void setWritable(EPLRDFStream e) {
         this.s = e;
     }
 

@@ -1,6 +1,6 @@
-package it.polimi.jasper.spe.operators.r2s.formatter.sysout;
+package it.polimi.jasper.formatter.sysout;
 
-import it.polimi.jasper.spe.operators.r2s.formatter.SelectResponseDefaultFormatter;
+import it.polimi.jasper.formatter.SelectResponseDefaultFormatter;
 
 public class SelectSysOutDefaultFormatter extends SelectResponseDefaultFormatter {
 

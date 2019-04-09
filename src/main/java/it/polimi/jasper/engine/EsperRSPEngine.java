@@ -3,29 +3,30 @@ package it.polimi.jasper.engine;
 import com.espertech.esper.client.EPAdministrator;
 import com.espertech.esper.client.EPRuntime;
 import com.espertech.esper.client.EPServiceProvider;
-import com.espertech.esper.client.time.CurrentTimeEvent;
 import it.polimi.jasper.rspql.reasoning.Entailment;
 import it.polimi.jasper.spe.esper.EsperStreamRegistrationService;
+import it.polimi.jasper.spe.esper.EsperTime;
 import it.polimi.jasper.spe.esper.RuntimeManager;
 import it.polimi.jasper.spe.report.EsperCCReportStrategy;
 import it.polimi.jasper.spe.report.EsperNECReportStrategy;
 import it.polimi.jasper.spe.report.EsperWCReportStrategy;
-import it.polimi.jasper.streams.RegisteredEPLStream;
-import it.polimi.yasper.core.engine.EngineConfiguration;
+import it.polimi.jasper.streams.EPLRDFStream;
+import it.polimi.yasper.core.engine.config.EngineConfiguration;
 import it.polimi.yasper.core.engine.features.QueryDeletionFeature;
 import it.polimi.yasper.core.engine.features.StreamDeletionFeature;
 import it.polimi.yasper.core.engine.features.StreamRegistrationFeature;
-import it.polimi.yasper.core.rspql.sds.SDS;
-import it.polimi.yasper.core.spe.operators.r2r.ContinuousQuery;
-import it.polimi.yasper.core.spe.operators.r2r.execution.ContinuousQueryExecution;
-import it.polimi.yasper.core.spe.operators.r2s.result.QueryResultFormatter;
-import it.polimi.yasper.core.spe.operators.s2r.execution.assigner.WindowAssigner;
-import it.polimi.yasper.core.spe.report.Report;
-import it.polimi.yasper.core.spe.report.ReportGrain;
-import it.polimi.yasper.core.spe.report.ReportImpl;
-import it.polimi.yasper.core.spe.tick.Tick;
-import it.polimi.yasper.core.stream.rdf.RDFStream;
-import it.polimi.yasper.core.stream.schema.StreamSchema;
+import it.polimi.yasper.core.enums.ReportGrain;
+import it.polimi.yasper.core.enums.Tick;
+import it.polimi.yasper.core.format.QueryResultFormatter;
+import it.polimi.yasper.core.operators.s2r.execution.assigner.Assigner;
+import it.polimi.yasper.core.querying.ContinuousQuery;
+import it.polimi.yasper.core.querying.ContinuousQueryExecution;
+import it.polimi.yasper.core.sds.SDS;
+import it.polimi.yasper.core.secret.report.Report;
+import it.polimi.yasper.core.secret.report.ReportImpl;
+import it.polimi.yasper.core.secret.time.Time;
+import it.polimi.yasper.core.stream.metadata.StreamSchema;
+import it.polimi.yasper.core.stream.web.WebStream;
 import lombok.extern.log4j.Log4j;
 import org.apache.jena.reasoner.rulesys.Rule;
 
@@ -35,7 +36,7 @@ import java.util.List;
 import java.util.Map;
 
 @Log4j
-public abstract class EsperRSPEngine implements StreamRegistrationFeature<RegisteredEPLStream, RDFStream>, StreamDeletionFeature<RegisteredEPLStream>, QueryDeletionFeature {
+public abstract class EsperRSPEngine implements StreamRegistrationFeature<EPLRDFStream, WebStream>, StreamDeletionFeature<EPLRDFStream>, QueryDeletionFeature {
 
     protected final boolean enabled_recursion;
     protected final String responseFormat;
@@ -48,7 +49,7 @@ public abstract class EsperRSPEngine implements StreamRegistrationFeature<Regist
     protected String tbox;
 
     protected final String base_uri;
-    protected Map<String, WindowAssigner> stream_dispatching_service;
+    protected Map<String, Assigner> stream_dispatching_service;
     protected Map<String, SDS> assignedSDS;
     protected Map<String, ContinuousQueryExecution> queryExecutions;
     protected Map<String, ContinuousQuery> registeredQueries;
@@ -62,6 +63,7 @@ public abstract class EsperRSPEngine implements StreamRegistrationFeature<Regist
     private final EPServiceProvider cep;
     private final EPRuntime runtime;
     protected final EPAdministrator admin;
+    protected final Time time;
 
     public EsperRSPEngine(long t0, EngineConfiguration configuration) {
         this.assignedSDS = new HashMap<>();
@@ -72,10 +74,12 @@ public abstract class EsperRSPEngine implements StreamRegistrationFeature<Regist
 
         StreamSchema.Factory.registerSchema(this.rsp_config.getStreamSchema());
 
+
         this.cep = RuntimeManager.getCEP();
         this.manager = RuntimeManager.getInstance();
         this.runtime = RuntimeManager.getEPRuntime();
         this.admin = RuntimeManager.getAdmin();
+
 
         stream_registration_service = new EsperStreamRegistrationService(admin);
         stream_dispatching_service = new HashMap<>();
@@ -126,16 +130,17 @@ public abstract class EsperRSPEngine implements StreamRegistrationFeature<Regist
         log.debug("Query Class [" + this.rsp_config.getQueryClass() + "]");
         log.debug("StreamItem Class [" + this.rsp_config.getStreamSchema() + "]");
 
-        runtime.sendEvent(new CurrentTimeEvent(t0));
+        this.time = new EsperTime(runtime, t0);
+
     }
 
     @Override
-    public RegisteredEPLStream register(RDFStream s) {
+    public EPLRDFStream register(WebStream s) {
         return stream_registration_service.register(s);
     }
 
     @Override
-    public void unregister(RegisteredEPLStream s) {
+    public void unregister(EPLRDFStream s) {
         stream_registration_service.unregister(s);
     }
 

@@ -1,8 +1,8 @@
 package it.polimi.jasper.rspql.tvg;
 
 import it.polimi.jasper.spe.operators.s2r.EsperWindowAssigner;
-import it.polimi.yasper.core.spe.content.Maintenance;
-import it.polimi.yasper.core.spe.report.Report;
+import it.polimi.yasper.core.enums.Maintenance;
+import it.polimi.yasper.core.secret.report.Report;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j;
 import org.apache.jena.graph.Graph;

@@ -20,16 +20,15 @@
  ******************************************************************************/
 package it.polimi.jasper.CSPARQLReadyToGo.streams;
 
-import it.polimi.jasper.streams.RegisteredEPLStream;
+import it.polimi.jasper.streams.EPLRDFStream;
 import it.polimi.jasper.streams.schema.GraphStreamSchema;
-import it.polimi.yasper.core.stream.rdf.RDFStream;
-import it.polimi.yasper.core.stream.schema.StreamSchema;
-import org.apache.jena.datatypes.RDFDatatype;
+import it.polimi.yasper.core.stream.metadata.StreamSchema;
+import it.polimi.yasper.core.stream.web.WebStreamImpl;
 import org.apache.jena.rdf.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class LBSMARDFStreamTestGenerator extends RDFStream implements Runnable {
+public class LBSMARDFStreamTestGenerator extends WebStreamImpl implements Runnable {
 
     /**
      * The logger.
@@ -48,7 +47,7 @@ public class LBSMARDFStreamTestGenerator extends RDFStream implements Runnable {
     }
 
     protected int grow_rate;
-    private RegisteredEPLStream s;
+    private EPLRDFStream s;
 
     private String type;
 
@@ -58,7 +57,7 @@ public class LBSMARDFStreamTestGenerator extends RDFStream implements Runnable {
         this.grow_rate = grow_rate;
     }
 
-    public void setWritable(RegisteredEPLStream e) {
+    public void setWritable(EPLRDFStream e) {
         this.s = e;
     }
 

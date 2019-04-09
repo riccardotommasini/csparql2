@@ -1,12 +1,12 @@
 package it.polimi.jasper.engine.color;
 
 import it.polimi.jasper.engine.Jasper;
-import it.polimi.jasper.spe.operators.r2s.formatter.ResponseFormatterFactory;
-import it.polimi.jasper.streams.RegisteredEPLStream;
-import it.polimi.yasper.core.engine.EngineConfiguration;
-import it.polimi.yasper.core.spe.operators.r2r.ContinuousQuery;
-import it.polimi.yasper.core.spe.operators.r2r.QueryConfiguration;
-import it.polimi.yasper.core.spe.operators.r2r.execution.ContinuousQueryExecution;
+import it.polimi.jasper.formatter.ResponseFormatterFactory;
+import it.polimi.jasper.streams.EPLRDFStream;
+import it.polimi.yasper.core.engine.config.EngineConfiguration;
+import it.polimi.yasper.core.querying.ContinuousQuery;
+import it.polimi.yasper.core.querying.ContinuousQueryExecution;
+import it.polimi.yasper.core.sds.SDSConfiguration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.io.FileUtils;
 
@@ -24,7 +24,7 @@ public class ColorsCSPARQLExample {
     public static void main(String[] args) throws InterruptedException, IOException, ConfigurationException {
 
         URL resource = ColorsCSPARQLExample.class.getResource("/csparqlColors.properties");
-        QueryConfiguration config = new QueryConfiguration(resource.getPath());
+        SDSConfiguration config = new SDSConfiguration(resource.getPath());
         EngineConfiguration ec = EngineConfiguration.loadConfig("/csparqlColors.properties");
 
         sr = new Jasper(0, ec);
@@ -37,9 +37,9 @@ public class ColorsCSPARQLExample {
         //qYellowStream must be fixed to build this stream as JOIN of red and green streams
         //   ColorsGraphStream yellow = new ColorsGraphStream("Yellow", "http://localhost:1255/streams/yellow");
 
-        RegisteredEPLStream registerRed = sr.register(red);
-        RegisteredEPLStream registerGreen = sr.register(green);
-        RegisteredEPLStream registerBlue = sr.register(blue);
+        EPLRDFStream registerRed = sr.register(red);
+        EPLRDFStream registerGreen = sr.register(green);
+        EPLRDFStream registerBlue = sr.register(blue);
         //RegisteredEPLStream registerYellow = sr.register(yellow);
 
         red.setWritable(registerRed);

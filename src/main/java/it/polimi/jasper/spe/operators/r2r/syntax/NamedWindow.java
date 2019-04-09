@@ -1,7 +1,7 @@
 package it.polimi.jasper.spe.operators.r2r.syntax;
 
-import it.polimi.yasper.core.spe.operators.s2r.syntax.WindowNode;
-import it.polimi.yasper.core.spe.operators.s2r.syntax.WindowType;
+import it.polimi.yasper.core.operators.s2r.syntax.WindowNode;
+import it.polimi.yasper.core.operators.s2r.syntax.WindowType;
 import lombok.Data;
 import org.apache.jena.graph.Node;
 

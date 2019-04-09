@@ -2,12 +2,12 @@ package it.polimi.jasper.CSPARQLReadyToGo;
 
 import it.polimi.jasper.CSPARQLReadyToGo.streams.LBSMARDFStreamTestGenerator;
 import it.polimi.jasper.engine.Jasper;
-import it.polimi.jasper.spe.operators.r2s.formatter.sysout.GenericResponseSysOutFormatter;
-import it.polimi.jasper.streams.RegisteredEPLStream;
-import it.polimi.yasper.core.engine.EngineConfiguration;
-import it.polimi.yasper.core.spe.operators.r2r.ContinuousQuery;
-import it.polimi.yasper.core.spe.operators.r2r.QueryConfiguration;
-import it.polimi.yasper.core.spe.operators.r2r.execution.ContinuousQueryExecution;
+import it.polimi.jasper.formatter.sysout.GenericResponseSysOutFormatter;
+import it.polimi.jasper.streams.EPLRDFStream;
+import it.polimi.yasper.core.engine.config.EngineConfiguration;
+import it.polimi.yasper.core.querying.ContinuousQuery;
+import it.polimi.yasper.core.querying.ContinuousQueryExecution;
+import it.polimi.yasper.core.sds.SDSConfiguration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.io.FileUtils;
 
@@ -33,13 +33,13 @@ public class CSPARQLReadyToGo {
         int key = WHO_LIKES_WHAT;
 
         String path = CSPARQLReadyToGo.class.getResource("/csparql.properties").getPath();
-        QueryConfiguration config = new QueryConfiguration(path);
+        SDSConfiguration config = new SDSConfiguration(path);
         EngineConfiguration ec = EngineConfiguration.loadConfig("/csparql.properties");
 
         ContinuousQuery q;
         ContinuousQueryExecution cqe;
         LBSMARDFStreamTestGenerator writer;
-        RegisteredEPLStream register;
+        EPLRDFStream register;
 
         sr = new Jasper(0, ec);
 
@@ -55,6 +55,10 @@ public class CSPARQLReadyToGo {
                 q = cqe.getContinuousQuery();
                 cqe.add(new GenericResponseSysOutFormatter("TABLE", true));
 
+                cqe.getSDS();
+                cqe.getR2R();
+                cqe.getS2R();
+                cqe.getR2R();
 
                 System.out.println(q.toString());
                 System.out.println("<<------>>");
@@ -85,12 +89,18 @@ public class CSPARQLReadyToGo {
                 writer.setWritable(register);
 
                 LBSMARDFStreamTestGenerator writer2 = new LBSMARDFStreamTestGenerator("Writer", "http://streamreasoning.org/jasper/streams/stream3", 5);
-                RegisteredEPLStream register2 = sr.register(writer2);
+                EPLRDFStream register2 = sr.register(writer2);
                 writer2.setWritable(register2);
 
                 cqe = sr.register(getQuery("rtgp-q3", ".rspql"), config);
                 q = cqe.getContinuousQuery();
                 cqe.add(new GenericResponseSysOutFormatter("TABLE", true));
+
+                cqe.outstream().addConsumer((arg, ts) -> {
+
+
+
+                });
 
                 System.out.println(q.toString());
                 System.out.println("<<------>>");

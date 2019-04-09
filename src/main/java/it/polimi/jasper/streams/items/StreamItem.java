@@ -1,6 +1,6 @@
 package it.polimi.jasper.streams.items;
 
-import it.polimi.yasper.core.stream.schema.StreamSchema;
+import it.polimi.yasper.core.stream.metadata.StreamSchema;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.jena.graph.Graph;

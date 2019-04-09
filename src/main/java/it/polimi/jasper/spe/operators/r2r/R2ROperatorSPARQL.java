@@ -1,47 +1,58 @@
-package it.polimi.jasper.spe.operators.r2r.execution;
+package it.polimi.jasper.spe.operators.r2r;
 
-import it.polimi.yasper.core.rspql.sds.SDS;
-import it.polimi.yasper.core.spe.operators.r2r.ContinuousQuery;
-import it.polimi.yasper.core.spe.operators.r2r.execution.ContinuousQueryExecutionObserver;
-import it.polimi.yasper.core.spe.operators.r2s.RelationToStreamOperator;
-import it.polimi.yasper.core.spe.operators.r2s.result.InstantaneousResult;
+import it.polimi.jasper.spe.operators.r2s.results.SolutionMappingImpl;
+import it.polimi.yasper.core.operators.r2r.RelationToRelationOperator;
+import it.polimi.yasper.core.querying.ContinuousQuery;
+import it.polimi.yasper.core.querying.result.SolutionMapping;
+import it.polimi.yasper.core.sds.SDS;
 import org.apache.jena.graph.Triple;
 import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.sparql.core.Quad;
+import org.apache.jena.sparql.engine.binding.Binding;
 import org.apache.jena.sparql.util.Context;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
-import java.util.Observable;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
-/**
- * Created by riccardo on 03/07/2017.
- */
-public abstract class JenaContinuousQueryExecution extends ContinuousQueryExecutionObserver implements QueryExecution {
+public class R2ROperatorSPARQL implements RelationToRelationOperator<Binding>, QueryExecution {
 
-    protected final Query q;
-    protected InstantaneousResult last_response = null;
-    protected QueryExecution execution;
+    private final ContinuousQuery query;
+    private final SDS sds;
+    private final String baseURI;
+    private final Dataset ds;
+    private final Query q;
+    public final List<String> resultVars;
+    private QueryExecution execution;
 
-    public JenaContinuousQueryExecution(ContinuousQuery query, SDS sds, RelationToStreamOperator s2r) {
-        super(query, s2r, sds);
-        this.q = (Query) query;
+    public R2ROperatorSPARQL(ContinuousQuery query, SDS sds, String baseURI) {
+        this.query = query;
+        this.sds = sds;
+        this.baseURI = baseURI;
+        this.ds = (Dataset) sds;
+        this.q = (Query) this.query;
+        resultVars = q.getResultVars();
     }
 
     @Override
-    public void update(Observable o, Object arg) {
-        Long now = (Long) arg;
-        sds.materialize(now);
-        InstantaneousResult r = eval(now);
-        setChanged();
-        notifyObservers(r);
+    public Collection<SolutionMapping<Binding>> eval(long ts) {
+        String id = baseURI + "result/" + ts;
+        this.execution = QueryExecutionFactory.create(q, ds);
+        return getSolutionSet(this.execution.execSelect()).stream().map(b ->
+                new SolutionMappingImpl(id, b, this.resultVars, ts))
+                .collect(Collectors.toList());
     }
 
-
-    @Override
-    public SDS getSDS() {
-        return sds;
+    private List<Binding> getSolutionSet(ResultSet results) {
+        List<Binding> solutions = new ArrayList<>();
+        while (results.hasNext()) {
+            solutions.add(results.nextBinding());
+        }
+        return solutions;
     }
 
     @Override
@@ -164,5 +175,4 @@ public abstract class JenaContinuousQueryExecution extends ContinuousQueryExecut
     public long getTimeout2() {
         return execution.getTimeout2();
     }
-
 }

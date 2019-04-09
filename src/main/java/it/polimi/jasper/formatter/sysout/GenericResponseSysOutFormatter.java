@@ -1,11 +1,10 @@
-package it.polimi.jasper.spe.operators.r2s.formatter.sysout;
+package it.polimi.jasper.formatter.sysout;
 
-import it.polimi.jasper.spe.operators.r2s.formatter.sysout.ConstructSysOutDefaultFormatter;
-import it.polimi.jasper.spe.operators.r2s.formatter.sysout.SelectSysOutDefaultFormatter;
-import it.polimi.jasper.spe.operators.r2s.results.ConstructResponse;
-import it.polimi.jasper.spe.operators.r2s.results.SelectResponse;
-import it.polimi.yasper.core.spe.operators.r2s.result.QueryResultFormatter;
+import it.polimi.yasper.core.format.QueryResultFormatter;
 import lombok.extern.log4j.Log4j;
+import org.apache.jena.graph.Graph;
+import org.apache.jena.sparql.algebra.Table;
+import org.apache.jena.sparql.engine.binding.Binding;
 
 import java.util.Observable;
 
@@ -29,10 +28,12 @@ public class GenericResponseSysOutFormatter extends QueryResultFormatter {
 
     @Override
     public void update(Observable o, Object arg) {
-        if (arg instanceof SelectResponse) {
-            sf.format((SelectResponse) arg);
-        } else if (arg instanceof ConstructResponse) {
-            cf.format((ConstructResponse) arg);
+        if (arg instanceof Binding) {
+            sf.format((Binding) arg);
+        } else if (arg instanceof Graph) {
+            cf.format((Graph) arg);
+        } else if (arg instanceof Table) {
+            sf.format((Table) arg);
         }
     }
 }

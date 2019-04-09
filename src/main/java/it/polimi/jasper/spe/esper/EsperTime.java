@@ -2,17 +2,25 @@ package it.polimi.jasper.spe.esper;
 
 import com.espertech.esper.client.EPRuntime;
 import com.espertech.esper.client.time.CurrentTimeEvent;
-import it.polimi.yasper.core.spe.time.ET;
-import it.polimi.yasper.core.spe.time.Time;
-import it.polimi.yasper.core.spe.time.TimeFactory;
-import it.polimi.yasper.core.spe.time.TimeInstant;
+import it.polimi.yasper.core.secret.time.ET;
+import it.polimi.yasper.core.secret.time.Time;
+import it.polimi.yasper.core.secret.time.TimeFactory;
+import it.polimi.yasper.core.secret.time.TimeInstant;
 
 public class EsperTime implements Time {
 
     private final EPRuntime cepRT;
+    private long t0;
 
-    public EsperTime(EPRuntime cepRT) {
+    public EsperTime(EPRuntime cepRT, long t0) {
         this.cepRT = cepRT;
+        this.t0=t0;
+        setAppTime(this.t0);
+    }
+
+    @Override
+    public long getScope() {
+        return this.t0;
     }
 
     @Override

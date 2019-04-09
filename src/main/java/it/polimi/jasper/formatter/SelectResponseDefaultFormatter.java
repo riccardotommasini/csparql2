@@ -1,9 +1,11 @@
-package it.polimi.jasper.spe.operators.r2s.formatter;
+package it.polimi.jasper.formatter;
 
 import com.github.jsonldjava.core.JsonLdOptions;
-import it.polimi.jasper.spe.operators.r2s.results.SelectResponse;
-import it.polimi.yasper.core.spe.operators.r2s.result.QueryResultFormatter;
+import it.polimi.jasper.spe.operators.r2s.results.SolutionMappingImpl;
+import it.polimi.yasper.core.format.QueryResultFormatter;
 import lombok.extern.log4j.Log4j;
+import org.apache.jena.atlas.io.IndentedWriter;
+import org.apache.jena.graph.Node;
 import org.apache.jena.query.ResultSetFormatter;
 import org.apache.jena.query.ResultSetRewindable;
 import org.apache.jena.rdf.model.Model;
@@ -12,10 +14,18 @@ import org.apache.jena.riot.RDFFormat;
 import org.apache.jena.riot.system.PrefixMap;
 import org.apache.jena.riot.system.PrefixMapStd;
 import org.apache.jena.riot.writer.JsonLDWriter;
+import org.apache.jena.sparql.algebra.Table;
 import org.apache.jena.sparql.core.DatasetGraphFactory;
+import org.apache.jena.sparql.core.Var;
+import org.apache.jena.sparql.engine.Plan;
+import org.apache.jena.sparql.engine.QueryIterator;
+import org.apache.jena.sparql.engine.binding.Binding;
 import org.apache.jena.sparql.resultset.RDFOutput;
+import org.apache.jena.sparql.serializer.SerializationContext;
+import org.apache.jena.sparql.util.FmtUtils;
 
 import java.io.ByteArrayOutputStream;
+import java.util.Iterator;
 import java.util.Observable;
 
 /**
@@ -39,18 +49,58 @@ public abstract class SelectResponseDefaultFormatter extends QueryResultFormatte
 
     @Override
     public void update(Observable o, Object arg) {
-        SelectResponse sr = (SelectResponse) arg;
+        Binding sr = (Binding) arg;
         this.format(sr);
     }
 
-    public void format(SelectResponse sr) {
+    public void format(Table sr) {
+        output(sr, IndentedWriter.stdout, null);
+    }
+
+    public void format(Binding sr) {
+        sr.vars().forEachRemaining(var -> {
+            System.out.println(var.getVarName() + " -> " + sr.get(var).toString());
+        });
+    }
+
+    public static void output(Table table, IndentedWriter out, SerializationContext sCxt) {
+        if ( sCxt != null ) {} // Prefix. But then qnames are wrong.
+        out.print("(table") ;
+        out.incIndent() ;
+        QueryIterator qIter = table.iterator(null) ;
+        for (; qIter.hasNext();) {
+            out.println() ;
+            Binding binding = qIter.nextBinding() ;
+            output(binding, out, sCxt) ;
+        }
+        out.decIndent() ;
+
+        out.print(")\n") ;
+    }
+
+    private static void output(Binding binding, IndentedWriter out, SerializationContext sCxt) {
+        out.print("(row") ;
+        for (Iterator<Var> iter = binding.vars(); iter.hasNext();) {
+            Var v = iter.next() ;
+            Node n = binding.get(v) ;
+            out.print(" ") ;
+            out.print(Plan.startMarker2) ;
+            out.print(FmtUtils.stringForNode(v)) ;
+            out.print(" ") ;
+            out.print(FmtUtils.stringForNode(n)) ;
+            out.print(Plan.finishMarker2) ;
+        }
+        out.print(")\n") ;
+    }
+
+    public void format(SolutionMappingImpl sr) {
         long cep_timestamp = sr.getCep_timestamp();
         if (cep_timestamp != last_result && distinct) {
             last_result = cep_timestamp;
             log.info("[" + System.currentTimeMillis() + "] Result at [" + last_result + "]");
 
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            ResultSetRewindable results = sr.getResults();
+            ResultSetRewindable results = null;
 
             switch (format) {
                 case "CSV":

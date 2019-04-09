@@ -2,14 +2,14 @@ package it.polimi.jasper.spe.esper;
 
 import com.espertech.esper.client.soda.EPStatementObjectModel;
 import com.espertech.esper.client.soda.View;
-import it.polimi.yasper.core.spe.content.Maintenance;
-import it.polimi.yasper.core.spe.operators.s2r.syntax.WindowType;
-import it.polimi.yasper.core.spe.report.Report;
-import it.polimi.yasper.core.spe.report.ReportImpl;
-import it.polimi.yasper.core.spe.report.strategies.NonEmptyContent;
-import it.polimi.yasper.core.spe.report.strategies.OnContentChange;
-import it.polimi.yasper.core.spe.report.strategies.OnWindowClose;
-import it.polimi.yasper.core.spe.tick.Tick;
+import it.polimi.yasper.core.enums.Maintenance;
+import it.polimi.yasper.core.enums.Tick;
+import it.polimi.yasper.core.operators.s2r.syntax.WindowType;
+import it.polimi.yasper.core.secret.report.Report;
+import it.polimi.yasper.core.secret.report.ReportImpl;
+import it.polimi.yasper.core.secret.report.strategies.NonEmptyContent;
+import it.polimi.yasper.core.secret.report.strategies.OnContentChange;
+import it.polimi.yasper.core.secret.report.strategies.OnWindowClose;
 import org.junit.Test;
 
 import java.io.StringWriter;
@@ -69,7 +69,7 @@ public class EPLFactoryTest {
 
         System.out.println(epStatementObjectModel.toEPL());
 
-        assertEquals("select * from " + stream + ".win:time(5 seconds) output snapshot every 5 seconds", epStatementObjectModel.toEPL());
+        assertEquals("select * from " + stream + ".win:time(5 seconds) output all every 5 seconds", epStatementObjectModel.toEPL());
     }
 
     @Test
@@ -88,7 +88,7 @@ public class EPLFactoryTest {
 
         System.out.println(epStatementObjectModel.toEPL());
 
-        assertEquals("select * from " + stream + ".win:time(5 seconds) output snapshot every 1 events", epStatementObjectModel.toEPL());
+        assertEquals("select * from " + stream + ".win:time(5 seconds) output all every 1 events", epStatementObjectModel.toEPL());
     }
 
 }

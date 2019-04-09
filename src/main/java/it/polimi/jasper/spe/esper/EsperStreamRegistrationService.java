@@ -5,12 +5,11 @@ import com.espertech.esper.client.EPStatement;
 import com.espertech.esper.client.soda.CreateSchemaClause;
 import com.espertech.esper.client.soda.SchemaColumnDesc;
 import it.polimi.jasper.spe.EncodingUtils;
-import it.polimi.jasper.streams.RegisteredEPLStream;
-import it.polimi.yasper.core.engine.exceptions.StreamRegistrationException;
-import it.polimi.yasper.core.engine.exceptions.UnregisteredStreamExeception;
-import it.polimi.yasper.core.stream.RegisteredStream;
-import it.polimi.yasper.core.stream.Stream;
-import it.polimi.yasper.core.stream.rdf.RDFStream;
+import it.polimi.jasper.streams.EPLRDFStream;
+import it.polimi.yasper.core.exceptions.StreamRegistrationException;
+import it.polimi.yasper.core.exceptions.UnregisteredStreamExeception;
+import it.polimi.yasper.core.stream.data.WebDataStream;
+import it.polimi.yasper.core.stream.web.WebStream;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j;
 import org.apache.jena.graph.Graph;
@@ -24,19 +23,19 @@ public class EsperStreamRegistrationService {
     private final EPAdministrator cepAdm;
 
     @Getter
-    private Map<String, RegisteredStream<Graph>> registeredStreams;
+    private Map<String, WebDataStream<Graph>> registeredStreams;
 
     public EsperStreamRegistrationService(EPAdministrator cepAdm) {
         this.cepAdm = cepAdm;
         this.registeredStreams = new HashMap<>();
     }
 
-    public RegisteredEPLStream register(Stream s) {
+    public EPLRDFStream register(WebStream s) {
         String uri = s.getURI();
         log.info("Registering Stream [" + uri + "]");
         if (!registeredStreams.containsKey(uri)) {
             EPStatement epl = createStream(toEPLSchema(s), uri);
-            RegisteredEPLStream value = new RegisteredEPLStream(s.getURI(), s, epl);
+            EPLRDFStream value = new EPLRDFStream(s.getURI(), s, epl);
             registeredStreams.put(uri, value);
             return value;
         } else
@@ -44,7 +43,7 @@ public class EsperStreamRegistrationService {
     }
 
 
-    public void unregister(RDFStream s) {
+    public void unregister(WebDataStream s) {
         log.info("Unregistering Stream [" + s + "]");
 
         if (!isRegistered(s.getURI())) {
@@ -63,7 +62,7 @@ public class EsperStreamRegistrationService {
         return cepAdm.createEPL(stream, s);
     }
 
-    private String toEPLSchema(Stream s) {
+    private String toEPLSchema(WebStream s) {
         CreateSchemaClause schema = new CreateSchemaClause();
         schema.setSchemaName(EncodingUtils.encode(s.getURI()));
         schema.setInherits(new HashSet<>(Arrays.asList("TStream")));
@@ -74,7 +73,7 @@ public class EsperStreamRegistrationService {
         return writer.toString();
     }
 
-    public boolean isRegistered(Stream s) {
+    public boolean isRegistered(WebStream s) {
         return isRegistered(s.getURI());
     }
 

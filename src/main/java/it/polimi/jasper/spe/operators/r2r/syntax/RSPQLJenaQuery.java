@@ -1,11 +1,13 @@
 package it.polimi.jasper.spe.operators.r2r.syntax;
 
-import it.polimi.yasper.core.spe.operators.r2r.ContinuousQuery;
-import it.polimi.yasper.core.spe.operators.r2r.QueryConfiguration;
-import it.polimi.yasper.core.spe.operators.r2s.StreamOperator;
-import it.polimi.yasper.core.spe.operators.s2r.syntax.WindowNode;
-import it.polimi.yasper.core.spe.time.Time;
-import it.polimi.yasper.core.stream.Stream;
+import it.polimi.yasper.core.enums.StreamOperator;
+import it.polimi.yasper.core.operators.s2r.syntax.WindowNode;
+import it.polimi.yasper.core.querying.ContinuousQuery;
+import it.polimi.yasper.core.sds.SDSConfiguration;
+import it.polimi.yasper.core.secret.time.Time;
+import it.polimi.yasper.core.stream.data.WebDataStream;
+import it.polimi.yasper.core.stream.web.WebStream;
+import it.polimi.yasper.core.stream.web.WebStreamImpl;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.jena.graph.Node;
@@ -33,13 +35,18 @@ public class RSPQLJenaQuery extends Query implements ContinuousQuery {
     private String outputStreamUri;
     private List<NamedWindow> namedWindows = new ArrayList<>();
     private List<ElementNamedWindow> elementNamedWindows = new ArrayList<>();
-    private Map<WindowNode, Stream> windowMap = new HashMap<>();
+    private Map<WindowNode, WebStream> windowMap = new HashMap<>();
 
     @Getter
     @Setter
-    private QueryConfiguration configuration;
+    private SDSConfiguration configuration;
 
     public RSPQLJenaQuery() {
+    }
+
+    @Override
+    public boolean isSelectType() {
+        return true;
     }
 
     public RSPQLJenaQuery(IRIResolver resolver) {
@@ -85,17 +92,17 @@ public class RSPQLJenaQuery extends Query implements ContinuousQuery {
 
     @Override
     public boolean isIstream() {
-        return false;
+        return ISTREAM.equals(streamType);
     }
 
     @Override
     public boolean isRstream() {
-        return false;
+        return RSTREAM.equals(streamType);
     }
 
     @Override
     public boolean isDstream() {
-        return false;
+        return DSTREAM.equals(streamType);
     }
 
     @Override
@@ -113,8 +120,8 @@ public class RSPQLJenaQuery extends Query implements ContinuousQuery {
     }
 
     @Override
-    public String getOutputStream() {
-        return null;
+    public WebStream getOutputStream() {
+        return new WebStreamImpl(outputStreamUri);
     }
 
     public String getStreamType() {
@@ -140,7 +147,7 @@ public class RSPQLJenaQuery extends Query implements ContinuousQuery {
 
     @Override
     public StreamOperator getR2S() {
-        return null;
+        return StreamOperator.valueOf(streamType);
     }
 
     @Override
@@ -149,7 +156,7 @@ public class RSPQLJenaQuery extends Query implements ContinuousQuery {
     }
 
     @Override
-    public Map<WindowNode, Stream> getWindowMap() {
+    public Map<WindowNode, WebStream> getWindowMap() {
         return windowMap;
     }
 
