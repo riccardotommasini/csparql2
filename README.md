@@ -11,9 +11,11 @@ Implemented using Yasper Common Library
        <url>https://jitpack.io</url>
    </repository>
  </repositories>
-	<dependency>
-	    <groupId>com.github.riccardotommasini</groupId>
-	    <artifactId>csparql2</artifactId>
-	    <version>2.3.0</version>
-	</dependency>
+ <dependencies>
+    <dependency>        
+	<groupId>com.github.riccardotommasini</groupId>
+	<artifactId>csparql2</artifactId>
+	<version>2.3.0</version>
+    </dependency>
+</dependencies>
 ```
