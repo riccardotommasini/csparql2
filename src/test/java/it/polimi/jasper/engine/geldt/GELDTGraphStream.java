@@ -35,7 +35,6 @@ public class GELDTGraphStream extends WebStreamImpl implements Runnable {
     private int sample;
 
     private String type;
-    private StreamSchema schema = new GraphStreamSchema();
 
     public GELDTGraphStream(int sample, String keywords, String type) {
         super(null);
@@ -56,12 +55,6 @@ public class GELDTGraphStream extends WebStreamImpl implements Runnable {
         URL resource = GELDTGraphStream.class.getResource("/geldt/streams/" + type + "/igraph");
         igraphpath = resource.getPath();
 
-    }
-
-
-    @Override
-    public StreamSchema getSchema() {
-        return schema;
     }
 
 

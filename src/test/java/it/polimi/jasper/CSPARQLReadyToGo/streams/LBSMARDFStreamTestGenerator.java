@@ -35,16 +35,9 @@ public class LBSMARDFStreamTestGenerator extends WebStreamImpl implements Runnab
      */
     protected final Logger logger = LoggerFactory.getLogger(LBSMARDFStreamTestGenerator.class);
 
-    private StreamSchema schema = new GraphStreamSchema();
-
     private int c = 1;
     private int ct = 1;
     private boolean keepRunning = false;
-
-    @Override
-    public StreamSchema getSchema() {
-        return schema;
-    }
 
     protected int grow_rate;
     private EPLRDFStream s;

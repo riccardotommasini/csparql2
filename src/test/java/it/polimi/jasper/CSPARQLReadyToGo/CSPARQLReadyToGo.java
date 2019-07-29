@@ -10,6 +10,7 @@ import it.polimi.yasper.core.querying.ContinuousQueryExecution;
 import it.polimi.yasper.core.sds.SDSConfiguration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.io.FileUtils;
+import org.apache.jena.sparql.algebra.Table;
 
 import java.io.File;
 import java.io.IOException;
@@ -59,6 +60,10 @@ public class CSPARQLReadyToGo {
                 cqe.getR2R();
                 cqe.getS2R();
                 cqe.getR2R();
+//
+//                cqe.<Table>outstream().addConsumer((arg, ts) -> {
+//                    s
+//                });
 
                 System.out.println(q.toString());
                 System.out.println("<<------>>");
@@ -97,7 +102,6 @@ public class CSPARQLReadyToGo {
                 cqe.add(new GenericResponseSysOutFormatter("TABLE", true));
 
                 cqe.outstream().addConsumer((arg, ts) -> {
-
 
 
                 });

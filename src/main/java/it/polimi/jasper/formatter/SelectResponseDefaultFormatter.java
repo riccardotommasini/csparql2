@@ -1,7 +1,7 @@
 package it.polimi.jasper.formatter;
 
 import com.github.jsonldjava.core.JsonLdOptions;
-import it.polimi.jasper.spe.operators.r2s.results.SolutionMappingImpl;
+import it.polimi.jasper.querying.results.SolutionMappingImpl;
 import it.polimi.yasper.core.format.QueryResultFormatter;
 import lombok.extern.log4j.Log4j;
 import org.apache.jena.atlas.io.IndentedWriter;

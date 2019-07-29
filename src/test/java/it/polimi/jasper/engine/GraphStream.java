@@ -16,12 +16,6 @@ import java.util.Random;
 @Log4j
 public class GraphStream extends WebStreamImpl implements Runnable {
 
-    private StreamSchema schema = new GraphStreamSchema();
-
-    @Override
-    public StreamSchema getSchema() {
-        return schema;
-    }
 
     protected int grow_rate;
     private EPLRDFStream s;

@@ -1,8 +1,8 @@
 package it.polimi.jasper.engine;
 
-import it.polimi.jasper.rspql.sds.JasperSDSManager;
-import it.polimi.jasper.spe.operators.r2r.syntax.QueryFactory;
-import it.polimi.jasper.spe.operators.r2r.syntax.RSPQLJenaQuery;
+import it.polimi.jasper.sds.JasperSDSManager;
+import it.polimi.jasper.querying.syntax.QueryFactory;
+import it.polimi.jasper.querying.syntax.RSPQLJenaQuery;
 import it.polimi.yasper.core.engine.config.EngineConfiguration;
 import it.polimi.yasper.core.engine.features.QueryObserverRegistrationFeature;
 import it.polimi.yasper.core.engine.features.QueryRegistrationFeature;

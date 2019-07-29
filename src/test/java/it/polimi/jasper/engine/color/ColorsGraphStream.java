@@ -18,13 +18,6 @@ import java.util.Random;
 @Log4j
 public class ColorsGraphStream extends WebStreamImpl implements Runnable {
 
-    private StreamSchema schema = new GraphStreamSchema();
-
-    @Override
-    public StreamSchema getSchema() {
-        return schema;
-    }
-
     private EPLRDFStream s;
 
     private String type;
