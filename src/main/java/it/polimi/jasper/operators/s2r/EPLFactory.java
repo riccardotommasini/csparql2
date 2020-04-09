@@ -1,6 +1,7 @@
 package it.polimi.jasper.operators.s2r;
 
 import com.espertech.esper.client.soda.*;
+import it.polimi.jasper.operators.s2r.neo4j.EsperWindowAssignerPGraph;
 import it.polimi.jasper.utils.EncodingUtils;
 import it.polimi.jasper.secret.report.EsperCCReportStrategy;
 import it.polimi.jasper.secret.report.EsperWCReportStrategy;
@@ -153,5 +154,12 @@ public class EPLFactory {
         return new EsperWindowAssigner(EncodingUtils.encode(name), tick, report, time, maintenance, epStatementObjectModel, time1);
     }
 
+    public static EsperWindowAssignerPGraph getWindowAssignerPGraph(Tick tick, Maintenance maintenance, Report report, boolean time, String name, long step, long range, String unitStep, String unitRange, WindowType type, Time time1) {
+        List<AnnotationPart> annotations = new ArrayList<>();//EPLFactory.getAnnotations(name, range, step, name);
+        View window = EPLFactory.getWindow((int) range, unitRange, type);
+        EPStatementObjectModel epStatementObjectModel = EPLFactory.toEPL(tick, report, maintenance, step, unitStep, type, name, window, annotations);
+        log.info(epStatementObjectModel.toEPL());
+        return new EsperWindowAssignerPGraph(EncodingUtils.encode(name), tick, report, time, maintenance, epStatementObjectModel, time1);
+    }
 
 }

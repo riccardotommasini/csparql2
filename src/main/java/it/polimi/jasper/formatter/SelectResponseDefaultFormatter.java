@@ -49,8 +49,11 @@ public abstract class SelectResponseDefaultFormatter extends QueryResultFormatte
 
     @Override
     public void update(Observable o, Object arg) {
-        Binding sr = (Binding) arg;
-        this.format(sr);
+        if (arg instanceof Binding) {
+            Binding sr = (Binding) arg;
+            this.format(sr);
+        } else
+            format((Table) arg);
     }
 
     public void format(Table sr) {
@@ -64,33 +67,34 @@ public abstract class SelectResponseDefaultFormatter extends QueryResultFormatte
     }
 
     public static void output(Table table, IndentedWriter out, SerializationContext sCxt) {
-        if ( sCxt != null ) {} // Prefix. But then qnames are wrong.
-        out.print("(table") ;
-        out.incIndent() ;
-        QueryIterator qIter = table.iterator(null) ;
-        for (; qIter.hasNext();) {
-            out.println() ;
-            Binding binding = qIter.nextBinding() ;
-            output(binding, out, sCxt) ;
+        if (sCxt != null) {
+        } // Prefix. But then qnames are wrong.
+        out.print("(table");
+        out.incIndent();
+        QueryIterator qIter = table.iterator(null);
+        for (; qIter.hasNext(); ) {
+            out.println();
+            Binding binding = qIter.nextBinding();
+            output(binding, out, sCxt);
         }
-        out.decIndent() ;
+        out.decIndent();
 
-        out.print(")\n") ;
+        out.print(")\n");
     }
 
     private static void output(Binding binding, IndentedWriter out, SerializationContext sCxt) {
-        out.print("(row") ;
-        for (Iterator<Var> iter = binding.vars(); iter.hasNext();) {
-            Var v = iter.next() ;
-            Node n = binding.get(v) ;
-            out.print(" ") ;
-            out.print(Plan.startMarker2) ;
-            out.print(FmtUtils.stringForNode(v)) ;
-            out.print(" ") ;
-            out.print(FmtUtils.stringForNode(n)) ;
-            out.print(Plan.finishMarker2) ;
+        out.print("(row");
+        for (Iterator<Var> iter = binding.vars(); iter.hasNext(); ) {
+            Var v = iter.next();
+            Node n = binding.get(v);
+            out.print(" ");
+            out.print(Plan.startMarker2);
+            out.print(FmtUtils.stringForNode(v));
+            out.print(" ");
+            out.print(FmtUtils.stringForNode(n));
+            out.print(Plan.finishMarker2);
         }
-        out.print(")\n") ;
+        out.print(")\n");
     }
 
     public void format(SolutionMappingImpl sr) {

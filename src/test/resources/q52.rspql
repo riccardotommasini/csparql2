@@ -12,3 +12,6 @@ WHERE  {
      BIND( UUID() as ?uuid )
 
 }
+
+(n:Writer {age: $value})
+RETURN value
