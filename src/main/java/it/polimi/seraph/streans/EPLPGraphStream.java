@@ -1,10 +1,9 @@
-package it.polimi.jasper.streams.neo4j;
+package it.polimi.seraph.streans;
 
 import com.espertech.esper.client.EPStatement;
 import it.polimi.yasper.core.stream.data.DataStreamImpl;
 import it.polimi.yasper.core.stream.web.WebStream;
 import lombok.Getter;
-import org.apache.jena.graph.Graph;
 
 /**
  * Created by riccardo on 10/07/2017.

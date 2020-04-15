@@ -1,4 +1,4 @@
-package it.polimi.jasper.streams.neo4j;
+package it.polimi.seraph.streans;
 
 import java.util.ArrayList;
 import java.util.List;

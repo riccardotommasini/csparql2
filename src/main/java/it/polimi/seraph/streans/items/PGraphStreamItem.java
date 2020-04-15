@@ -1,7 +1,7 @@
-package it.polimi.jasper.streams.items.neo4j;
+package it.polimi.seraph.streans.items;
 
 import it.polimi.jasper.streams.items.RDFStreamItem;
-import it.polimi.jasper.streams.neo4j.PGraph;
+import it.polimi.seraph.streans.PGraph;
 
 //TODO wrap rid of  JenaGraph
 public class PGraphStreamItem extends RDFStreamItem<PGraph> {

@@ -1,13 +1,13 @@
-package it.polimi.jasper.operators.s2r.neo4j;
+package it.polimi.seraph.s2r;
 
 import com.espertech.esper.client.*;
 import com.espertech.esper.client.soda.EPStatementObjectModel;
 import it.polimi.jasper.operators.s2r.RuntimeManager;
-import it.polimi.jasper.sds.tvg.neo4j.EsperTimeVaryingPGraphImpl;
-import it.polimi.jasper.sds.tvg.neo4j.NamedEsperTimeVaryingPGraph;
-import it.polimi.jasper.secret.content.neo4j.ContentPGraphBean;
-import it.polimi.jasper.streams.items.neo4j.PGraphStreamItem;
-import it.polimi.jasper.streams.neo4j.PGraph;
+import it.polimi.seraph.sds.EsperTimeVaryingPGraphImpl;
+import it.polimi.seraph.sds.NamedEsperTimeVaryingPGraph;
+import it.polimi.seraph.content.ContentPGraphBean;
+import it.polimi.seraph.streans.items.PGraphStreamItem;
+import it.polimi.seraph.streans.PGraph;
 import it.polimi.yasper.core.enums.Maintenance;
 import it.polimi.yasper.core.enums.ReportGrain;
 import it.polimi.yasper.core.enums.Tick;

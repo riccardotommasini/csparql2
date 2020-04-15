@@ -1,12 +1,12 @@
-package it.polimi.jasper.sds.tvg.neo4j;
+package it.polimi.seraph.sds;
 
 import com.espertech.esper.client.EPServiceProvider;
 import com.espertech.esper.client.EPStatement;
 import com.espertech.esper.client.EventBean;
 import com.espertech.esper.client.StatementAwareUpdateListener;
-import it.polimi.jasper.secret.content.neo4j.ContentPGraphBean;
-import it.polimi.jasper.operators.s2r.neo4j.EsperWindowAssignerPGraph;
-import it.polimi.jasper.streams.neo4j.PGraph;
+import it.polimi.seraph.content.ContentPGraphBean;
+import it.polimi.seraph.s2r.EsperWindowAssignerPGraph;
+import it.polimi.seraph.streans.PGraph;
 import it.polimi.yasper.core.enums.Maintenance;
 import it.polimi.yasper.core.querying.ContinuousQueryExecution;
 import it.polimi.yasper.core.sds.timevarying.TimeVarying;

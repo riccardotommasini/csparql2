@@ -1,11 +1,11 @@
-package it.polimi.jasper.secret.content.neo4j;
+package it.polimi.seraph.content;
 
 import com.espertech.esper.client.EventBean;
 import com.espertech.esper.event.map.MapEventBean;
 import it.polimi.jasper.streams.items.GraphStreamItem;
-import it.polimi.jasper.streams.items.neo4j.PGraphStreamItem;
+import it.polimi.seraph.streans.items.PGraphStreamItem;
 import it.polimi.jasper.streams.items.StreamItem;
-import it.polimi.jasper.streams.neo4j.PGraph;
+import it.polimi.seraph.streans.PGraph;
 import it.polimi.yasper.core.secret.content.Content;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;

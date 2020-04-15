@@ -1,7 +1,7 @@
 package it.polimi.jasper.operators.s2r;
 
 import com.espertech.esper.client.soda.*;
-import it.polimi.jasper.operators.s2r.neo4j.EsperWindowAssignerPGraph;
+import it.polimi.seraph.s2r.EsperWindowAssignerPGraph;
 import it.polimi.jasper.utils.EncodingUtils;
 import it.polimi.jasper.secret.report.EsperCCReportStrategy;
 import it.polimi.jasper.secret.report.EsperWCReportStrategy;

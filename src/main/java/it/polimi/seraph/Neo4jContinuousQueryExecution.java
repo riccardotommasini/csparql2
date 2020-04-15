@@ -1,5 +1,6 @@
-package it.polimi.jasper.execution;
+package it.polimi.seraph;
 
+import it.polimi.seraph.streans.PGraph;
 import it.polimi.yasper.core.format.QueryResultFormatter;
 import it.polimi.yasper.core.operators.r2r.RelationToRelationOperator;
 import it.polimi.yasper.core.operators.r2s.RelationToStreamOperator;
@@ -11,18 +12,18 @@ import it.polimi.yasper.core.sds.SDS;
 import it.polimi.yasper.core.stream.data.WebDataStream;
 import lombok.extern.log4j.Log4j;
 import org.apache.jena.datatypes.xsd.XSDDatatype;
-import org.apache.jena.graph.*;
+import org.apache.jena.graph.Graph;
+import org.apache.jena.graph.Node;
+import org.apache.jena.graph.NodeFactory;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.riot.system.IRIResolver;
 import org.apache.jena.sparql.algebra.Algebra;
 import org.apache.jena.sparql.algebra.Table;
 import org.apache.jena.sparql.algebra.TableFactory;
-import org.apache.jena.sparql.core.Quad;
 import org.apache.jena.sparql.core.Var;
 import org.apache.jena.sparql.engine.binding.Binding;
 import org.apache.jena.sparql.engine.binding.BindingFactory;
-import org.apache.jena.sparql.modify.TemplateLib;
 import org.apache.jena.sparql.syntax.Template;
 
 import java.util.*;
@@ -32,7 +33,7 @@ import java.util.stream.Stream;
  * Created by riccardo on 03/07/2017.
  */
 @Log4j
-public class JenaContinuousQueryExecution extends Observable implements Observer, ContinuousQueryExecution<Graph, Graph, Binding> {
+public class Neo4jContinuousQueryExecution extends Observable implements Observer, ContinuousQueryExecution<PGraph, PGraph, Map<String, Object>> {
 
     private final RelationToStreamOperator<Binding> r2s;
     private final RelationToRelationOperator<Binding> r2r;
@@ -45,7 +46,7 @@ public class JenaContinuousQueryExecution extends Observable implements Observer
     protected QueryExecution execution;
     protected IRIResolver resolver;
 
-    public JenaContinuousQueryExecution(IRIResolver resolver, WebDataStream out, ContinuousQuery query, SDS sds, RelationToRelationOperator<Binding> r2r, RelationToStreamOperator<Binding> r2s, StreamToRelationOperator<Graph, Graph>... s2rs) {
+    public Neo4jContinuousQueryExecution(IRIResolver resolver, WebDataStream out, ContinuousQuery query, SDS sds, RelationToRelationOperator<Binding> r2r, RelationToStreamOperator<Binding> r2s, StreamToRelationOperator<Graph, Graph>... s2rs) {
         this.resolver = resolver;
         this.query = query;
         this.q = (Query) query;
@@ -65,19 +66,11 @@ public class JenaContinuousQueryExecution extends Observable implements Observer
         eval1.forEach(ib -> {
             Binding eval = r2s.eval(ib, now);
             setChanged();
-            if (query.isConstructType()) {
-                Graph apply = apply(eval, now);
-                if (outstream() != null) {
-                    outstream().put(apply, now);
-                }
-                notifyObservers(apply);
-            } else {
-                Table arg1 = apply2(eval, now);
-                if (outstream() != null) {
-                    outstream().put(arg1, now);
-                }
-                notifyObservers(arg1);
+            Table arg1 = apply2(eval, now);
+            if (outstream() != null) {
+                outstream().put(arg1, now);
             }
+            notifyObservers(arg1);
         });
     }
 
@@ -99,30 +92,6 @@ public class JenaContinuousQueryExecution extends Observable implements Observer
         return table;
     }
 
-    public Graph apply(Binding b, long now) {
-        // Iteration is a new mapping of bnodes.
-        Graph g = Factory.createGraphMem();
-        Map<Node, Node> bNodeMap = new HashMap<>();
-        bNodeMap.clear();
-        List<Quad> quads = template.getQuads();
-        for (Quad quad : quads) {
-            Quad q = TemplateLib.subst(quad, b, bNodeMap);
-            if (!q.isConcrete()) {
-                // Log.warn(TemplateLib.class, "Unbound quad:
-                // "+FmtUtils.stringForQuad(quad)) ;
-                continue;
-            }
-            g.add(q.asTriple());
-        }
-        Node s = NodeFactory.createURI(resolver.resolveToString("/result/" + now));
-        Node p = NodeFactory.createURI(resolver.resolveToString("eventTime"));
-        Node o = NodeFactory.createLiteral(now + "", XSDDatatype.XSDdateTimeStamp);
-        g.add(Triple.create(s, p, o));
-        p = NodeFactory.createURI(resolver.resolveToString("processingTime"));
-        o = NodeFactory.createLiteral(System.currentTimeMillis() + "", XSDDatatype.XSDdateTimeStamp);
-        g.add(Triple.create(s, p, o));
-        return g;
-    }
 
     @Override
     public ContinuousQuery getContinuousQuery() {
@@ -130,8 +99,13 @@ public class JenaContinuousQueryExecution extends Observable implements Observer
     }
 
     @Override
-    public SDS<Graph> getSDS() {
-        return sds;
+    public SDS<PGraph> getSDS() {
+        return null;
+    }
+
+    @Override
+    public StreamToRelationOperator<PGraph, PGraph>[] getS2R() {
+        return new StreamToRelationOperator[0];
     }
 
 
@@ -139,10 +113,6 @@ public class JenaContinuousQueryExecution extends Observable implements Observer
         s2rs.add(op);
     }
 
-    @Override
-    public StreamToRelationOperator<Graph, Graph>[] getS2R() {
-        return s2rs.toArray(new StreamToRelationOperator[s2rs.size()]);
-    }
 
     @Override
     public RelationToRelationOperator getR2R() {

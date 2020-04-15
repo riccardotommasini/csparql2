@@ -1,8 +1,7 @@
-package it.polimi.jasper.operators.s2r.neo4j;
+package it.polimi.seraph.s2r;
 
 import it.polimi.jasper.operators.s2r.EPLFactory;
-import it.polimi.jasper.operators.s2r.EsperWindowAssigner;
-import it.polimi.jasper.streams.neo4j.PGraph;
+import it.polimi.seraph.streans.PGraph;
 import it.polimi.yasper.core.enums.Maintenance;
 import it.polimi.yasper.core.enums.ReportGrain;
 import it.polimi.yasper.core.enums.Tick;
@@ -15,7 +14,6 @@ import it.polimi.yasper.core.secret.report.Report;
 import it.polimi.yasper.core.secret.time.Time;
 import it.polimi.yasper.core.stream.data.WebDataStream;
 import lombok.RequiredArgsConstructor;
-import org.apache.jena.graph.Graph;
 import org.apache.jena.reasoner.Reasoner;
 
 import java.util.ArrayList;

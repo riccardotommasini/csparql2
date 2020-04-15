@@ -35,3 +35,6 @@ public class JDStream implements RelationToStreamOperator<Binding> {
         return BindingFactory.binding();
     }
 }
+
+
+

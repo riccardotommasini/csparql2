@@ -1,9 +1,8 @@
-package it.polimi.jasper.streams.neo4j;
+package it.polimi.seraph.streans;
 
 
 import it.polimi.jasper.streams.schema.RDFStreamSchema;
 import it.polimi.yasper.core.stream.metadata.SchemaEntry;
-import org.apache.jena.graph.Graph;
 
 import java.util.HashSet;
 import java.util.Set;

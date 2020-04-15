@@ -10,6 +10,7 @@ import it.polimi.yasper.core.exceptions.StreamRegistrationException;
 import it.polimi.yasper.core.exceptions.UnregisteredStreamExeception;
 import it.polimi.yasper.core.stream.data.WebDataStream;
 import it.polimi.yasper.core.stream.web.WebStream;
+import it.polimi.yasper.core.stream.web.WebStreamImpl;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j;
 import org.apache.jena.graph.Graph;
@@ -23,14 +24,14 @@ public class EsperStreamRegistrationService {
     private final EPAdministrator cepAdm;
 
     @Getter
-    private Map<String, WebDataStream<Graph>> registeredStreams;
+    private Map<String, WebDataStream> registeredStreams;
 
     public EsperStreamRegistrationService(EPAdministrator cepAdm) {
         this.cepAdm = cepAdm;
         this.registeredStreams = new HashMap<>();
     }
 
-    public EPLRDFStream register(WebStream s) {
+    public WebStreamImpl register(WebStream s) {
         String uri = s.getURI();
         log.info("Registering Stream [" + uri + "]");
         if (!registeredStreams.containsKey(uri)) {
