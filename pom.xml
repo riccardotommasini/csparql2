@@ -26,7 +26,7 @@
             <artifactId>esper</artifactId>
             <version>7.1.0</version>
         </dependency>
-       
+
         <dependency>
             <groupId>com.github.riccardotommasini.yasper</groupId>
             <artifactId>yasper-core</artifactId>
@@ -97,6 +97,11 @@
         <dependency>
             <groupId>org.neo4j</groupId>
             <artifactId>neo4j</artifactId>
+            <version>4.0.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.neo4j.community</groupId>
+            <artifactId>it-test-support</artifactId>
             <version>4.0.3</version>
         </dependency>
     </dependencies>

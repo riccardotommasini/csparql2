@@ -8,13 +8,11 @@ import lombok.extern.log4j.Log4j;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.sparql.engine.binding.Binding;
-import org.neo4j.dbms.api.DatabaseManagementService;
-import org.neo4j.dbms.api.DatabaseManagementServiceBuilder;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Result;
 import org.neo4j.graphdb.Transaction;
+import org.neo4j.test.TestDatabaseManagementServiceBuilder;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -31,10 +29,13 @@ public class R2ROperatorCypher implements RelationToRelationOperator<Map<String,
     public final List<String> resultVars;
     private QueryExecution execution;
 
-    private static final File databaseDirectory = new File(R2ROperatorCypher.class.getResource("db").getPath());
+//    private static final File databaseDirectory = new File(R2ROperatorCypher.class.getResource("db").getPath());
 
-    DatabaseManagementService managementService = new DatabaseManagementServiceBuilder(databaseDirectory).build();
-    GraphDatabaseService db = managementService.database(DEFAULT_DATABASE_NAME);
+    //    DatabaseManagementService managementService = new DatabaseManagementServiceBuilder(databaseDirectory).build();
+//    GraphDatabaseService db = managementService.database(DEFAULT_DATABASE_NAME);
+    TestDatabaseManagementServiceBuilder builder = new TestDatabaseManagementServiceBuilder();
+    GraphDatabaseService db = builder.impermanent().build().database(DEFAULT_DATABASE_NAME);
+
 
     private Transaction tx;
 
@@ -48,7 +49,7 @@ public class R2ROperatorCypher implements RelationToRelationOperator<Map<String,
     @Override
     public Stream<SolutionMapping<Map<String, Object>>> eval(long ts) {
         //TODO fix up to stream
-        String id = baseURI + "result/" + ts;
+        String id = baseURI + "result;" + ts;
         this.tx = db.beginTx();
         Result result = tx.execute(query.getSPARQL());
 //        |--name-|--age--|-email--|
