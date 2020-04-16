@@ -7,7 +7,7 @@ import lombok.extern.log4j.Log4j;
 import org.apache.jena.graph.Graph;
 
 @Log4j
-public class IncrementalContentGraphBean extends ContentGraphBean {
+public class IncrementalContentGraphBean extends JenaGraphContent {
 
     public IncrementalContentGraphBean(Graph graph) {
         super(graph);
@@ -39,5 +39,4 @@ public class IncrementalContentGraphBean extends ContentGraphBean {
         log.debug("Handling single IStreamTest [" + st + "]");
         elements.remove(st.getTypedContent());
     }
-
 }

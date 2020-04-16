@@ -33,13 +33,13 @@ import java.util.*;
 public class JenaContinuousQueryExecution extends Observable implements Observer, ContinuousQueryExecution<Graph, Graph, Binding> {
 
     private final RelationToStreamOperator<Binding> r2s;
+    private List<StreamToRelationOperator<Graph, Graph>> s2rs;
     private final RelationToRelationOperator<Binding> r2r;
     private final SDS sds;
     private final ContinuousQuery query;
     private final Query q;
     private final Template template;
     private final WebDataStream out;
-    private List<StreamToRelationOperator<Graph, Graph>> s2rs;
     protected QueryExecution execution;
     protected IRIResolver resolver;
 
@@ -58,7 +58,7 @@ public class JenaContinuousQueryExecution extends Observable implements Observer
     @Override
     public void update(Observable o, Object arg) {
         Long now = (Long) arg;
-        sds.materialize(now);
+//        sds.materialize(now);
         r2r.eval(now).forEach(ib -> {
             Binding eval = r2s.eval(ib, now);
             setChanged();
