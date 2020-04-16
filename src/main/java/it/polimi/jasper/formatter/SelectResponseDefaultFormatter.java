@@ -49,7 +49,7 @@ public abstract class SelectResponseDefaultFormatter extends QueryResultFormatte
 
     @Override
     public void update(Observable o, Object arg) {
-        Binding sr = (Binding) arg;
+        Table sr = (Table) arg;
         this.format(sr);
     }
 
