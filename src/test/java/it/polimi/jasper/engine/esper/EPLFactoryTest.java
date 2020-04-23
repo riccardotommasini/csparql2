@@ -2,7 +2,7 @@ package it.polimi.jasper.engine.esper;
 
 import com.espertech.esper.client.soda.EPStatementObjectModel;
 import com.espertech.esper.client.soda.View;
-import it.polimi.jasper.operators.s2r.EPLFactory;
+import it.polimi.jasper.operators.s2r.epl.EPLFactory;
 import it.polimi.yasper.core.enums.Maintenance;
 import it.polimi.yasper.core.enums.Tick;
 import it.polimi.yasper.core.operators.s2r.syntax.WindowType;

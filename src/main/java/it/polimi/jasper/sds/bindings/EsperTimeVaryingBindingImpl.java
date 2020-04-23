@@ -1,6 +1,6 @@
-package it.polimi.jasper.sds.tvb;
+package it.polimi.jasper.sds.bindings;
 
-import it.polimi.jasper.sds.EsperTimeVaryingGeneric;
+import it.polimi.jasper.sds.tv.EsperTimeVaryingGeneric;
 import it.polimi.jasper.secret.content.BindingSet;
 import it.polimi.jasper.secret.content.ContentEventBean;
 import it.polimi.yasper.core.enums.Maintenance;

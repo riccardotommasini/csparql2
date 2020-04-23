@@ -17,12 +17,13 @@ public class QueryFactory {
 
     static ThrowingErrorListener listener = ThrowingErrorListener.INSTANCE;
 
-    public static RSPQLJenaQuery parse(IRIResolver resolver, String queryString) throws IOException {
+    public static RSPQLJenaQuery parse(String baseUri, String queryString) throws IOException {
+
         InputStream inputStream = new ByteArrayInputStream(queryString.getBytes());
-        return parse(resolver, inputStream);
+        return parse(baseUri, inputStream);
     }
 
-    public static RSPQLJenaQuery parse(IRIResolver resolver, InputStream inputStream) throws IOException {
+    public static RSPQLJenaQuery parse(String baseUri, InputStream inputStream) throws IOException {
         // Ignore case for keywords
         CaseChangingCharStream charStream = new CaseChangingCharStream(CharStreams.fromStream(inputStream), true);
         RSPQLLexer lexer = new RSPQLLexer(charStream);
@@ -36,7 +37,7 @@ public class QueryFactory {
         parser.addErrorListener(listener);
         ParseTree tree = parser.queryUnit();
 
-        RSPQLJenaQuery query = new RSPQLJenaQuery(resolver);
+        RSPQLJenaQuery query = new RSPQLJenaQuery(IRIResolver.create(baseUri));
         RSPQLJenaVisitor visitor = new RSPQLJenaVisitor(query);
         visitor.visit(tree);
 

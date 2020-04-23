@@ -1,9 +1,10 @@
-package it.polimi.jasper.operators.s2r;
+package it.polimi.jasper.operators.s2r.epl;
 
+import com.espertech.esper.client.EPStatement;
 import com.espertech.esper.client.soda.*;
-import it.polimi.jasper.utils.EncodingUtils;
 import it.polimi.jasper.secret.report.EsperCCReportStrategy;
 import it.polimi.jasper.secret.report.EsperWCReportStrategy;
+import it.polimi.jasper.utils.EncodingUtils;
 import it.polimi.yasper.core.enums.Maintenance;
 import it.polimi.yasper.core.enums.Tick;
 import it.polimi.yasper.core.operators.s2r.syntax.WindowType;
@@ -145,23 +146,22 @@ public class EPLFactory {
         return writer.toString();
     }
 
-    public static EsperGGWindowAssigner getWindowAssigner(Tick tick, Maintenance maintenance, Report report, boolean time, String name, long step, long range, String unitStep, String unitRange, WindowType type, Time time1) {
+    public static EPStatement getWindowAssigner(Tick tick, Maintenance maintenance, Report report, boolean time, String name, long step, long range, String unitStep, String unitRange, WindowType type, Time time1) {
         List<AnnotationPart> annotations = new ArrayList<>();//EPLFactory.getAnnotations(name, range, step, name);
         View window = EPLFactory.getWindow((int) range, unitRange, type);
         EPStatementObjectModel epStatementObjectModel = EPLFactory.toEPL(tick, report, maintenance, step, unitStep, type, name, window, annotations);
         log.info(epStatementObjectModel.toEPL());
-        return new EsperGGWindowAssigner(EncodingUtils.encode(name), tick, report, time, maintenance, epStatementObjectModel, time1);
+        return RuntimeManager.getAdmin().create(epStatementObjectModel, name);
     }
 
 
-    public static EsperTBWindowAssigner getWindowAssignerTB(Tick tick, Maintenance maintenance, Report report, boolean time, String name, long step, long range, String unitStep, String unitRange, WindowType type, Time time1) {
+    public static EPStatement getWindowAssignerTB(Tick tick, Maintenance maintenance, Report report, boolean time, String name, long step, long range, String unitStep, String unitRange, WindowType type, Time time1) {
         List<AnnotationPart> annotations = new ArrayList<>();//EPLFactory.getAnnotations(name, range, step, name);
         View window = EPLFactory.getWindow((int) range, unitRange, type);
-        EPStatementObjectModel epStatementObjectModel = EPLFactory.toEPL(tick, report, maintenance, step, unitStep, type, name, window, annotations);
+        EPStatementObjectModel epStatementObjectModel = EPLFactory.toEPL(tick, report, Maintenance.NAIVE, step, unitStep, type, name, window, annotations);
         log.info(epStatementObjectModel.toEPL());
-        return new EsperTBWindowAssigner(EncodingUtils.encode(name), tick, report, time, maintenance, epStatementObjectModel, time1);
+        return RuntimeManager.getAdmin().create(epStatementObjectModel, name);
     }
-
 
 
 }

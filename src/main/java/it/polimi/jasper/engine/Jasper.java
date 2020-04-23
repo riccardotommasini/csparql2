@@ -2,7 +2,7 @@ package it.polimi.jasper.engine;
 
 import it.polimi.jasper.querying.syntax.QueryFactory;
 import it.polimi.jasper.querying.syntax.RSPQLJenaQuery;
-import it.polimi.jasper.sds.JasperSDSManager;
+import it.polimi.jasper.sds.graph.JasperSDSManager;
 import it.polimi.yasper.core.engine.config.EngineConfiguration;
 import it.polimi.yasper.core.engine.features.QueryObserverRegistrationFeature;
 import it.polimi.yasper.core.engine.features.QueryRegistrationFeature;
@@ -16,10 +16,9 @@ import it.polimi.yasper.core.querying.ContinuousQueryExecution;
 import it.polimi.yasper.core.sds.SDSConfiguration;
 import it.polimi.yasper.core.secret.report.ReportImpl;
 import it.polimi.yasper.core.secret.report.strategies.ReportingStrategy;
-import lombok.Getter;
 import lombok.extern.log4j.Log4j;
+import org.apache.commons.configuration.ConfigurationException;
 import org.apache.jena.graph.Graph;
-import org.apache.jena.riot.system.IRIResolver;
 import org.apache.jena.sparql.engine.binding.Binding;
 
 import java.io.IOException;
@@ -29,33 +28,11 @@ import java.util.List;
 
 @Log4j
 public class Jasper extends EsperRSPEngine<Graph> implements QueryObserverRegistrationFeature, QueryRegistrationFeature<RSPQLJenaQuery>, QueryStringRegistrationFeature {
-
-    @Getter
-    private IRIResolver resolver;
     private Maintenance maintenance;
-
 
     public Jasper(long t0, EngineConfiguration configuration) {
         super(t0, configuration);
 
-//        String string = configuration.
-//
-//        if (string == null)
-//            this.entailment = Entailment.NONE;
-//        else {
-//            this.entailment = Entailment.valueOf(string);
-//            this.tbox = rsp_config.getString("rsp_engine.tbox_location");
-//            if (tbox == null) {
-//                throw new RuntimeException("Not Specified TBOX");
-//            }
-//        }
-//
-//        if (Entailment.CUSTOM.equals(this.entailment)) {
-//            this.rules = Rule.rulesFromURL(rsp_config.getString("jasper.rules"));
-//        }
-
-
-                this.resolver = IRIResolver.create(base_uri);
         this.reportGrain = ReportGrain.SINGLE;
         this.maintenance = Maintenance.NAIVE;
     }
@@ -67,19 +44,27 @@ public class Jasper extends EsperRSPEngine<Graph> implements QueryObserverRegist
 
     @Override
     public ContinuousQueryExecution<Graph, Graph, Binding> register(RSPQLJenaQuery continuousQuery) {
-        return register(continuousQuery, SDSConfiguration.getDefault());
+        try {
+            return register(continuousQuery, SDSConfiguration.getDefault());
+        } catch (ConfigurationException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public ContinuousQueryExecution<Graph, Graph, Binding> register(String s) {
-        return register(s, SDSConfiguration.getDefault());
+        try {
+            return register(s, SDSConfiguration.getDefault());
+        } catch (ConfigurationException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public ContinuousQueryExecution<Graph, Graph, Binding> register(String q, SDSConfiguration queryConfiguration) {
         log.info("Parsing Query [" + q + "]");
         try {
-            return register(QueryFactory.parse(resolver, q), queryConfiguration);
+            return register(QueryFactory.parse(base_uri, q), queryConfiguration);
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage());
         }
@@ -92,7 +77,7 @@ public class Jasper extends EsperRSPEngine<Graph> implements QueryObserverRegist
                 this,
                 q,
                 this.time,
-                this.resolver,
+                this.base_uri,
                 this.report,
                 this.responseFormat,
                 this.enabled_recursion,

@@ -44,13 +44,13 @@ public class JenaContinuousQueryExecution extends Observable implements Observer
     protected QueryExecution execution;
     protected IRIResolver resolver;
 
-    public JenaContinuousQueryExecution(IRIResolver resolver, WebDataStream out, ContinuousQuery query, SDS sds, RelationToRelationOperator<Binding> r2r, RelationToStreamOperator<Binding> r2s, StreamToRelationOperator<Graph, Graph>... s2rs) {
+    public JenaContinuousQueryExecution(IRIResolver resolver, WebDataStream out, ContinuousQuery query, SDS sds, RelationToRelationOperator<Binding> r2r, RelationToStreamOperator<Binding> r2s, List<StreamToRelationOperator<Graph, Graph>> s2rs) {
         this.resolver = resolver;
         this.query = query;
         this.q = (Query) query;
         this.template = q.getConstructTemplate();
         this.sds = sds;
-        this.s2rs = s2rs == null ? new ArrayList<>() : Arrays.asList(s2rs);
+        this.s2rs = s2rs;
         this.r2r = r2r;
         this.r2s = r2s;
         this.out = out;

@@ -1,4 +1,4 @@
-package it.polimi.jasper.sds;
+package it.polimi.jasper.sds.tv;
 
 import com.espertech.esper.client.EPServiceProvider;
 import com.espertech.esper.client.EPStatement;
@@ -32,7 +32,7 @@ public abstract class EsperTimeVaryingGeneric<I, O> extends Observable implement
 
     protected ContentEventBean<I, ?, O> c;
 
-    public EsperTimeVaryingGeneric(ContentEventBean<I, ?, O> c, Maintenance maintenance, Report report, Assigner<I, O> wa, SDS sds) {
+    public EsperTimeVaryingGeneric(ContentEventBean<I, ?, O> c, Maintenance maintenance, Report report, Assigner<I, O> wa, SDS<O> sds) {
         this.maintenance = maintenance;
         this.wa = wa;
         this.report = report;

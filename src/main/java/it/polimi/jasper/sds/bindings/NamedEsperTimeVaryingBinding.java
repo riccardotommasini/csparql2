@@ -1,4 +1,4 @@
-package it.polimi.jasper.sds.tvb;
+package it.polimi.jasper.sds.bindings;
 
 import it.polimi.jasper.secret.content.BindingSet;
 import it.polimi.jasper.secret.content.ContentEventBean;

@@ -1,4 +1,4 @@
-package it.polimi.jasper.sds.tvg;
+package it.polimi.jasper.sds.graph;
 
 import it.polimi.jasper.secret.content.ContentEventBean;
 import it.polimi.yasper.core.enums.Maintenance;
@@ -15,7 +15,7 @@ public class NamedEsperTimeVaryingGraph extends EsperTimeVaryingGraphImpl {
 
     private String uri;
 
-    public NamedEsperTimeVaryingGraph(ContentEventBean<Graph> c, String uri, Maintenance maintenance, Report report, Assigner<Graph, Graph> wo, SDS sds) {
+    public NamedEsperTimeVaryingGraph(ContentEventBean<Graph, ?, Graph> c, String uri, Maintenance maintenance, Report report, Assigner<Graph, Graph> wo, SDS<Graph> sds) {
         super(c, maintenance, report, wo, sds);
         this.uri = uri;
     }

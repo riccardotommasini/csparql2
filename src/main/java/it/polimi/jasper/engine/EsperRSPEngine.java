@@ -4,7 +4,7 @@ import com.espertech.esper.client.EPAdministrator;
 import com.espertech.esper.client.EPRuntime;
 import com.espertech.esper.client.EPServiceProvider;
 import it.polimi.jasper.engine.esper.EsperStreamRegistrationService;
-import it.polimi.jasper.operators.s2r.RuntimeManager;
+import it.polimi.jasper.operators.s2r.epl.RuntimeManager;
 import it.polimi.jasper.querying.Entailment;
 import it.polimi.jasper.secret.EsperTime;
 import it.polimi.jasper.streams.EPLStream;
@@ -19,12 +19,10 @@ import it.polimi.yasper.core.querying.ContinuousQuery;
 import it.polimi.yasper.core.querying.ContinuousQueryExecution;
 import it.polimi.yasper.core.sds.SDS;
 import it.polimi.yasper.core.secret.report.Report;
-import it.polimi.yasper.core.secret.report.ReportImpl;
 import it.polimi.yasper.core.secret.time.Time;
 import it.polimi.yasper.core.stream.metadata.StreamSchema;
 import it.polimi.yasper.core.stream.web.WebStream;
 import lombok.extern.log4j.Log4j;
-import org.apache.jena.reasoner.rulesys.Rule;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,8 +35,7 @@ public abstract class EsperRSPEngine<T> implements StreamRegistrationFeature<EPL
     protected final boolean enabled_recursion;
     protected final String responseFormat;
     protected final Boolean usingEventTime;
-    protected  Entailment entailment;
-    protected List<Rule> rules = null;
+    protected Entailment entailment;
     protected Report report;
     protected ReportGrain reportGrain;
     protected Tick tick;
@@ -76,6 +73,18 @@ public abstract class EsperRSPEngine<T> implements StreamRegistrationFeature<EPL
 
         stream_registration_service = new EsperStreamRegistrationService(admin);
 
+        String entailment = rsp_config.getString("jasper.entailment");
+
+        if (entailment == null)
+            this.entailment = Entailment.NONE;
+        else {
+            this.entailment = Entailment.valueOf(entailment);
+            this.tbox = rsp_config.getString("rsp_engine.tbox_location");
+            if (tbox == null) {
+                throw new RuntimeException("Not Specified TBOX");
+            }
+        }
+
         this.enabled_recursion = rsp_config.isRecursionEnables();
         this.responseFormat = rsp_config.getResponseFormat();
 
@@ -85,6 +94,7 @@ public abstract class EsperRSPEngine<T> implements StreamRegistrationFeature<EPL
 
         this.base_uri = rsp_config.getBaseURI();
         report = rsp_config.getReport();
+
 
         log.debug("Running Configuration ]");
         log.debug("Event Time [" + this.rsp_config.isUsingEventTime() + "]");

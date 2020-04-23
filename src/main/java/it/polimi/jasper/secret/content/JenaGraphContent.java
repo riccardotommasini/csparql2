@@ -1,14 +1,26 @@
 package it.polimi.jasper.secret.content;
 
+import it.polimi.jasper.engine.execution.ContinuousQueryExecutionFactory;
 import lombok.extern.log4j.Log4j;
 import org.apache.jena.graph.Graph;
 import org.apache.jena.graph.GraphUtil;
+import org.apache.jena.mem.GraphMem;
+import org.apache.jena.reasoner.Reasoner;
 
 @Log4j
 public class JenaGraphContent extends ContentEventBean<Graph, Graph, Graph> {
 
     public JenaGraphContent(Graph graph) {
         super(graph);
+    }
+
+    public JenaGraphContent() {
+        super(graph());
+    }
+
+    private static Graph graph() {
+        Reasoner reasoner = ContinuousQueryExecutionFactory.getReasoner();
+        return reasoner != null ? reasoner.bind(new GraphMem()) : new GraphMem();
     }
 
     @Override

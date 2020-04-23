@@ -1,4 +1,4 @@
-package it.polimi.jasper.operators.s2r;
+package it.polimi.jasper.operators.s2r.epl;
 
 import com.espertech.esper.client.*;
 

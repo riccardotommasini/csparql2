@@ -39,7 +39,7 @@ public class TestRSPQLParserCB {
                             System.out.println(file);
                             String querys = FileUtils.readFileToString(file);
 
-                            RSPQLJenaQuery query = QueryFactory.parse(sr.getResolver(), querys);
+                            RSPQLJenaQuery query = QueryFactory.parse(ec.getBaseURI(), querys);
                             System.out.println(query);
 
                         } catch (IOException e) {
@@ -61,7 +61,7 @@ public class TestRSPQLParserCB {
                 "    }\n" +
                 "}\n";
 
-        RSPQLJenaQuery query = QueryFactory.parse(sr.getResolver(), trickyQuery);
+        RSPQLJenaQuery query = QueryFactory.parse(ec.getBaseURI(), trickyQuery);
         // Print the query (only the SPARQL 1.1 parts)
 
         //        System.out.println("----------");

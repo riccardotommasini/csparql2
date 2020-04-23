@@ -57,7 +57,7 @@ public class RSPQLParserTestCitybench {
         System.out.println(input);
         System.out.println("<=====RSPQL=====>\n");
 
-        RSPQLJenaQuery rspql = QueryFactory.parse(IRIResolver.create(IRIResolver.chooseBaseURI()), input);
+        RSPQLJenaQuery rspql = QueryFactory.parse("http://example.org/", input);
         System.err.println(rspql.toString());
 
         System.out.println("<=====JENA=====>\n");

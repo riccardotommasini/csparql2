@@ -3,7 +3,7 @@ package it.polimi.jasper.operators.s2r;
 import com.espertech.esper.client.EPAdministrator;
 import com.espertech.esper.client.EPRuntime;
 import com.espertech.esper.client.EPStatement;
-import com.espertech.esper.client.soda.EPStatementObjectModel;
+import it.polimi.jasper.operators.s2r.epl.RuntimeManager;
 import it.polimi.yasper.core.enums.ReportGrain;
 import it.polimi.yasper.core.enums.Tick;
 import it.polimi.yasper.core.operators.s2r.execution.assigner.Assigner;
@@ -28,14 +28,13 @@ public abstract class AbstractEsperWindowAssigner<I, O> implements Assigner<I, O
     protected Tick tick;
     protected ReportGrain reportGrain = ReportGrain.SINGLE;
 
-    public AbstractEsperWindowAssigner(String name, Tick tick, Report report, boolean event_time, EPStatementObjectModel stm, Time time) {
+    public AbstractEsperWindowAssigner(String name, Tick tick, Report report, boolean event_time, EPStatement stm, Time time) {
         this.name = name;
         this.tick = tick;
         this.report = report;
         this.eventtime = event_time;
         this.runtime = RuntimeManager.getEPRuntime();
-        this.admin = RuntimeManager.getAdmin();
-        this.statement = admin.create(stm, name);
+        this.statement = stm;
         this.time = time;
     }
 

@@ -30,7 +30,7 @@ public class TestRSPQLParser {
                 "    }\n" +
                 "}\n";
 
-        RSPQLJenaQuery query = QueryFactory.parse(sr.getResolver(), trickyQuery);
+        RSPQLJenaQuery query = QueryFactory.parse(ec.getBaseURI(), trickyQuery);
         // Print the query (only the SPARQL 1.1 parts)
 
         //        System.out.println("----------");

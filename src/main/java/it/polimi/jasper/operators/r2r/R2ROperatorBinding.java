@@ -2,8 +2,7 @@ package it.polimi.jasper.operators.r2r;
 
 import it.polimi.jasper.querying.results.SolutionMappingImpl;
 import it.polimi.jasper.querying.syntax.RSPQLJenaQuery;
-import it.polimi.jasper.sds.JenaSDSBB;
-import it.polimi.jasper.secret.content.BindingSet;
+import it.polimi.jasper.sds.bindings.JenaSDSBB;
 import it.polimi.yasper.core.operators.r2r.RelationToRelationOperator;
 import it.polimi.yasper.core.querying.result.SolutionMapping;
 import it.polimi.yasper.core.sds.timevarying.TimeVarying;
@@ -14,7 +13,6 @@ import org.apache.jena.sparql.engine.binding.Binding;
 import org.apache.jena.sparql.engine.binding.BindingUtils;
 
 import java.util.*;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Log4j
@@ -41,12 +39,11 @@ public class R2ROperatorBinding implements RelationToRelationOperator<Binding> {
         Set<Binding> answers = new HashSet<>();
         //suppose materialized at ts
 
-        sds.getNamed_tvg().forEach((s, tvb) ->
+        sds.tvgs().stream().filter(TimeVarying::named).forEach(tvb ->
                 tvb.get().forEach(binding ->
                         {
-                            sds.getNamed_tvg().entrySet().stream()
-                                    .filter(stringBindingSetEntry -> !stringBindingSetEntry.getKey().equals(s))//take the other windows
-                                    .map(Map.Entry::getValue)//remove the key
+                            sds.tvgs().stream().filter(TimeVarying::named)
+                                    .filter(stringBindingSetEntry -> !stringBindingSetEntry.equals(tvb.iri()))//take the other windows
                                     .map(TimeVarying::get)
                                     .flatMap(Collection::stream)//unroll the binding sets
                                     .map(b -> BindingUtils.merge(binding, b))//merge line-by-line with current
