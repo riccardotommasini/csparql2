@@ -1,6 +1,6 @@
 package it.polimi.jasper.engine.geldt;
 
-import it.polimi.jasper.engine.Jasper;
+import it.polimi.jasper.jena.Jasper;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;

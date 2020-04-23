@@ -1,6 +1,6 @@
 package it.polimi.jasper.engine.execution;
 
-import it.polimi.jasper.secret.content.BindingSet;
+import it.polimi.jasper.jena.b.BindingSet;
 import it.polimi.yasper.core.format.QueryResultFormatter;
 import it.polimi.yasper.core.operators.r2r.RelationToRelationOperator;
 import it.polimi.yasper.core.operators.r2s.RelationToStreamOperator;

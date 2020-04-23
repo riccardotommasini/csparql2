@@ -1,8 +1,7 @@
-package it.polimi.jasper.operators.r2r;
+package it.polimi.jasper.jena.b;
 
 import it.polimi.jasper.querying.results.SolutionMappingImpl;
 import it.polimi.jasper.querying.syntax.RSPQLJenaQuery;
-import it.polimi.jasper.sds.bindings.JenaSDSBB;
 import it.polimi.yasper.core.operators.r2r.RelationToRelationOperator;
 import it.polimi.yasper.core.querying.result.SolutionMapping;
 import it.polimi.yasper.core.sds.timevarying.TimeVarying;

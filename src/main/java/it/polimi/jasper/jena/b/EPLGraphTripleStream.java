@@ -1,4 +1,4 @@
-package it.polimi.jasper.streams.schema;
+package it.polimi.jasper.jena.b;
 
 import com.espertech.esper.client.EPStatement;
 import it.polimi.jasper.streams.EPLStream;

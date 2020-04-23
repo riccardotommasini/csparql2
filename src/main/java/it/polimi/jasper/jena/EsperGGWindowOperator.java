@@ -1,14 +1,11 @@
-package it.polimi.jasper.operators.s2r;
+package it.polimi.jasper.jena;
 
 import com.espertech.esper.client.EPStatement;
 import com.espertech.esper.client.EventBean;
 import com.espertech.esper.client.SafeIterator;
+import it.polimi.jasper.operators.s2r.AbstractEsperWindowAssigner;
 import it.polimi.jasper.operators.s2r.epl.EPLFactory;
-import it.polimi.jasper.sds.graph.EsperTimeVaryingGraphImpl;
-import it.polimi.jasper.sds.graph.NamedEsperTimeVaryingGraph;
 import it.polimi.jasper.sds.tv.EsperTimeVaryingGeneric;
-import it.polimi.jasper.secret.content.JenaGraphContent;
-import it.polimi.jasper.streams.items.GraphStreamItem;
 import it.polimi.jasper.utils.EncodingUtils;
 import it.polimi.yasper.core.enums.Maintenance;
 import it.polimi.yasper.core.enums.ReportGrain;

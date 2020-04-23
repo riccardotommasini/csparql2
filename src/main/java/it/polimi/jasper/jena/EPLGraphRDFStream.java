@@ -1,7 +1,7 @@
-package it.polimi.jasper.streams;
+package it.polimi.jasper.jena;
 
 import com.espertech.esper.client.EPStatement;
-import it.polimi.yasper.core.stream.data.DataStreamImpl;
+import it.polimi.jasper.streams.EPLStream;
 import it.polimi.yasper.core.stream.web.WebStream;
 import lombok.Getter;
 import org.apache.jena.graph.Graph;

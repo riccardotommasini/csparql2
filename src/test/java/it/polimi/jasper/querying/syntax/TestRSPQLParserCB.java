@@ -1,8 +1,7 @@
 package it.polimi.jasper.querying.syntax;
 
 import it.polimi.jasper.CSPARQLReadyToGo.CSPARQLReadyToGo;
-import it.polimi.jasper.engine.Jasper;
-import it.polimi.jasper.engine.color.ColorsCSPARQLExample;
+import it.polimi.jasper.jena.Jasper;
 import it.polimi.yasper.core.engine.config.EngineConfiguration;
 import it.polimi.yasper.core.sds.SDSConfiguration;
 import org.apache.commons.configuration.ConfigurationException;

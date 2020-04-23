@@ -1,13 +1,13 @@
 package it.polimi.jasper.engine.execution;
 
-import it.polimi.jasper.operators.r2r.R2ROperatorSPARQL;
-import it.polimi.jasper.operators.r2r.R2ROperatorSPARQLEnt;
+import it.polimi.jasper.jena.JenaSDSGG;
+import it.polimi.jasper.jena.R2ROperatorSPARQL;
+import it.polimi.jasper.jena.R2ROperatorSPARQLEnt;
 import it.polimi.jasper.operators.r2s.JDStream;
 import it.polimi.jasper.operators.r2s.JIStream;
 import it.polimi.jasper.operators.r2s.JRStream;
 import it.polimi.jasper.querying.Entailment;
 import it.polimi.jasper.querying.syntax.RSPQLJenaQuery;
-import it.polimi.jasper.sds.graph.JenaSDSGG;
 import it.polimi.yasper.core.enums.StreamOperator;
 import it.polimi.yasper.core.operators.r2r.RelationToRelationOperator;
 import it.polimi.yasper.core.operators.r2s.RelationToStreamOperator;
@@ -56,7 +56,7 @@ public final class ContinuousQueryExecutionFactory extends QueryExecutionFactory
     }
 
 
-    public static Reasoner getReasoner(Entailment et, List<Rule> rules, String tboxLocation) {
+    public static Reasoner getReasoner(Entailment et, String tboxLocation) {
         switch (et) {
             case OWL:
                 reasoner = ReasonerRegistry.getOWLReasoner().bindSchema(ModelFactory.createDefaultModel().read(tboxLocation));
@@ -64,8 +64,6 @@ public final class ContinuousQueryExecutionFactory extends QueryExecutionFactory
                 reasoner = ReasonerRegistry.getRDFSReasoner().bindSchema(ModelFactory.createDefaultModel().read(tboxLocation));
             case OWL2RL:
                 reasoner = ReasonerRegistry.getRDFSReasoner().bindSchema(ModelFactory.createDefaultModel().read(tboxLocation));
-            case CUSTOM:
-                reasoner = getTvgReasoner(ModelFactory.createDefaultModel().read(tboxLocation), rules);
             case NONE:
             default:
                 return reasoner;

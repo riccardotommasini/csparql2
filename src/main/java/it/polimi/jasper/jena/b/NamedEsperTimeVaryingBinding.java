@@ -1,6 +1,5 @@
-package it.polimi.jasper.sds.bindings;
+package it.polimi.jasper.jena.b;
 
-import it.polimi.jasper.secret.content.BindingSet;
 import it.polimi.jasper.secret.content.ContentEventBean;
 import it.polimi.yasper.core.enums.Maintenance;
 import it.polimi.yasper.core.operators.s2r.execution.assigner.Assigner;

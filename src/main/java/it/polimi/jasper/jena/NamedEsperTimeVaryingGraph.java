@@ -1,4 +1,4 @@
-package it.polimi.jasper.sds.graph;
+package it.polimi.jasper.jena;
 
 import it.polimi.jasper.secret.content.ContentEventBean;
 import it.polimi.yasper.core.enums.Maintenance;

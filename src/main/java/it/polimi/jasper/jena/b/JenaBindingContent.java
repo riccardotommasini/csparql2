@@ -1,5 +1,6 @@
-package it.polimi.jasper.secret.content;
+package it.polimi.jasper.jena.b;
 
+import it.polimi.jasper.secret.content.ContentEventBean;
 import lombok.extern.log4j.Log4j;
 import org.apache.jena.graph.Graph;
 import org.apache.jena.graph.Triple;

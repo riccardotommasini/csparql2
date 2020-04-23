@@ -1,4 +1,4 @@
-package it.polimi.jasper.secret.content;
+package it.polimi.jasper.jena.b;
 
 import org.apache.jena.graph.Node;
 import org.apache.jena.query.QuerySolution;

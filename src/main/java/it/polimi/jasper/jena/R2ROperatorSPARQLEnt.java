@@ -1,8 +1,7 @@
-package it.polimi.jasper.operators.r2r;
+package it.polimi.jasper.jena;
 
 import it.polimi.jasper.querying.results.SolutionMappingImpl;
 import it.polimi.jasper.querying.syntax.RSPQLJenaQuery;
-import it.polimi.jasper.sds.graph.JenaSDSGG;
 import it.polimi.yasper.core.operators.r2r.RelationToRelationOperator;
 import it.polimi.yasper.core.querying.result.SolutionMapping;
 import lombok.extern.log4j.Log4j;
@@ -11,7 +10,9 @@ import org.apache.jena.graph.Triple;
 import org.apache.jena.graph.compose.MultiUnion;
 import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.impl.ModelCom;
+import org.apache.jena.rdf.model.impl.InfModelImpl;
+import org.apache.jena.reasoner.InfGraph;
+import org.apache.jena.reasoner.Reasoner;
 import org.apache.jena.sparql.core.DatasetGraphFactory;
 import org.apache.jena.sparql.core.Quad;
 import org.apache.jena.sparql.engine.binding.Binding;
@@ -24,7 +25,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
 @Log4j
-public class R2ROperatorSPARQL implements RelationToRelationOperator<Binding>, QueryExecution {
+public class R2ROperatorSPARQLEnt implements RelationToRelationOperator<Binding>, QueryExecution {
 
     private final RSPQLJenaQuery query;
     private final JenaSDSGG sds;
@@ -32,17 +33,19 @@ public class R2ROperatorSPARQL implements RelationToRelationOperator<Binding>, Q
     private final String baseURI;
     public final List<String> resultVars;
     private QueryExecution execution;
+    private final Reasoner reasoner;
 
-    public R2ROperatorSPARQL(RSPQLJenaQuery query, JenaSDSGG sds, String baseURI) {
+    public R2ROperatorSPARQLEnt(RSPQLJenaQuery query, Reasoner reasoner, JenaSDSGG sds, String baseURI) {
         this.query = query;
         this.sds = sds;
+        this.reasoner = reasoner;
         MultiUnion graph = new MultiUnion();
         ds = DatasetFactory.wrap(DatasetGraphFactory.create(graph));
         sds.tvgs().forEach(tvg -> {
             if (tvg.named()) {
-                ds.addNamedModel(tvg.iri(), new ModelCom(tvg.get()));
+                ds.addNamedModel(tvg.iri(), new InfModelImpl((InfGraph) (tvg.get())));
             } else {
-                ((MultiUnion) ds.getDefaultModel().getGraph()).addGraph(tvg.get());
+                ((MultiUnion) ds.getDefaultModel().getGraph()).addGraph(new InfModelImpl((InfGraph) (tvg.get())).getInfGraph());
             }
         });
 

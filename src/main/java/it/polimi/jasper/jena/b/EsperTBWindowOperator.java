@@ -1,16 +1,13 @@
-package it.polimi.jasper.operators.s2r;
+package it.polimi.jasper.jena.b;
 
 import com.espertech.esper.client.EPStatement;
 import com.espertech.esper.client.EventBean;
 import com.espertech.esper.client.SafeIterator;
+import it.polimi.jasper.operators.s2r.AbstractEsperWindowAssigner;
 import it.polimi.jasper.operators.s2r.epl.EPLFactory;
-import it.polimi.jasper.sds.bindings.EsperTimeVaryingBindingImpl;
-import it.polimi.jasper.sds.bindings.NamedEsperTimeVaryingBinding;
 import it.polimi.jasper.sds.tv.EsperTimeVaryingGeneric;
-import it.polimi.jasper.secret.content.BindingSet;
 import it.polimi.jasper.secret.content.ContentEventBean;
-import it.polimi.jasper.secret.content.JenaBindingContent;
-import it.polimi.jasper.streams.items.TripleStreamItem;
+import it.polimi.jasper.jena.TripleStreamItem;
 import it.polimi.jasper.utils.EncodingUtils;
 import it.polimi.yasper.core.enums.Maintenance;
 import it.polimi.yasper.core.enums.ReportGrain;

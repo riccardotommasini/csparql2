@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package it.polimi.jasper.secret.content;
+package it.polimi.jasper.jena.b;
 
 import org.apache.jena.atlas.iterator.Iter;
 import org.apache.jena.graph.Node;

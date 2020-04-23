@@ -25,8 +25,7 @@ public final class SolutionMappingImpl extends SolutionMappingBase<Binding> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SolutionMappingImpl response = (SolutionMappingImpl) o;
-        Binding binding = response.get();
-        return this.get().equals(binding);
+        return this.get().equals(response.get());
     }
 
     @Override

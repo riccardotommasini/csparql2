@@ -1,5 +1,6 @@
-package it.polimi.jasper.streams.items;
+package it.polimi.jasper.jena;
 
+import it.polimi.jasper.streams.items.RDFStreamItem;
 import org.apache.jena.graph.Graph;
 import org.apache.jena.graph.GraphUtil;
 

@@ -3,7 +3,6 @@ package it.polimi.jasper.streams.items;
 import it.polimi.yasper.core.stream.metadata.StreamSchema;
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.jena.graph.Graph;
 
 import java.lang.reflect.Type;
 import java.util.HashMap;
@@ -51,7 +50,6 @@ public abstract class StreamItem<T> extends HashMap<String, Object> {
     public T getTypedContent() {
         return this.containsKey(content) ? (T) this.get(content) : null;
     }
-
 
     public abstract T addTo(T abox);
 

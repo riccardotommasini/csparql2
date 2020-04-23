@@ -6,7 +6,7 @@ import com.espertech.esper.client.soda.CreateSchemaClause;
 import com.espertech.esper.client.soda.SchemaColumnDesc;
 import it.polimi.jasper.streams.EPLStream;
 import it.polimi.jasper.utils.EncodingUtils;
-import it.polimi.jasper.streams.EPLGraphRDFStream;
+import it.polimi.jasper.jena.EPLGraphRDFStream;
 import it.polimi.yasper.core.exceptions.StreamRegistrationException;
 import it.polimi.yasper.core.exceptions.UnregisteredStreamExeception;
 import it.polimi.yasper.core.stream.data.WebDataStream;

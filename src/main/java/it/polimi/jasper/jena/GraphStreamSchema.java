@@ -1,6 +1,7 @@
-package it.polimi.jasper.streams.schema;
+package it.polimi.jasper.jena;
 
 
+import it.polimi.jasper.streams.schema.RDFStreamSchema;
 import it.polimi.yasper.core.stream.metadata.SchemaEntry;
 import org.apache.jena.graph.Graph;
 

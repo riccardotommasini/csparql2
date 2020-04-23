@@ -1,5 +1,6 @@
 package it.polimi.jasper.engine;
 
+import it.polimi.jasper.jena.Jasper;
 import it.polimi.jasper.streams.EPLStream;
 import it.polimi.yasper.core.engine.config.ConfigurationUtils;
 import it.polimi.yasper.core.engine.config.EngineConfiguration;

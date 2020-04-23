@@ -1,7 +1,6 @@
-package it.polimi.jasper.sds.bindings;
+package it.polimi.jasper.jena.b;
 
-import it.polimi.jasper.sds.graph.AbstractSDS;
-import it.polimi.jasper.secret.content.BindingSet;
+import it.polimi.jasper.sds.AbstractSDS;
 import lombok.extern.log4j.Log4j;
 
 /**

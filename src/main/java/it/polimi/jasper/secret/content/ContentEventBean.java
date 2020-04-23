@@ -2,7 +2,7 @@ package it.polimi.jasper.secret.content;
 
 import com.espertech.esper.client.EventBean;
 import com.espertech.esper.event.map.MapEventBean;
-import it.polimi.jasper.streams.items.GraphStreamItem;
+import it.polimi.jasper.jena.GraphStreamItem;
 import it.polimi.jasper.streams.items.StreamItem;
 import it.polimi.yasper.core.secret.content.Content;
 import lombok.Setter;

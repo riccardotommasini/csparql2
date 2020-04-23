@@ -1,4 +1,4 @@
-package it.polimi.jasper.sds.graph;
+package it.polimi.jasper.sds;
 
 import it.polimi.yasper.core.sds.SDS;
 import it.polimi.yasper.core.sds.timevarying.TimeVarying;

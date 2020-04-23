@@ -1,7 +1,7 @@
 package it.polimi.jasper.CSPARQLReadyToGo;
 
 import it.polimi.jasper.CSPARQLReadyToGo.streams.LBSMARDFStreamTestGenerator;
-import it.polimi.jasper.engine.Jasper;
+import it.polimi.jasper.jena.Jasper;
 import it.polimi.jasper.engine.execution.formatter.sysout.GenericResponseSysOutFormatter;
 import it.polimi.jasper.streams.EPLStream;
 import it.polimi.yasper.core.engine.config.EngineConfiguration;

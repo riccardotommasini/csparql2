@@ -1,12 +1,8 @@
-package it.polimi.jasper.sds.graph;
+package it.polimi.jasper.jena;
 
-import it.polimi.jasper.engine.Jasper;
 import it.polimi.jasper.engine.esper.EsperStreamRegistrationService;
 import it.polimi.jasper.engine.execution.ContinuousQueryExecutionFactory;
 import it.polimi.jasper.engine.execution.JenaContinuousQueryExecution;
-import it.polimi.jasper.operators.r2r.R2ROperatorSPARQL;
-import it.polimi.jasper.operators.r2r.R2ROperatorSPARQLEnt;
-import it.polimi.jasper.operators.s2r.EsperGGWindowOperator;
 import it.polimi.jasper.querying.Entailment;
 import it.polimi.jasper.querying.syntax.RSPQLJenaQuery;
 import it.polimi.jasper.sds.tv.TimeVaryingStatic;
@@ -36,7 +32,6 @@ import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.impl.InfModelImpl;
 import org.apache.jena.reasoner.InfGraph;
 import org.apache.jena.reasoner.Reasoner;
-import org.apache.jena.reasoner.rulesys.Rule;
 import org.apache.jena.riot.system.IRIResolver;
 import org.apache.jena.sparql.engine.binding.Binding;
 import org.apache.jena.sparql.graph.GraphFactory;
@@ -65,7 +60,6 @@ public class JasperSDSManager implements SDSManager {
 
     private final EsperStreamRegistrationService<Graph> stream_registration_service;
     private final Entailment et;
-    private final List<Rule> rules;
     private final Time time;
     private final Jasper jasper;
 
@@ -83,7 +77,7 @@ public class JasperSDSManager implements SDSManager {
     private String tboxLocation;
     private EPLStream<Graph> out;
 
-    public JasperSDSManager(Jasper jasper, RSPQLJenaQuery query, Time time, String baseUri, Report report, String responseFormat, Boolean enabled_recursion, Boolean usingEventTime, ReportGrain reportGrain, Tick tick, EsperStreamRegistrationService stream_registration_service, Maintenance sdsMaintainance, String tboxLocation, Entailment et, List<Rule> rules) {
+    public JasperSDSManager(Jasper jasper, RSPQLJenaQuery query, Time time, String baseUri, Report report, String responseFormat, Boolean enabled_recursion, Boolean usingEventTime, ReportGrain reportGrain, Tick tick, EsperStreamRegistrationService stream_registration_service, Maintenance sdsMaintainance, String tboxLocation, Entailment et) {
         this.jasper = jasper;
         this.query = query;
         this.time = time;
@@ -98,13 +92,12 @@ public class JasperSDSManager implements SDSManager {
         this.maintenance = sdsMaintainance;
         this.tboxLocation = tboxLocation;
         this.et = et;
-        this.rules = rules;
     }
 
     @Override
     public SDS build() {
 
-        this.reasoner = ContinuousQueryExecutionFactory.getReasoner(et, rules, tboxLocation);
+        this.reasoner = ContinuousQueryExecutionFactory.getReasoner(et, tboxLocation);
 
         if (query.isRecursive() && !this.enabled_recursion) {
             throw new UnsupportedOperationException("Recursion must be enabled");
