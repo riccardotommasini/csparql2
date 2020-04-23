@@ -1,4 +1,4 @@
-package it.polimi.jasper.jena;
+package it.polimi.jasper.jena.b;
 
 import it.polimi.jasper.streams.items.RDFStreamItem;
 import org.apache.jena.graph.Triple;

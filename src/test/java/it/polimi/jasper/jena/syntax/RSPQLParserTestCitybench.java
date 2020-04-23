@@ -1,8 +1,7 @@
-package it.polimi.jasper.querying.syntax;
+package it.polimi.jasper.jena.syntax;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.jena.query.QueryParseException;
-import org.apache.jena.riot.system.IRIResolver;
 import org.apache.jena.sparql.core.QueryCompare;
 import org.junit.Before;
 import org.junit.Test;

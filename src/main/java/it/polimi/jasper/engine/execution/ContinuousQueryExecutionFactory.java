@@ -7,7 +7,7 @@ import it.polimi.jasper.operators.r2s.JDStream;
 import it.polimi.jasper.operators.r2s.JIStream;
 import it.polimi.jasper.operators.r2s.JRStream;
 import it.polimi.jasper.querying.Entailment;
-import it.polimi.jasper.querying.syntax.RSPQLJenaQuery;
+import it.polimi.jasper.jena.syntax.RSPQLJenaQuery;
 import it.polimi.yasper.core.enums.StreamOperator;
 import it.polimi.yasper.core.operators.r2r.RelationToRelationOperator;
 import it.polimi.yasper.core.operators.r2s.RelationToStreamOperator;

@@ -1,6 +1,5 @@
-package it.polimi.jasper.querying.syntax;
+package it.polimi.jasper.jena.syntax;
 
-import it.polimi.jasper.CSPARQLReadyToGo.CSPARQLReadyToGo;
 import it.polimi.jasper.jena.Jasper;
 import it.polimi.yasper.core.engine.config.EngineConfiguration;
 import it.polimi.yasper.core.sds.SDSConfiguration;
@@ -13,25 +12,24 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.Objects;
 
-public class TestRSPQLParserCB {
+public class TestRSPQLParserLS {
 
     public static void main(String[] args) throws IOException, ConfigurationException {
 
-        String path = CSPARQLReadyToGo.class.getResource("/csparql.properties").getPath();
+        String path = TestRSPQLParserLS.class.getResource("/csparql.properties").getPath();
         SDSConfiguration config = new SDSConfiguration(path);
         EngineConfiguration ec = EngineConfiguration.loadConfig("/csparql.properties");
 
 
         Jasper sr = new Jasper(0, ec);
 
-        URL folder = CSPARQLReadyToGo.class.getResource("/citybench/");
+        URL folder = TestRSPQLParserLS.class.getResource("/lsbench/");
 
         File f = new File(folder.getPath());
 
         if (f.isDirectory())
 
             Arrays.stream(Objects.requireNonNull(f.listFiles()))
-                    .filter(file -> file.getName().contains(".rspql"))
                     .forEach(file -> {
 
                         try {

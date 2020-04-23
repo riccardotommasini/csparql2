@@ -4,7 +4,7 @@ import it.polimi.jasper.engine.esper.EsperStreamRegistrationService;
 import it.polimi.jasper.engine.execution.ContinuousQueryExecutionFactory;
 import it.polimi.jasper.engine.execution.JenaContinuousQueryExecution;
 import it.polimi.jasper.querying.Entailment;
-import it.polimi.jasper.querying.syntax.RSPQLJenaQuery;
+import it.polimi.jasper.jena.syntax.RSPQLJenaQuery;
 import it.polimi.jasper.sds.tv.TimeVaryingStatic;
 import it.polimi.jasper.streams.EPLStream;
 import it.polimi.yasper.core.RDFUtils;

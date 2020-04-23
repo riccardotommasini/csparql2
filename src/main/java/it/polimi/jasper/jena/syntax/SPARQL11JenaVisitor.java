@@ -1,4 +1,4 @@
-package it.polimi.jasper.querying.syntax;
+package it.polimi.jasper.jena.syntax;
 
 
 import it.polimi.yasper.core.querying.syntax.RSPQLBaseVisitor;

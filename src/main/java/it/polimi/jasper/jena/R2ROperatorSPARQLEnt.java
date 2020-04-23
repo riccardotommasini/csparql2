@@ -1,7 +1,6 @@
 package it.polimi.jasper.jena;
 
-import it.polimi.jasper.querying.results.SolutionMappingImpl;
-import it.polimi.jasper.querying.syntax.RSPQLJenaQuery;
+import it.polimi.jasper.jena.syntax.RSPQLJenaQuery;
 import it.polimi.yasper.core.operators.r2r.RelationToRelationOperator;
 import it.polimi.yasper.core.querying.result.SolutionMapping;
 import lombok.extern.log4j.Log4j;

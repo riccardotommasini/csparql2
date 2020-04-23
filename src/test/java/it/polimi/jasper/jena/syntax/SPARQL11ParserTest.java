@@ -1,4 +1,4 @@
-package it.polimi.jasper.querying.syntax;
+package it.polimi.jasper.jena.syntax;
 
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecutionFactory;

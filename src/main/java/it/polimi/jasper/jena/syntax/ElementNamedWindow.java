@@ -1,4 +1,4 @@
-package it.polimi.jasper.querying.syntax;
+package it.polimi.jasper.jena.syntax;
 
 import org.apache.jena.graph.Node;
 import org.apache.jena.sparql.syntax.Element;

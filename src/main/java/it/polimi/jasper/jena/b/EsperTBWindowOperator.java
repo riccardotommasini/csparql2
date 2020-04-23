@@ -7,7 +7,6 @@ import it.polimi.jasper.operators.s2r.AbstractEsperWindowAssigner;
 import it.polimi.jasper.operators.s2r.epl.EPLFactory;
 import it.polimi.jasper.sds.tv.EsperTimeVaryingGeneric;
 import it.polimi.jasper.secret.content.ContentEventBean;
-import it.polimi.jasper.jena.TripleStreamItem;
 import it.polimi.jasper.utils.EncodingUtils;
 import it.polimi.yasper.core.enums.Maintenance;
 import it.polimi.yasper.core.enums.ReportGrain;

@@ -1,14 +1,19 @@
-package it.polimi.jasper.querying.syntax;
+package it.polimi.jasper.jena.syntax;
 
 import it.polimi.jasper.CSPARQLReadyToGo.CSPARQLReadyToGo;
 import it.polimi.jasper.jena.Jasper;
 import it.polimi.yasper.core.engine.config.EngineConfiguration;
 import it.polimi.yasper.core.sds.SDSConfiguration;
 import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.io.FileUtils;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.URL;
+import java.util.Arrays;
+import java.util.Objects;
 
-public class TestRSPQLParser {
+public class TestRSPQLParserCB {
 
     public static void main(String[] args) throws IOException, ConfigurationException {
 
@@ -18,10 +23,35 @@ public class TestRSPQLParser {
 
 
         Jasper sr = new Jasper(0, ec);
+
+        URL folder = CSPARQLReadyToGo.class.getResource("/citybench/");
+
+        File f = new File(folder.getPath());
+
+        if (f.isDirectory())
+
+            Arrays.stream(Objects.requireNonNull(f.listFiles()))
+                    .filter(file -> file.getName().contains(".rspql"))
+                    .forEach(file -> {
+
+                        try {
+                            System.out.println(file);
+                            String querys = FileUtils.readFileToString(file);
+
+                            RSPQLJenaQuery query = QueryFactory.parse(ec.getBaseURI(), querys);
+                            System.out.println(query);
+
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+
+                    });
+
         String trickyQuery = "" +
                 "PREFIX ars: <http://www.streamreasoning/it.polimi.jasper.test/artist#>\n" +
                 "REGISTER RSTREAM <s1> AS\n" +
-                "SELECT2 (SUM(?age) AS ?sum) ?a \n" +
+                "SELECT (SUM(?age) AS ?sum) ?a \n" +
                 "FROM NAMED WINDOW <win2> ON <stream2> [RANGE PT1M STEP PT1M]\n" +
                 "WHERE  {\n" +
                 "    WINDOW ?w {\n" +
@@ -50,4 +80,5 @@ public class TestRSPQLParser {
 
 
     }
+
 }

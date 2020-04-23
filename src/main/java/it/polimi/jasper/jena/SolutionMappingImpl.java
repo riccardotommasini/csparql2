@@ -1,4 +1,4 @@
-package it.polimi.jasper.querying.results;
+package it.polimi.jasper.jena;
 
 import it.polimi.yasper.core.querying.result.SolutionMapping;
 import it.polimi.yasper.core.querying.result.SolutionMappingBase;
