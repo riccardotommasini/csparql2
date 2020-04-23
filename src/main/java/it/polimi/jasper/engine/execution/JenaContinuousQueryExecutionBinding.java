@@ -1,5 +1,6 @@
 package it.polimi.jasper.engine.execution;
 
+import it.polimi.jasper.secret.content.BindingSet;
 import it.polimi.yasper.core.format.QueryResultFormatter;
 import it.polimi.yasper.core.operators.r2r.RelationToRelationOperator;
 import it.polimi.yasper.core.operators.r2s.RelationToStreamOperator;
@@ -31,7 +32,7 @@ import java.util.*;
  * Created by riccardo on 03/07/2017.
  */
 @Log4j
-public class JenaContinuousQueryExecution extends Observable implements Observer, ContinuousQueryExecution<Graph, Graph, Binding> {
+public class JenaContinuousQueryExecutionBinding extends Observable implements Observer, ContinuousQueryExecution<Triple, BindingSet, Binding> {
 
     private final RelationToStreamOperator<Binding> r2s;
     private List<StreamToRelationOperator<Graph, Graph>> s2rs;
@@ -44,7 +45,7 @@ public class JenaContinuousQueryExecution extends Observable implements Observer
     protected QueryExecution execution;
     protected IRIResolver resolver;
 
-    public JenaContinuousQueryExecution(IRIResolver resolver, WebDataStream out, ContinuousQuery query, SDS sds, RelationToRelationOperator<Binding> r2r, RelationToStreamOperator<Binding> r2s, StreamToRelationOperator<Graph, Graph>... s2rs) {
+    public JenaContinuousQueryExecutionBinding(IRIResolver resolver, WebDataStream out, ContinuousQuery query, SDS sds, RelationToRelationOperator<Binding> r2r, RelationToStreamOperator<Binding> r2s, StreamToRelationOperator<Graph, Graph>... s2rs) {
         this.resolver = resolver;
         this.query = query;
         this.q = (Query) query;
@@ -128,7 +129,7 @@ public class JenaContinuousQueryExecution extends Observable implements Observer
     }
 
     @Override
-    public SDS<Graph> getSDS() {
+    public SDS<BindingSet> getSDS() {
         return sds;
     }
 
@@ -138,7 +139,7 @@ public class JenaContinuousQueryExecution extends Observable implements Observer
     }
 
     @Override
-    public StreamToRelationOperator<Graph, Graph>[] getS2R() {
+    public StreamToRelationOperator<Triple, BindingSet>[] getS2R() {
         return s2rs.toArray(new StreamToRelationOperator[s2rs.size()]);
     }
 

@@ -145,13 +145,23 @@ public class EPLFactory {
         return writer.toString();
     }
 
-    public static EsperWindowAssigner getWindowAssigner(Tick tick, Maintenance maintenance, Report report, boolean time, String name, long step, long range, String unitStep, String unitRange, WindowType type, Time time1) {
+    public static EsperGGWindowAssigner getWindowAssigner(Tick tick, Maintenance maintenance, Report report, boolean time, String name, long step, long range, String unitStep, String unitRange, WindowType type, Time time1) {
         List<AnnotationPart> annotations = new ArrayList<>();//EPLFactory.getAnnotations(name, range, step, name);
         View window = EPLFactory.getWindow((int) range, unitRange, type);
         EPStatementObjectModel epStatementObjectModel = EPLFactory.toEPL(tick, report, maintenance, step, unitStep, type, name, window, annotations);
         log.info(epStatementObjectModel.toEPL());
-        return new EsperWindowAssigner(EncodingUtils.encode(name), tick, report, time, maintenance, epStatementObjectModel, time1);
+        return new EsperGGWindowAssigner(EncodingUtils.encode(name), tick, report, time, maintenance, epStatementObjectModel, time1);
     }
+
+
+    public static EsperTBWindowAssigner getWindowAssignerTB(Tick tick, Maintenance maintenance, Report report, boolean time, String name, long step, long range, String unitStep, String unitRange, WindowType type, Time time1) {
+        List<AnnotationPart> annotations = new ArrayList<>();//EPLFactory.getAnnotations(name, range, step, name);
+        View window = EPLFactory.getWindow((int) range, unitRange, type);
+        EPStatementObjectModel epStatementObjectModel = EPLFactory.toEPL(tick, report, maintenance, step, unitStep, type, name, window, annotations);
+        log.info(epStatementObjectModel.toEPL());
+        return new EsperTBWindowAssigner(EncodingUtils.encode(name), tick, report, time, maintenance, epStatementObjectModel, time1);
+    }
+
 
 
 }

@@ -1,6 +1,6 @@
-package it.polimi.jasper.formatter.sysout;
+package it.polimi.jasper.engine.execution.formatter.sysout;
 
-import it.polimi.jasper.formatter.ConstructResponseDefaultFormatter;
+import it.polimi.jasper.engine.execution.formatter.ConstructResponseDefaultFormatter;
 
 public class ConstructSysOutDefaultFormatter extends ConstructResponseDefaultFormatter {
 

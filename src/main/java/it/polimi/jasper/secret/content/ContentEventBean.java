@@ -7,23 +7,21 @@ import it.polimi.jasper.streams.items.StreamItem;
 import it.polimi.yasper.core.secret.content.Content;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
-import org.apache.jena.graph.Graph;
-import org.apache.jena.graph.GraphUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Log4j
-public class ContentGraphBean implements Content<Graph> {
+public abstract class ContentEventBean<I, T, O> implements Content<I,O> {
 
-    protected List<Graph> elements;
-    protected Graph graph;
+    protected List<I> elements;
+    protected T content;
 
     @Setter
     private long last_timestamp_changed;
 
-    public ContentGraphBean(Graph graph) {
-        this.graph = graph;
+    public ContentEventBean(T content) {
+        this.content = content;
         this.elements = new ArrayList<>();
     }
 
@@ -32,8 +30,8 @@ public class ContentGraphBean implements Content<Graph> {
         IStreamUpdate(newData);
     }
 
-    private void handleSingleIStream(GraphStreamItem st) {
-       // log.debug("Handling single IStreamTest [" + st + "]");
+    protected void handleSingleIStream(StreamItem<I> st) {
+        // log.debug("Handling single IStreamTest [" + st + "]");
         elements.add(st.getTypedContent());
     }
 
@@ -45,10 +43,10 @@ public class ContentGraphBean implements Content<Graph> {
                 if (e instanceof MapEventBean) {
                     MapEventBean meb = (MapEventBean) e;
                     if (meb.getProperties() instanceof GraphStreamItem) {
-                        handleSingleIStream((GraphStreamItem) e.getUnderlying());
+                        handleSingleIStream((StreamItem<I>) e.getUnderlying());
                     } else {
                         for (int i = 0; i < meb.getProperties().size(); i++) {
-                            GraphStreamItem st = (GraphStreamItem) meb.get("stream_" + i);
+                            StreamItem<I> st = (StreamItem<I>) meb.get("stream_" + i);
                             handleSingleIStream(st);
                         }
                     }
@@ -67,7 +65,7 @@ public class ContentGraphBean implements Content<Graph> {
     }
 
     @Override
-    public void add(Graph e) {
+    public void add(I e) {
         elements.add(e);
     }
 
@@ -76,10 +74,10 @@ public class ContentGraphBean implements Content<Graph> {
         if (e instanceof MapEventBean) {
             MapEventBean meb = (MapEventBean) e;
             if (meb.getUnderlying() instanceof GraphStreamItem) {
-                elements.add((Graph) ((StreamItem) meb.getUnderlying()).getTypedContent());
+                elements.add((I) ((StreamItem<I>) meb.getUnderlying()).getTypedContent());
             } else {
                 for (int i = 0; i < meb.getProperties().size(); i++) {
-                    GraphStreamItem st = (GraphStreamItem) meb.get("stream_" + i);
+                    StreamItem<I> st = (StreamItem<I>) meb.get("stream_" + i);
                     elements.add(st.getTypedContent());
                 }
             }
@@ -89,15 +87,6 @@ public class ContentGraphBean implements Content<Graph> {
     @Override
     public Long getTimeStampLastUpdate() {
         return last_timestamp_changed;
-    }
-
-    @Override
-    public Graph coalesce() {
-        graph.clear();
-        elements.forEach(ig -> GraphUtil.addInto(this.graph, ig));
-        //        elements.stream().flatMap(ig->GraphUtil.findAll(ig).toList().stream()).forEach(this.graph::add);
-
-        return this.graph;
     }
 
     @Override
@@ -114,8 +103,5 @@ public class ContentGraphBean implements Content<Graph> {
         setLast_timestamp_changed(event_time);
     }
 
-    public void replace(Graph coalesce) {
-        this.graph.clear();
-        GraphUtil.addInto(graph, coalesce);
-    }
+    public abstract void replace(O coalesce);
 }

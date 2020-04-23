@@ -3,14 +3,11 @@ package it.polimi.jasper.engine;
 import com.espertech.esper.client.EPAdministrator;
 import com.espertech.esper.client.EPRuntime;
 import com.espertech.esper.client.EPServiceProvider;
-import it.polimi.jasper.querying.Entailment;
 import it.polimi.jasper.engine.esper.EsperStreamRegistrationService;
-import it.polimi.jasper.secret.EsperTime;
 import it.polimi.jasper.operators.s2r.RuntimeManager;
-import it.polimi.jasper.secret.report.EsperCCReportStrategy;
-import it.polimi.jasper.secret.report.EsperNECReportStrategy;
-import it.polimi.jasper.secret.report.EsperWCReportStrategy;
-import it.polimi.jasper.streams.EPLRDFStream;
+import it.polimi.jasper.querying.Entailment;
+import it.polimi.jasper.secret.EsperTime;
+import it.polimi.jasper.streams.EPLStream;
 import it.polimi.yasper.core.engine.config.EngineConfiguration;
 import it.polimi.yasper.core.engine.features.QueryDeletionFeature;
 import it.polimi.yasper.core.engine.features.StreamDeletionFeature;
@@ -18,7 +15,6 @@ import it.polimi.yasper.core.engine.features.StreamRegistrationFeature;
 import it.polimi.yasper.core.enums.ReportGrain;
 import it.polimi.yasper.core.enums.Tick;
 import it.polimi.yasper.core.format.QueryResultFormatter;
-import it.polimi.yasper.core.operators.s2r.execution.assigner.Assigner;
 import it.polimi.yasper.core.querying.ContinuousQuery;
 import it.polimi.yasper.core.querying.ContinuousQueryExecution;
 import it.polimi.yasper.core.sds.SDS;
@@ -36,12 +32,12 @@ import java.util.List;
 import java.util.Map;
 
 @Log4j
-public abstract class EsperRSPEngine implements StreamRegistrationFeature<EPLRDFStream, WebStream>, StreamDeletionFeature<EPLRDFStream>, QueryDeletionFeature {
+public abstract class EsperRSPEngine<T> implements StreamRegistrationFeature<EPLStream<T>, WebStream>, StreamDeletionFeature<EPLStream<T>>, QueryDeletionFeature {
 
     protected final boolean enabled_recursion;
     protected final String responseFormat;
     protected final Boolean usingEventTime;
-    protected final Entailment entailment;
+    protected  Entailment entailment;
     protected List<Rule> rules = null;
     protected Report report;
     protected ReportGrain reportGrain;
@@ -49,13 +45,12 @@ public abstract class EsperRSPEngine implements StreamRegistrationFeature<EPLRDF
     protected String tbox;
 
     protected final String base_uri;
-    protected Map<String, Assigner> stream_dispatching_service;
     protected Map<String, SDS> assignedSDS;
     protected Map<String, ContinuousQueryExecution> queryExecutions;
     protected Map<String, ContinuousQuery> registeredQueries;
     protected Map<String, List<QueryResultFormatter>> queryObservers;
 
-    protected EsperStreamRegistrationService stream_registration_service;
+    protected EsperStreamRegistrationService<T> stream_registration_service;
 
     protected EngineConfiguration rsp_config;
 
@@ -74,15 +69,12 @@ public abstract class EsperRSPEngine implements StreamRegistrationFeature<EPLRDF
 
         StreamSchema.Factory.registerSchema(this.rsp_config.getStreamSchema());
 
-
         this.cep = RuntimeManager.getCEP();
         this.manager = RuntimeManager.getInstance();
         this.runtime = RuntimeManager.getEPRuntime();
         this.admin = RuntimeManager.getAdmin();
 
-
         stream_registration_service = new EsperStreamRegistrationService(admin);
-        stream_dispatching_service = new HashMap<>();
 
         this.enabled_recursion = rsp_config.isRecursionEnables();
         this.responseFormat = rsp_config.getResponseFormat();
@@ -91,37 +83,8 @@ public abstract class EsperRSPEngine implements StreamRegistrationFeature<EPLRDF
         this.reportGrain = rsp_config.getReportGrain();
         this.tick = rsp_config.getTick();
 
-        String string = rsp_config.getString("jasper.entailment");
-
-        if (string == null)
-            this.entailment = Entailment.NONE;
-        else {
-            this.entailment = Entailment.valueOf(string);
-            this.tbox = rsp_config.getString("rsp_engine.tbox_location");
-            if (tbox == null) {
-                throw new RuntimeException("Not Specified TBOX");
-            }
-        }
-
-        this.report = new ReportImpl();
-
-        this.base_uri = rsp_config.getString("rsp_engine.base_uri");
-
-        if (rsp_config.getBoolean("rsp_engine.periodic")) {
-        }
-        if (rsp_config.getBoolean("rsp_engine.on_content_change")) {
-            report.add(new EsperCCReportStrategy());
-        }
-        if (rsp_config.getBoolean("rsp_engine.non_empty_content")) {
-            report.add(new EsperNECReportStrategy());
-        }
-        if (rsp_config.getBoolean("rsp_engine.on_window_close")) {
-            report.add(new EsperWCReportStrategy());
-        }
-
-        if (Entailment.CUSTOM.equals(this.entailment)) {
-            this.rules = Rule.rulesFromURL(rsp_config.getString("jasper.rules"));
-        }
+        this.base_uri = rsp_config.getBaseURI();
+        report = rsp_config.getReport();
 
         log.debug("Running Configuration ]");
         log.debug("Event Time [" + this.rsp_config.isUsingEventTime() + "]");
@@ -135,12 +98,12 @@ public abstract class EsperRSPEngine implements StreamRegistrationFeature<EPLRDF
     }
 
     @Override
-    public EPLRDFStream register(WebStream s) {
+    public EPLStream<T> register(WebStream s) {
         return stream_registration_service.register(s);
     }
 
     @Override
-    public void unregister(EPLRDFStream s) {
+    public void unregister(EPLStream<T> s) {
         stream_registration_service.unregister(s);
     }
 

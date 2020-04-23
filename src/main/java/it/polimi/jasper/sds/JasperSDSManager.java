@@ -2,18 +2,17 @@ package it.polimi.jasper.sds;
 
 import it.polimi.jasper.engine.Jasper;
 import it.polimi.jasper.engine.esper.EsperStreamRegistrationService;
-import it.polimi.jasper.execution.ContinuousQueryExecutionFactory;
-import it.polimi.jasper.execution.JenaContinuousQueryExecution;
-import it.polimi.jasper.operators.s2r.EsperWindowOperator;
+import it.polimi.jasper.engine.execution.ContinuousQueryExecutionFactory;
+import it.polimi.jasper.engine.execution.JenaContinuousQueryExecution;
+import it.polimi.jasper.operators.s2r.EsperGGWindowOperator;
 import it.polimi.jasper.querying.Entailment;
 import it.polimi.jasper.querying.syntax.RSPQLJenaQuery;
-import it.polimi.jasper.streams.EPLRDFStream;
+import it.polimi.jasper.streams.EPLStream;
 import it.polimi.yasper.core.RDFUtils;
 import it.polimi.yasper.core.enums.Maintenance;
 import it.polimi.yasper.core.enums.ReportGrain;
 import it.polimi.yasper.core.enums.Tick;
 import it.polimi.yasper.core.exceptions.StreamRegistrationException;
-import it.polimi.yasper.core.operators.s2r.execution.assigner.Assigner;
 import it.polimi.yasper.core.querying.ContinuousQueryExecution;
 import it.polimi.yasper.core.sds.SDS;
 import it.polimi.yasper.core.sds.SDSManager;
@@ -54,7 +53,7 @@ public class JasperSDSManager implements SDSManager {
     private final ReportGrain reportGrain;
     private final Tick tick;
 
-    private final EsperStreamRegistrationService stream_registration_service;
+    private final EsperStreamRegistrationService<Graph> stream_registration_service;
     private final Entailment et;
     private final List<Rule> rules;
     private final Time time;
@@ -64,7 +63,7 @@ public class JasperSDSManager implements SDSManager {
     protected Reasoner reasoner;
 
     @Getter
-    private JenaSDS sds;
+    private JenaSDSGG sds;
 
     @Getter
     private JenaContinuousQueryExecution cqe;
@@ -72,9 +71,9 @@ public class JasperSDSManager implements SDSManager {
     private Maintenance maintenance;
 
     private String tboxLocation;
-    private EPLRDFStream out;
+    private EPLStream<Graph> out;
 
-    public JasperSDSManager(Jasper jasper, RSPQLJenaQuery query, Time time, IRIResolver resolver, Report report, String responseFormat, Boolean enabled_recursion, Boolean usingEventTime, ReportGrain reportGrain, Tick tick, EsperStreamRegistrationService stream_registration_service, Map<String, Assigner> stream_dispatching_service, Maintenance sdsMaintainance, String tboxLocation, Entailment et, List<Rule> rules) {
+    public JasperSDSManager(Jasper jasper, RSPQLJenaQuery query, Time time, IRIResolver resolver, Report report, String responseFormat, Boolean enabled_recursion, Boolean usingEventTime, ReportGrain reportGrain, Tick tick, EsperStreamRegistrationService stream_registration_service, Maintenance sdsMaintainance, String tboxLocation, Entailment et, List<Rule> rules) {
         this.jasper = jasper;
         this.query = query;
         this.time = time;
@@ -101,7 +100,7 @@ public class JasperSDSManager implements SDSManager {
             throw new UnsupportedOperationException("Recursion must be enabled");
         }
 
-        this.sds = new JenaSDS(new MultiUnion());
+        this.sds = new JenaSDSGG(new MultiUnion());
 
         //Load Static Knowledge
         query.getNamedGraphURIs().forEach(g -> {
@@ -126,12 +125,13 @@ public class JasperSDSManager implements SDSManager {
 
         Map<String, WebDataStream<Graph>> registeredStreams = stream_registration_service.getRegisteredStreams();
 
-
         WebStream outputStream = query.getOutputStream();
 
         this.out = jasper.register(outputStream);
 
         this.cqe = ContinuousQueryExecutionFactory.create(resolver, query, sds, out, null);
+
+        sds.addObserver(this.cqe);
 
         query.getWindowMap().forEach((wo, s) -> {
 
@@ -140,7 +140,7 @@ public class JasperSDSManager implements SDSManager {
                 throw new StreamRegistrationException(s.getURI());
             } else {
 
-                EsperWindowOperator ewo = new EsperWindowOperator(
+                EsperGGWindowOperator ewo = new EsperGGWindowOperator(
                         this.tick,
                         this.report,
                         this.reasoner,
@@ -151,9 +151,8 @@ public class JasperSDSManager implements SDSManager {
                         wo,
                         this.cqe);
 
-                cqe.addS2R(ewo);
-
                 TimeVarying<Graph> tvii = ewo.apply(registeredStreams.get(key));
+
 
                 if (ewo.named())
                     this.sds.add(RDFUtils.createIRI(wo.iri()), tvii);

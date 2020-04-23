@@ -1,14 +1,15 @@
 package it.polimi.jasper.engine.color;
 
 import it.polimi.jasper.engine.Jasper;
-import it.polimi.jasper.formatter.ResponseFormatterFactory;
-import it.polimi.jasper.streams.EPLRDFStream;
+import it.polimi.jasper.engine.execution.formatter.ResponseFormatterFactory;
+import it.polimi.jasper.streams.EPLStream;
 import it.polimi.yasper.core.engine.config.EngineConfiguration;
 import it.polimi.yasper.core.querying.ContinuousQuery;
 import it.polimi.yasper.core.querying.ContinuousQueryExecution;
 import it.polimi.yasper.core.sds.SDSConfiguration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.io.FileUtils;
+import org.apache.jena.graph.Graph;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,9 +38,9 @@ public class ColorsCSPARQLExample {
         //qYellowStream must be fixed to build this stream as JOIN of red and green streams
         //   ColorsGraphStream yellow = new ColorsGraphStream("Yellow", "http://localhost:1255/streams/yellow");
 
-        EPLRDFStream registerRed = sr.register(red);
-        EPLRDFStream registerGreen = sr.register(green);
-        EPLRDFStream registerBlue = sr.register(blue);
+        EPLStream<Graph> registerRed = sr.register(red);
+        EPLStream<Graph> registerGreen = sr.register(green);
+        EPLStream<Graph> registerBlue = sr.register(blue);
         //RegisteredEPLStream registerYellow = sr.register(yellow);
 
         red.setWritable(registerRed);

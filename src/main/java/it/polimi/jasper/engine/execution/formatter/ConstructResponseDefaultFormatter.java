@@ -1,4 +1,4 @@
-package it.polimi.jasper.formatter;
+package it.polimi.jasper.engine.execution.formatter;
 
 import it.polimi.yasper.core.format.QueryResultFormatter;
 import lombok.extern.log4j.Log4j;

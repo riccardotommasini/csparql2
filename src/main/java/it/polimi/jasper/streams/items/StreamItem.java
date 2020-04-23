@@ -53,9 +53,9 @@ public abstract class StreamItem<T> extends HashMap<String, Object> {
     }
 
 
-    public abstract Graph addTo(Graph abox);
+    public abstract T addTo(T abox);
 
-    public abstract Graph removeFrom(Graph abox);
+    public abstract T removeFrom(T abox);
 
     public abstract String getStreamURI();
 

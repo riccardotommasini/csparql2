@@ -10,12 +10,12 @@ import org.apache.jena.graph.Graph;
  * Created by riccardo on 10/07/2017.
  */
 @Getter
-public class EPLRDFStream extends DataStreamImpl<Graph> {
+public class EPLStream<T> extends DataStreamImpl<T> {
 
     protected WebStream stream;
     protected EPStatement e;
 
-    public EPLRDFStream(String uri, WebStream s, EPStatement epl) {
+    public EPLStream(String uri, WebStream s, EPStatement epl) {
         super(uri);
         this.stream = s;
         this.e = epl;

@@ -1,12 +1,13 @@
 package it.polimi.jasper.engine.geldt;
 
 import it.polimi.jasper.engine.Jasper;
-import it.polimi.jasper.formatter.ResponseFormatterFactory;
-import it.polimi.jasper.streams.EPLRDFStream;
+import it.polimi.jasper.engine.execution.formatter.ResponseFormatterFactory;
+import it.polimi.jasper.streams.EPLStream;
 import it.polimi.yasper.core.engine.config.EngineConfiguration;
 import it.polimi.yasper.core.querying.ContinuousQueryExecution;
 import it.polimi.yasper.core.sds.SDSConfiguration;
 import org.apache.commons.configuration.ConfigurationException;
+import org.apache.jena.graph.Graph;
 
 import java.io.IOException;
 import java.net.URL;
@@ -30,7 +31,7 @@ public class GELDTArticleExample extends GELDTExample {
 
         System.out.println(dt);
 
-        EPLRDFStream dtr = sr.register(dt);
+        EPLStream<Graph> dtr = sr.register(dt);
 
         dt.setWritable(dtr);
 

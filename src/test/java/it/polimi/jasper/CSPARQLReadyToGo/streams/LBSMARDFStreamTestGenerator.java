@@ -20,10 +20,9 @@
  ******************************************************************************/
 package it.polimi.jasper.CSPARQLReadyToGo.streams;
 
-import it.polimi.jasper.streams.EPLRDFStream;
-import it.polimi.jasper.streams.schema.GraphStreamSchema;
-import it.polimi.yasper.core.stream.metadata.StreamSchema;
+import it.polimi.jasper.streams.EPLStream;
 import it.polimi.yasper.core.stream.web.WebStreamImpl;
+import org.apache.jena.graph.Graph;
 import org.apache.jena.rdf.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,7 +39,7 @@ public class LBSMARDFStreamTestGenerator extends WebStreamImpl implements Runnab
     private boolean keepRunning = false;
 
     protected int grow_rate;
-    private EPLRDFStream s;
+    private EPLStream<Graph> s;
 
     private String type;
 
@@ -50,7 +49,7 @@ public class LBSMARDFStreamTestGenerator extends WebStreamImpl implements Runnab
         this.grow_rate = grow_rate;
     }
 
-    public void setWritable(EPLRDFStream e) {
+    public void setWritable(EPLStream<Graph> e) {
         this.s = e;
     }
 

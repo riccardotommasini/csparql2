@@ -1,14 +1,15 @@
 package it.polimi.jasper.engine;
 
-import it.polimi.jasper.formatter.ResponseFormatterFactory;
-import it.polimi.jasper.streams.EPLRDFStream;
+import it.polimi.jasper.streams.EPLStream;
 import it.polimi.yasper.core.engine.config.ConfigurationUtils;
 import it.polimi.yasper.core.engine.config.EngineConfiguration;
 import it.polimi.yasper.core.querying.ContinuousQuery;
 import it.polimi.yasper.core.querying.ContinuousQueryExecution;
 import it.polimi.yasper.core.sds.SDSConfiguration;
+import it.polimi.yasper.core.stream.data.WebDataStream;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.io.FileUtils;
+import org.apache.jena.graph.Graph;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,7 +34,7 @@ public class CSPARQLExample {
 
         GraphStream writer = new GraphStream("Writer", "http://differenthost:12134/stream2", 1);
 
-        EPLRDFStream register = sr.register(writer);
+        EPLStream<Graph> register = sr.register(writer);
 
         writer.setWritable(register);
 
@@ -45,11 +46,15 @@ public class CSPARQLExample {
 
         System.out.println("<<------>>");
 
-        if (query.isConstructType()) {
-            cqe.add(ResponseFormatterFactory.getConstructResponseSysOutFormatter("JSON-LD", true));
-        } else if (query.isSelectType()) {
-            cqe.add(ResponseFormatterFactory.getSelectResponseSysOutFormatter("TABLE", true)); //or "CSV" or "JSON" or "JSON-LD"
-        }
+//        if (query.isConstructType()) {
+//            cqe.add(ResponseFormatterFactory.getConstructResponseSysOutFormatter("JSON-LD", true));
+//        } else if (query.isSelectType()) {
+//            cqe.add(ResponseFormatterFactory.getSelectResponseSysOutFormatter("TABLE", true)); //or "CSV" or "JSON" or "JSON-LD"
+//        }
+
+        WebDataStream outputStream = cqe.outstream();
+
+        outputStream.addConsumer((o, l) -> System.out.println(o));
 
         //In real application we do not have to start the stream.
         (new Thread(writer)).start();

@@ -1,4 +1,4 @@
-package it.polimi.jasper.formatter;
+package it.polimi.jasper.engine.execution.formatter;
 
 import com.github.jsonldjava.core.JsonLdOptions;
 import it.polimi.jasper.querying.results.SolutionMappingImpl;

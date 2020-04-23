@@ -1,5 +1,6 @@
 package it.polimi.jasper.operators.s2r;
 
+import it.polimi.jasper.secret.content.BindingSet;
 import it.polimi.yasper.core.enums.Maintenance;
 import it.polimi.yasper.core.enums.ReportGrain;
 import it.polimi.yasper.core.enums.Tick;
@@ -12,18 +13,17 @@ import it.polimi.yasper.core.secret.report.Report;
 import it.polimi.yasper.core.secret.time.Time;
 import it.polimi.yasper.core.stream.data.WebDataStream;
 import lombok.RequiredArgsConstructor;
-import org.apache.jena.graph.Graph;
-import org.apache.jena.reasoner.Reasoner;
+import org.apache.jena.graph.Triple;
+import org.apache.jena.sparql.engine.binding.Binding;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
-public class EsperWindowOperator implements StreamToRelationOperator<Graph, Graph> {
+public class EsperTBWindowOperator implements StreamToRelationOperator<Triple, BindingSet> {
 
     private final Tick tick;
     private final Report report;
-    private final Reasoner reasoner;
     private final Boolean eventtime;
     private final ReportGrain reportGrain;
     private final Maintenance maintenance;
@@ -44,10 +44,8 @@ public class EsperWindowOperator implements StreamToRelationOperator<Graph, Grap
     }
 
     @Override
-    public TimeVarying<Graph> apply(WebDataStream<Graph> s) {
-        EsperWindowAssigner windowAssigner = EPLFactory.getWindowAssigner(tick, maintenance, report, eventtime, s.getURI(), wo.getStep(), wo.getRange(), wo.getUnitStep(), wo.getUnitRange(), wo.getType(), time);
-        windowAssigner.setReasoner(reasoner);
-        windowAssigner.setMaintenance(maintenance);
+    public TimeVarying<BindingSet> apply(WebDataStream<Triple> s) {
+        EsperTBWindowAssigner windowAssigner = EPLFactory.getWindowAssignerTB(tick, maintenance, report, eventtime, s.getURI(), wo.getStep(), wo.getRange(), wo.getUnitStep(), wo.getUnitRange(), wo.getType(), time);
         s.addConsumer(windowAssigner);
         this.assigners.add(windowAssigner);
         return windowAssigner.set(context);

@@ -1,11 +1,10 @@
 package it.polimi.jasper.engine.geldt;
 
-import it.polimi.jasper.streams.EPLRDFStream;
-import it.polimi.jasper.streams.schema.GraphStreamSchema;
-import it.polimi.yasper.core.stream.metadata.StreamSchema;
+import it.polimi.jasper.streams.EPLStream;
 import it.polimi.yasper.core.stream.web.WebStreamImpl;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j;
+import org.apache.jena.graph.Graph;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.QueryFactory;
@@ -31,7 +30,7 @@ public class GELDTGraphStream extends WebStreamImpl implements Runnable {
     private Model sgraph;
     private Model igraphlast;
 
-    private EPLRDFStream s;
+    private EPLStream<Graph> s;
     private int sample;
 
     private String type;
@@ -58,7 +57,7 @@ public class GELDTGraphStream extends WebStreamImpl implements Runnable {
     }
 
 
-    public void setWritable(EPLRDFStream e) {
+    public void setWritable(EPLStream<Graph> e) {
         this.s = e;
     }
 

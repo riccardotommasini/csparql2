@@ -5,7 +5,6 @@ import lombok.extern.log4j.Log4j;
 import java.io.*;
 
 @Log4j
-
 public class FileService {
 
     public static boolean write(String where, String data) {

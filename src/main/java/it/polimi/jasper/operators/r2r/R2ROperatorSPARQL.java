@@ -1,10 +1,10 @@
 package it.polimi.jasper.operators.r2r;
 
 import it.polimi.jasper.querying.results.SolutionMappingImpl;
+import it.polimi.jasper.querying.syntax.RSPQLJenaQuery;
+import it.polimi.jasper.sds.JenaSDSGG;
 import it.polimi.yasper.core.operators.r2r.RelationToRelationOperator;
-import it.polimi.yasper.core.querying.ContinuousQuery;
 import it.polimi.yasper.core.querying.result.SolutionMapping;
-import it.polimi.yasper.core.sds.SDS;
 import lombok.extern.log4j.Log4j;
 import org.apache.jena.ext.com.google.common.collect.Streams;
 import org.apache.jena.graph.Triple;
@@ -23,28 +23,24 @@ import java.util.stream.Stream;
 @Log4j
 public class R2ROperatorSPARQL implements RelationToRelationOperator<Binding>, QueryExecution {
 
-    private final ContinuousQuery query;
-    private final SDS sds;
+    private final RSPQLJenaQuery query;
+    private final JenaSDSGG sds;
     private final String baseURI;
-    private final Dataset ds;
-    private final Query q;
     public final List<String> resultVars;
     private QueryExecution execution;
 
-    public R2ROperatorSPARQL(ContinuousQuery query, SDS sds, String baseURI) {
+    public R2ROperatorSPARQL(RSPQLJenaQuery query, JenaSDSGG sds, String baseURI) {
         this.query = query;
         this.sds = sds;
         this.baseURI = baseURI;
-        this.ds = (Dataset) sds;
-        this.q = (Query) this.query;
-        resultVars = q.getResultVars();
+        this.resultVars = query.getResultVars();
     }
 
     @Override
     public Stream<SolutionMapping<Binding>> eval(long ts) {
         //TODO fix up to stream
         String id = baseURI + "result/" + ts;
-        this.execution = QueryExecutionFactory.create(q, ds);
+        this.execution = QueryExecutionFactory.create(query, sds.getDS());
         return Streams.stream(this.execution.execSelect()).map(querySolution -> ((org.apache.jena.sparql.core.ResultBinding) querySolution).getBinding()).map(b -> new SolutionMappingImpl(id, b, this.resultVars, ts));
     }
 
@@ -64,7 +60,7 @@ public class R2ROperatorSPARQL implements RelationToRelationOperator<Binding>, Q
 
     @Override
     public Dataset getDataset() {
-        return (Dataset) sds;
+        return sds.getDS();
     }
 
     @Override
@@ -74,7 +70,7 @@ public class R2ROperatorSPARQL implements RelationToRelationOperator<Binding>, Q
 
     @Override
     public Query getQuery() {
-        return q;
+        return query;
     }
 
     @Override

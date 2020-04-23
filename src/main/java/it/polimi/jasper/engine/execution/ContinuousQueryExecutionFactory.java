@@ -1,7 +1,7 @@
-package it.polimi.jasper.execution;
+package it.polimi.jasper.engine.execution;
 
 import it.polimi.jasper.querying.Entailment;
-import it.polimi.jasper.sds.JenaSDS;
+import it.polimi.jasper.sds.JenaSDSGG;
 import it.polimi.jasper.operators.r2r.R2ROperatorSPARQL;
 import it.polimi.jasper.querying.syntax.RSPQLJenaQuery;
 import it.polimi.jasper.operators.r2s.JDStream;
@@ -32,7 +32,7 @@ import java.util.List;
 public final class ContinuousQueryExecutionFactory extends QueryExecutionFactory {
 
 
-    static public JenaContinuousQueryExecution create(IRIResolver resolver, RSPQLJenaQuery query, JenaSDS sds, WebDataStream out, StreamToRelationOperator... s2rs) {
+    static public JenaContinuousQueryExecution create(IRIResolver resolver, RSPQLJenaQuery query, JenaSDSGG sds, WebDataStream out, StreamToRelationOperator... s2rs) {
         StreamOperator r2S = query.getR2S() != null ? query.getR2S() : StreamOperator.RSTREAM;
         RelationToRelationOperator<Binding> r2r = new R2ROperatorSPARQL(query, sds, resolver.getBaseIRIasString());
         RelationToStreamOperator s2r = getToStreamOperator(r2S);
