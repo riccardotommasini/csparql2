@@ -1,5 +1,6 @@
-package it.polimi.jasper.engine.execution;
+package it.polimi.jasper.jena;
 
+import it.polimi.jasper.jena.JenaContinuousQueryExecution;
 import it.polimi.jasper.jena.JenaSDSGG;
 import it.polimi.jasper.jena.R2ROperatorSPARQL;
 import it.polimi.jasper.jena.R2ROperatorSPARQLEnt;
@@ -56,19 +57,6 @@ public final class ContinuousQueryExecutionFactory extends QueryExecutionFactory
     }
 
 
-    public static Reasoner getReasoner(Entailment et, String tboxLocation) {
-        switch (et) {
-            case OWL:
-                reasoner = ReasonerRegistry.getOWLReasoner().bindSchema(ModelFactory.createDefaultModel().read(tboxLocation));
-            case RDFS:
-                reasoner = ReasonerRegistry.getRDFSReasoner().bindSchema(ModelFactory.createDefaultModel().read(tboxLocation));
-            case OWL2RL:
-                reasoner = ReasonerRegistry.getRDFSReasoner().bindSchema(ModelFactory.createDefaultModel().read(tboxLocation));
-            case NONE:
-            default:
-                return reasoner;
-        }
-    }
 
     public static Reasoner getReasoner() {
         return reasoner;

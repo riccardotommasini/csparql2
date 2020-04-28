@@ -2,12 +2,12 @@ package it.polimi.jasper.CSPARQLReadyToGo;
 
 import it.polimi.jasper.CSPARQLReadyToGo.streams.LBSMARDFStreamTestGenerator;
 import it.polimi.jasper.jena.Jasper;
-import it.polimi.jasper.engine.execution.formatter.sysout.GenericResponseSysOutFormatter;
-import it.polimi.jasper.streams.EPLStream;
+import it.polimi.jasper.jena.formatter.sysout.GenericResponseSysOutFormatter;
 import it.polimi.yasper.core.engine.config.EngineConfiguration;
 import it.polimi.yasper.core.querying.ContinuousQuery;
 import it.polimi.yasper.core.querying.ContinuousQueryExecution;
 import it.polimi.yasper.core.sds.SDSConfiguration;
+import it.polimi.yasper.core.stream.data.DataStreamImpl;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.io.FileUtils;
 import org.apache.jena.graph.Graph;
@@ -40,7 +40,7 @@ public class CSPARQLReadyToGo {
         ContinuousQuery q;
         ContinuousQueryExecution cqe;
         LBSMARDFStreamTestGenerator writer;
-        EPLStream<Graph> register;
+        DataStreamImpl<Graph> register;
 
         sr = new Jasper(0, ec);
 
@@ -94,7 +94,7 @@ public class CSPARQLReadyToGo {
                 writer.setWritable(register);
 
                 LBSMARDFStreamTestGenerator writer2 = new LBSMARDFStreamTestGenerator("Writer", "http://streamreasoning.org/jasper/streams/stream3", 5);
-                EPLStream<Graph> register2 = sr.register(writer2);
+                DataStreamImpl<Graph> register2 = sr.register(writer2);
                 writer2.setWritable(register2);
 
                 cqe = sr.register(getQuery("rtgp-q3", ".rspql"), config);

@@ -1,6 +1,7 @@
 package it.polimi.jasper.engine.geldt;
 
 import it.polimi.jasper.streams.EPLStream;
+import it.polimi.yasper.core.stream.data.DataStreamImpl;
 import it.polimi.yasper.core.stream.web.WebStreamImpl;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j;
@@ -30,7 +31,7 @@ public class GELDTGraphStream extends WebStreamImpl implements Runnable {
     private Model sgraph;
     private Model igraphlast;
 
-    private EPLStream<Graph> s;
+    private DataStreamImpl<Graph> s;
     private int sample;
 
     private String type;
@@ -57,7 +58,7 @@ public class GELDTGraphStream extends WebStreamImpl implements Runnable {
     }
 
 
-    public void setWritable(EPLStream<Graph> e) {
+    public void setWritable(DataStreamImpl<Graph> e) {
         this.s = e;
     }
 

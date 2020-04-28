@@ -1,6 +1,7 @@
 package it.polimi.jasper.engine.color;
 
 import it.polimi.jasper.streams.EPLStream;
+import it.polimi.yasper.core.stream.data.DataStreamImpl;
 import it.polimi.yasper.core.stream.web.WebStreamImpl;
 import lombok.extern.log4j.Log4j;
 import org.apache.jena.graph.Graph;
@@ -16,7 +17,7 @@ import java.util.Random;
 @Log4j
 public class ColorsGraphStream extends WebStreamImpl implements Runnable {
 
-    private EPLStream<Graph> s;
+    private DataStreamImpl<Graph> s;
 
     private String type;
 
@@ -25,7 +26,7 @@ public class ColorsGraphStream extends WebStreamImpl implements Runnable {
         this.type = name;
     }
 
-    public void setWritable(EPLStream<Graph> e) {
+    public void setWritable(DataStreamImpl<Graph> e) {
         this.s = e;
     }
 

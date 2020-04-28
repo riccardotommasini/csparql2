@@ -1,12 +1,9 @@
 package it.polimi.jasper.jena;
 
-import it.polimi.jasper.engine.esper.EsperStreamRegistrationService;
-import it.polimi.jasper.engine.execution.ContinuousQueryExecutionFactory;
-import it.polimi.jasper.engine.execution.JenaContinuousQueryExecution;
-import it.polimi.jasper.querying.Entailment;
+import it.polimi.jasper.engine.esper.StreamRegistrationService;
 import it.polimi.jasper.jena.syntax.RSPQLJenaQuery;
+import it.polimi.jasper.querying.Entailment;
 import it.polimi.jasper.sds.tv.TimeVaryingStatic;
-import it.polimi.jasper.streams.EPLStream;
 import it.polimi.yasper.core.RDFUtils;
 import it.polimi.yasper.core.enums.Maintenance;
 import it.polimi.yasper.core.enums.ReportGrain;
@@ -22,6 +19,7 @@ import it.polimi.yasper.core.sds.SDS;
 import it.polimi.yasper.core.sds.SDSManager;
 import it.polimi.yasper.core.secret.report.Report;
 import it.polimi.yasper.core.secret.time.Time;
+import it.polimi.yasper.core.stream.data.DataStreamImpl;
 import it.polimi.yasper.core.stream.data.WebDataStream;
 import it.polimi.yasper.core.stream.web.WebStream;
 import lombok.Getter;
@@ -32,6 +30,7 @@ import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.impl.InfModelImpl;
 import org.apache.jena.reasoner.InfGraph;
 import org.apache.jena.reasoner.Reasoner;
+import org.apache.jena.reasoner.ReasonerRegistry;
 import org.apache.jena.riot.system.IRIResolver;
 import org.apache.jena.sparql.engine.binding.Binding;
 import org.apache.jena.sparql.graph.GraphFactory;
@@ -58,7 +57,7 @@ public class JasperSDSManager implements SDSManager {
     private final ReportGrain reportGrain;
     private final Tick tick;
 
-    private final EsperStreamRegistrationService<Graph> stream_registration_service;
+    private final StreamRegistrationService<Graph> stream_registration_service;
     private final Entailment et;
     private final Time time;
     private final Jasper jasper;
@@ -75,9 +74,9 @@ public class JasperSDSManager implements SDSManager {
     private Maintenance maintenance;
 
     private String tboxLocation;
-    private EPLStream<Graph> out;
+    private DataStreamImpl<Graph> out;
 
-    public JasperSDSManager(Jasper jasper, RSPQLJenaQuery query, Time time, String baseUri, Report report, String responseFormat, Boolean enabled_recursion, Boolean usingEventTime, ReportGrain reportGrain, Tick tick, EsperStreamRegistrationService stream_registration_service, Maintenance sdsMaintainance, String tboxLocation, Entailment et) {
+    public JasperSDSManager(Jasper jasper, RSPQLJenaQuery query, Time time, String baseUri, Report report, String responseFormat, Boolean enabled_recursion, Boolean usingEventTime, ReportGrain reportGrain, Tick tick, StreamRegistrationService stream_registration_service, Maintenance sdsMaintainance, String tboxLocation, Entailment et) {
         this.jasper = jasper;
         this.query = query;
         this.time = time;
@@ -97,7 +96,7 @@ public class JasperSDSManager implements SDSManager {
     @Override
     public SDS build() {
 
-        this.reasoner = ContinuousQueryExecutionFactory.getReasoner(et, tboxLocation);
+        getReasoner(et, tboxLocation);
 
         if (query.isRecursive() && !this.enabled_recursion) {
             throw new UnsupportedOperationException("Recursion must be enabled");
@@ -181,6 +180,20 @@ public class JasperSDSManager implements SDSManager {
     @Override
     public ContinuousQueryExecution<Graph, Graph, Binding> getContinuousQueryExecution() {
         return cqe;
+    }
+
+    public Reasoner getReasoner(Entailment et, String tboxLocation) {
+        switch (et) {
+            case OWL:
+                reasoner = ReasonerRegistry.getOWLReasoner().bindSchema(ModelFactory.createDefaultModel().read(tboxLocation));
+            case RDFS:
+                reasoner = ReasonerRegistry.getRDFSReasoner().bindSchema(ModelFactory.createDefaultModel().read(tboxLocation));
+            case OWL2RL:
+                reasoner = ReasonerRegistry.getRDFSReasoner().bindSchema(ModelFactory.createDefaultModel().read(tboxLocation));
+            case NONE:
+            default:
+                return reasoner;
+        }
     }
 
 }

@@ -4,6 +4,8 @@ import com.espertech.esper.client.EPAdministrator;
 import com.espertech.esper.client.EPRuntime;
 import com.espertech.esper.client.EPServiceProvider;
 import it.polimi.jasper.engine.esper.EsperStreamRegistrationService;
+import it.polimi.jasper.engine.esper.StreamRegistrationService;
+import it.polimi.jasper.jena.EsperStreamRegistrationServiceImpl;
 import it.polimi.jasper.operators.s2r.epl.RuntimeManager;
 import it.polimi.jasper.querying.Entailment;
 import it.polimi.jasper.secret.EsperTime;
@@ -20,17 +22,15 @@ import it.polimi.yasper.core.querying.ContinuousQueryExecution;
 import it.polimi.yasper.core.sds.SDS;
 import it.polimi.yasper.core.secret.report.Report;
 import it.polimi.yasper.core.secret.time.Time;
+import it.polimi.yasper.core.stream.data.DataStreamImpl;
 import it.polimi.yasper.core.stream.metadata.StreamSchema;
 import it.polimi.yasper.core.stream.web.WebStream;
 import lombok.extern.log4j.Log4j;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Log4j
-public abstract class EsperRSPEngine<T> implements StreamRegistrationFeature<EPLStream<T>, WebStream>, StreamDeletionFeature<EPLStream<T>>, QueryDeletionFeature {
+public abstract class EsperRSPEngine<T> implements StreamRegistrationFeature<DataStreamImpl<T>, WebStream>, StreamDeletionFeature<DataStreamImpl<T>>, QueryDeletionFeature {
 
     protected final boolean enabled_recursion;
     protected final String responseFormat;
@@ -71,8 +71,6 @@ public abstract class EsperRSPEngine<T> implements StreamRegistrationFeature<EPL
         this.runtime = RuntimeManager.getEPRuntime();
         this.admin = RuntimeManager.getAdmin();
 
-        stream_registration_service = new EsperStreamRegistrationService(admin);
-
         String entailment = rsp_config.getString("jasper.entailment");
 
         if (entailment == null)
@@ -108,12 +106,12 @@ public abstract class EsperRSPEngine<T> implements StreamRegistrationFeature<EPL
     }
 
     @Override
-    public EPLStream<T> register(WebStream s) {
+    public DataStreamImpl<T> register(WebStream s) {
         return stream_registration_service.register(s);
     }
 
     @Override
-    public void unregister(EPLStream<T> s) {
+    public void unregister(DataStreamImpl<T> s) {
         stream_registration_service.unregister(s);
     }
 

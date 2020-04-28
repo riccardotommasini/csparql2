@@ -21,6 +21,7 @@
 package it.polimi.jasper.CSPARQLReadyToGo.streams;
 
 import it.polimi.jasper.streams.EPLStream;
+import it.polimi.yasper.core.stream.data.DataStreamImpl;
 import it.polimi.yasper.core.stream.web.WebStreamImpl;
 import org.apache.jena.graph.Graph;
 import org.apache.jena.rdf.model.*;
@@ -39,7 +40,7 @@ public class LBSMARDFStreamTestGenerator extends WebStreamImpl implements Runnab
     private boolean keepRunning = false;
 
     protected int grow_rate;
-    private EPLStream<Graph> s;
+    private DataStreamImpl<Graph> s;
 
     private String type;
 
@@ -49,7 +50,7 @@ public class LBSMARDFStreamTestGenerator extends WebStreamImpl implements Runnab
         this.grow_rate = grow_rate;
     }
 
-    public void setWritable(EPLStream<Graph> e) {
+    public void setWritable(DataStreamImpl<Graph> e) {
         this.s = e;
     }
 

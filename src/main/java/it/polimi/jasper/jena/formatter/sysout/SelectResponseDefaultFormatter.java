@@ -1,4 +1,4 @@
-package it.polimi.jasper.engine.execution.formatter;
+package it.polimi.jasper.jena.formatter.sysout;
 
 import com.github.jsonldjava.core.JsonLdOptions;
 import it.polimi.jasper.jena.SolutionMappingImpl;

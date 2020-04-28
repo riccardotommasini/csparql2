@@ -1,8 +1,8 @@
-package it.polimi.jasper.engine.execution.formatter;
+package it.polimi.jasper.jena.formatter.sysout;
 
 
-import it.polimi.jasper.engine.execution.formatter.sysout.ConstructSysOutDefaultFormatter;
-import it.polimi.jasper.engine.execution.formatter.sysout.SelectSysOutDefaultFormatter;
+import it.polimi.jasper.jena.formatter.sysout.ConstructSysOutDefaultFormatter;
+import it.polimi.jasper.jena.formatter.sysout.SelectSysOutDefaultFormatter;
 import it.polimi.yasper.core.format.QueryResultFormatter;
 
 /**

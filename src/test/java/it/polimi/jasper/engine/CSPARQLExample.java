@@ -7,6 +7,7 @@ import it.polimi.yasper.core.engine.config.EngineConfiguration;
 import it.polimi.yasper.core.querying.ContinuousQuery;
 import it.polimi.yasper.core.querying.ContinuousQueryExecution;
 import it.polimi.yasper.core.sds.SDSConfiguration;
+import it.polimi.yasper.core.stream.data.DataStreamImpl;
 import it.polimi.yasper.core.stream.data.WebDataStream;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.io.FileUtils;
@@ -35,7 +36,7 @@ public class CSPARQLExample {
 
         GraphStream writer = new GraphStream("Writer", "http://differenthost:12134/stream2", 1);
 
-        EPLStream<Graph> register = sr.register(writer);
+        DataStreamImpl<Graph> register = sr.register(writer);
 
         writer.setWritable(register);
 

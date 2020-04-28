@@ -1,6 +1,5 @@
 package it.polimi.jasper.jena;
 
-import it.polimi.jasper.engine.execution.ContinuousQueryExecutionFactory;
 import it.polimi.jasper.secret.content.ContentEventBean;
 import lombok.extern.log4j.Log4j;
 import org.apache.jena.graph.Graph;

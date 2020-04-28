@@ -1,6 +1,7 @@
 package it.polimi.jasper.engine;
 
 import it.polimi.jasper.streams.EPLStream;
+import it.polimi.yasper.core.stream.data.DataStreamImpl;
 import it.polimi.yasper.core.stream.web.WebStreamImpl;
 import lombok.extern.log4j.Log4j;
 import org.apache.jena.graph.Graph;
@@ -17,7 +18,7 @@ public class GraphStream extends WebStreamImpl implements Runnable {
 
 
     protected int grow_rate;
-    private EPLStream<Graph> s;
+    private DataStreamImpl<Graph> s;
 
     private String type;
 
@@ -27,7 +28,7 @@ public class GraphStream extends WebStreamImpl implements Runnable {
         this.grow_rate = grow_rate;
     }
 
-    public void setWritable(EPLStream<Graph> e) {
+    public void setWritable(DataStreamImpl<Graph> e) {
         this.s = e;
     }
 

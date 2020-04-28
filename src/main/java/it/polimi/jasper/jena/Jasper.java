@@ -1,5 +1,6 @@
 package it.polimi.jasper.jena;
 
+import com.espertech.esper.client.EPRuntime;
 import it.polimi.jasper.engine.EsperRSPEngine;
 import it.polimi.jasper.jena.syntax.QueryFactory;
 import it.polimi.jasper.jena.syntax.RSPQLJenaQuery;
@@ -28,13 +29,14 @@ import java.util.List;
 
 @Log4j
 public class Jasper extends EsperRSPEngine<Graph> implements QueryObserverRegistrationFeature, QueryRegistrationFeature<RSPQLJenaQuery>, QueryStringRegistrationFeature {
+
     private Maintenance maintenance;
 
     public Jasper(long t0, EngineConfiguration configuration) {
         super(t0, configuration);
-
         this.reportGrain = ReportGrain.SINGLE;
         this.maintenance = Maintenance.NAIVE;
+        this.stream_registration_service = new EsperStreamRegistrationServiceImpl(admin);
     }
 
     public void setReport(ReportingStrategy... sr) {

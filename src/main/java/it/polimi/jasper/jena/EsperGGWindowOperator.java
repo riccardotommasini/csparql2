@@ -50,17 +50,26 @@ public class EsperGGWindowOperator implements StreamToRelationOperator<Graph, Gr
 
     @Override
     public TimeVarying<Graph> apply(WebDataStream<Graph> s) {
-        EPStatement windowAssigner = EPLFactory.getWindowAssigner(tick, maintenance, report, eventtime, s.getURI(), wo.getStep(), wo.getRange(), wo.getUnitStep(), wo.getUnitRange(), wo.getType(), time);
-        EsperGGWindowAssigner consumer = new EsperGGWindowAssigner(EncodingUtils.encode(s.getURI()), windowAssigner);
+        EsperGGWindowAssigner consumer = new EsperGGWindowAssigner(s.getURI());
         s.addConsumer(consumer);
         return consumer.set(context);
     }
 
     class EsperGGWindowAssigner extends AbstractEsperWindowAssigner<Graph, Graph> {
 
+        public EsperGGWindowAssigner(String name) {
+            super(EncodingUtils.encode(name),
+                    EsperGGWindowOperator.this.tick,
+                    EsperGGWindowOperator.this.report,
+                    EsperGGWindowOperator.this.eventtime,
+                    EPLFactory.getWindowAssigner(EsperGGWindowOperator.this.tick,
+                            EsperGGWindowOperator.this.maintenance,
+                            EsperGGWindowOperator.this.report,
+                            EsperGGWindowOperator.this.eventtime,
+                            name, wo.getStep(), wo.getRange(), wo.getUnitStep(), wo.getUnitRange(), wo.getType(),
+                            EsperGGWindowOperator.this.time)
 
-        public EsperGGWindowAssigner(String name, EPStatement stm) {
-            super(name, EsperGGWindowOperator.this.tick, EsperGGWindowOperator.this.report, EsperGGWindowOperator.this.eventtime, stm, EsperGGWindowOperator.this.time);
+                    , EsperGGWindowOperator.this.time);
         }
 
         public EsperGGWindowAssigner(String name, Tick tick, Report report, boolean event_time, Maintenance maintenance, EPStatement stm, Time time) {

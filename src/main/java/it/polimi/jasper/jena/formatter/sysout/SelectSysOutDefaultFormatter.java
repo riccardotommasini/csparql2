@@ -1,6 +1,4 @@
-package it.polimi.jasper.engine.execution.formatter.sysout;
-
-import it.polimi.jasper.engine.execution.formatter.SelectResponseDefaultFormatter;
+package it.polimi.jasper.jena.formatter.sysout;
 
 public class SelectSysOutDefaultFormatter extends SelectResponseDefaultFormatter {
 
